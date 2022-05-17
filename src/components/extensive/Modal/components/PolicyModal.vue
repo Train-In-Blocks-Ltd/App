@@ -53,6 +53,7 @@
 
 <script lang="ts">
 import appState from "../../../../store/modules/appState";
+import accountStore from "../../../../store/modules/account";
 import utilsStore from "../../../../store/modules/utils";
 import { Component, Mixins } from "vue-property-decorator";
 import GeneralMixins from "../../../../generalMixins";
@@ -63,7 +64,7 @@ export default class PolicyModal extends Mixins(GeneralMixins) {
     eula: string | null = null;
 
     get claims() {
-        return appState.claims;
+        return accountStore.claims;
     }
     get policyVersion() {
         return appState.policyVersion;
@@ -77,10 +78,14 @@ export default class PolicyModal extends Mixins(GeneralMixins) {
 
     /** Agree to EULA terms. */
     async agreeToTerms() {
-        appState.setClaimsPolicy([this.name, this.today(), this.policyVersion]);
+        accountStore.setClaimsPolicy([
+            this.name,
+            this.today(),
+            this.policyVersion,
+        ]);
         try {
             appState.setDontLeave(true);
-            await appState.updateClaims();
+            await accountStore.updateClaims();
             appState.stopLoaders();
             utilsStore.closeModal();
         } catch (e) {

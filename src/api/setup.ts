@@ -1,5 +1,5 @@
 import { baseAPI } from ".";
-import appState from "../store/modules/appState";
+import accountStore from "../store/modules/account";
 import { Booking, Client, Portfolio, Template } from "../store/modules/types";
 
 type HighLevelData = {
@@ -13,7 +13,7 @@ type HighLevelData = {
 /** Gets all the data for the trainer-user's session. */
 export const useGetHighLevelData = async (): Promise<HighLevelData> => {
     const response = await baseAPI.get<(Client[] | any)[]>(
-        `https://api.traininblocks.com/v2/${appState.claims?.sub}`
+        `https://api.traininblocks.com/v2/${accountStore.claims?.sub}`
     );
 
     const sortedClients = response.data[0].sort((a: Client, b: Client) => {

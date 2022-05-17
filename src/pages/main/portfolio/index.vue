@@ -58,6 +58,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import appState from "../../../store/modules/appState";
+import accountStore from "../../../store/modules/account";
 import portfolioStore from "../../../store/modules/portfolio";
 import utilsStore from "../../../store/modules/utils";
 import { NavigationGuardNext, Route } from "vue-router";
@@ -83,7 +84,7 @@ export default class Portfolio extends Vue {
     editingPortfolio: boolean = false;
 
     get claims() {
-        return appState.claims;
+        return accountStore.claims;
     }
     get dontLeave() {
         return appState.dontLeave;

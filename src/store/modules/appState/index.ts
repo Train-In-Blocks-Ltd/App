@@ -1,18 +1,11 @@
 import {
-    Action,
     getModule,
     Module,
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import {
-    DarkmodeType,
-    PWADisplayMode,
-    PWASettings,
-    TIBUserClaims,
-} from "../types";
+import { PWADisplayMode, PWASettings } from "../types";
 import store from "../..";
-import { baseAPI } from "../../../api";
 
 @Module({
     namespaced: true,
@@ -29,7 +22,6 @@ class AppStateModule extends VuexModule {
     silentLoading: boolean = false;
     dontLeave: boolean = false;
     disableButtons: boolean = false;
-    claims: TIBUserClaims | null = null;
     pwa: PWASettings = {
         deferredPrompt: null,
         displayMode: "browser tab",
@@ -90,52 +82,6 @@ class AppStateModule extends VuexModule {
     @MutationAction
     async setNewBuild(newBuild: boolean) {
         return { newBuild };
-    }
-    @MutationAction
-    async setClaims(claims: TIBUserClaims | null) {
-        return { claims };
-    }
-    @MutationAction
-    async setClaimsAnalytics(ga: boolean) {
-        return {
-            claims: {
-                ga,
-            },
-        };
-    }
-    @MutationAction
-    async setClaimsTheme(theme: DarkmodeType) {
-        return {
-            claims: {
-                theme,
-            },
-        };
-    }
-    @MutationAction
-    async setClaimsPolicy(policy: TIBUserClaims["policy"]) {
-        return {
-            claims: {
-                policy,
-            },
-        };
-    }
-    @MutationAction
-    async updateClaims() {
-        const { ga, theme, policy, calendar } = this.claims!;
-        await baseAPI.post("/.netlify/functions/okta", {
-            type: "POST",
-            body: {
-                profile: {
-                    ga,
-                    theme,
-                    policy,
-                    calendar,
-                },
-            },
-            url: `${this.claims?.sub}`,
-        });
-
-        return {};
     }
     @MutationAction
     async setPWADeferredPrompt(deferredPrompt: Event | null) {

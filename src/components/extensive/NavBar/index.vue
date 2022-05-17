@@ -53,6 +53,7 @@
 
 <script lang="ts">
 import appState from "../../../store/modules/appState";
+import accountStore from "../../../store/modules/account";
 import utilsStore from "../../../store/modules/utils";
 import { NavLinkType } from "../../../store/modules/types";
 import { Component, Vue } from "vue-property-decorator";
@@ -137,7 +138,7 @@ export default class NavBar extends Vue {
     ];
 
     get claims() {
-        return appState.claims;
+        return accountStore.claims;
     }
     get authenticated() {
         return appState.authenticated;

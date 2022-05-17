@@ -223,10 +223,10 @@ export default class Account extends Vue {
         return appState.dontLeave;
     }
     get claims() {
-        return appState.claims;
+        return accountStore.claims;
     }
     set claims(value: TIBUserClaims | null) {
-        appState.setClaims(value);
+        accountStore.setClaims(value);
     }
     get versionName() {
         return appState.versionName;
@@ -294,12 +294,12 @@ export default class Account extends Vue {
 
     /** Toggles enabled calendar. */
     handleEnableCalendar() {
-        appState.updateClaims();
+        accountStore.updateClaims();
     }
 
     /** Toggles tracking. */
     handleAllowCookies() {
-        appState.updateClaims();
+        accountStore.updateClaims();
     }
 
     /** Opens EULA modal respective to user type. */

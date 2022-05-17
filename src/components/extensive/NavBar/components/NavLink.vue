@@ -38,6 +38,7 @@
 
 <script lang="ts">
 import appState from "../../../../store/modules/appState";
+import accountStore from "../../../../store/modules/account";
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 @Component
@@ -50,7 +51,7 @@ export default class NavLink extends Vue {
     @Prop(Function) readonly onClick!: () => void;
 
     get claims() {
-        return appState.claims;
+        return accountStore.claims;
     }
     get isDemo() {
         return appState.isDemo;

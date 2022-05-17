@@ -130,6 +130,7 @@ body {
 import { Component, Ref, Vue, Watch } from "vue-property-decorator";
 import { baseAPI } from "./api";
 import appState from "./store/modules/appState";
+import accountStore from "./store/modules/account";
 import utilsStore from "./store/modules/utils";
 import clientsStore from "./store/modules/clients";
 import templatesStore from "./store/modules/templates";
@@ -193,7 +194,7 @@ export default class App extends Vue {
         return appState.loading;
     }
     get claims() {
-        return appState.claims;
+        return accountStore.claims;
     }
     get connected() {
         return appState.connected;
@@ -287,7 +288,7 @@ export default class App extends Vue {
         baseAPI.interceptors.request.use(
             (config) => {
                 if (
-                    appState.claims?.email === "demo@traininblocks.com" &&
+                    accountStore.claims?.email === "demo@traininblocks.com" &&
                     config.method !== "get"
                 ) {
                     this.$store.dispatch("openResponsePopUp", {
@@ -340,28 +341,30 @@ export default class App extends Vue {
     async setup() {
         if (!this.instanceReady) {
             // Set claims
-            appState.setClaims((await this.$auth.getUser()) as TIBUserClaims);
+            accountStore.setClaims(
+                (await this.$auth.getUser()) as TIBUserClaims
+            );
 
             // Sets demo flag
             appState.setIsDemo(
-                appState.claims?.email === "demo@traininblocks.com"
+                accountStore.claims?.email === "demo@traininblocks.com"
             );
 
             // Sets trainer flag
             appState.setIsTrainer(
-                appState.claims?.user_type === "Trainer" ||
-                    appState.claims?.user_type === "Admin"
+                accountStore.claims?.user_type === "Trainer" ||
+                    accountStore.claims?.user_type === "Admin"
             );
 
-            if (appState.claims) {
-                if (!appState.claims.ga || !appState.claims)
-                    appState.setClaimsAnalytics(true);
+            if (accountStore.claims) {
+                if (!accountStore.claims.ga || !accountStore.claims)
+                    accountStore.setClaimsAnalytics(true);
 
-                if (!appState.claims.theme || !appState.claims)
-                    appState.setClaimsTheme("system");
+                if (!accountStore.claims.theme || !accountStore.claims)
+                    accountStore.setClaimsTheme("system");
 
                 // Set analytics and theme
-                appState.claims.ga !== false
+                accountStore.claims.ga !== false
                     ? this.$ga.enable()
                     : this.$ga.disable();
 
@@ -372,9 +375,10 @@ export default class App extends Vue {
 
                 // Set EULA
                 if (
-                    (!appState.claims.policy ||
-                        appState.policyVersion !== appState.claims.policy[2]) &&
-                    appState.claims.email !== "demo@traininblocks.com" &&
+                    (!accountStore.claims.policy ||
+                        appState.policyVersion !==
+                            accountStore.claims.policy[2]) &&
+                    accountStore.claims.email !== "demo@traininblocks.com" &&
                     this.authenticated
                 ) {
                     utilsStore.openModal({
@@ -402,8 +406,8 @@ export default class App extends Vue {
 
             // Get data if not client
             if (
-                appState.claims?.user_type === "Admin" ||
-                appState.claims?.user_type === "Trainer"
+                accountStore.claims?.user_type === "Admin" ||
+                accountStore.claims?.user_type === "Trainer"
             ) {
                 try {
                     const {
