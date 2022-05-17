@@ -72,7 +72,6 @@ export default {
         profile_image: null,
         sessionsToday: [],
         bookings: [],
-        products: [],
     },
 
     // Portfolio
@@ -85,7 +84,6 @@ export default {
     // Products
     hasCheckedStripeConnect: false,
     isStripeConnected: false,
-    products: [],
 
     // Template
     templates: null,

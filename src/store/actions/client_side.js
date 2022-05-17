@@ -73,13 +73,6 @@ export default {
                     return new Date(a.datetime) - new Date(b.datetime);
                 }),
             });
-
-            // Sets products
-            commit("SET_DATA_DEEP", {
-                attrParent: "clientUser",
-                attrChild: "products",
-                data: RESPONSE.data[4],
-            });
         }
     },
 

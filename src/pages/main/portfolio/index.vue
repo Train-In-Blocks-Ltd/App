@@ -52,8 +52,6 @@
                 @on-edit-change="resolve_portfolio_editor"
             />
         </label-wrapper>
-
-        <!-- <products /> -->
     </wrapper>
 </template>
 
@@ -64,13 +62,11 @@ import portfolioStore from "../../../store/modules/portfolio";
 import utilsStore from "../../../store/modules/utils";
 import { NavigationGuardNext, Route } from "vue-router";
 import { EditorState } from "@/src/store/modules/types";
-import portfolio from "../../../store/modules/portfolio";
 
 const LabelWrapper = () =>
     import(
         /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../../components/generic/LabelWrapper.vue"
     );
-// const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '@/components/Products')
 
 @Component({
     metaInfo() {
@@ -80,7 +76,6 @@ const LabelWrapper = () =>
     },
     components: {
         LabelWrapper,
-        // Products
     },
 })
 export default class Portfolio extends Vue {
