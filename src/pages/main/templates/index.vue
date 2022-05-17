@@ -17,11 +17,9 @@
             inputClass="text-2xl"
             style="margin-bottom: 2rem"
         />
-        <div
-            v-if="templates && selectedIds.length < templates.length"
-            class="flex justify-end items-center my-8"
-        >
+        <div class="flex justify-end items-center my-8">
             <a
+                v-if="templates && selectedIds.length < templates.length"
                 href="javascript:void(0)"
                 aria-label="Select all"
                 @click="handleSelectAll"
@@ -46,7 +44,7 @@
             <div class="skeleton-item w-1/2" />
             <div class="skeleton-item w-1/4" />
         </div>
-        <div v-else-if="templates" class="grid gap-8 my-8">
+        <div v-else-if="templates.length > 0" class="grid gap-8 my-8">
             <card-wrapper
                 v-for="(template, index) in templates"
                 v-show="
@@ -109,7 +107,7 @@
                 />
             </card-wrapper>
         </div>
-        <txt v-else type="large-body" grey>No templates yet :(</txt>
+        <txt v-else type="large-body" grey>No templates yet</txt>
     </wrapper>
 </template>
 
