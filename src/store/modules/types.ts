@@ -159,3 +159,11 @@ export type ModalName =
     | "statistics"
     | "templates"
     | "eula";
+
+export type Calculator = {
+    id: string;
+    name: string;
+    inputs: { id: string; label: string; value: number | null }[];
+    metric: string;
+    units: string;
+};
