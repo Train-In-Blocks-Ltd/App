@@ -19,13 +19,7 @@
                 <txt type="title">Plans</txt>
                 <icon-button
                     svg="file-plus"
-                    :on-click="
-                        () =>
-                            $store.dispatch('openModal', {
-                                name: 'new-plan',
-                                size: 'xs',
-                            })
-                    "
+                    :on-click="handleOpenNewPlan"
                     :icon-size="28"
                     aria-label="New plan"
                     title="New plan"
@@ -62,86 +56,101 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { EditorState } from "@/src/store/modules/types";
+import { Component, Vue } from "vue-property-decorator";
+import { NavigationGuardNext, Route } from "vue-router";
+import appState from "../../../../../store/modules/appState";
+import clientStore from "../../../../../store/modules/client";
+import utilsStore from "../../../../../store/modules/utils";
 
 const Bookings = () =>
     import(
-        /* webpackChunkName: "components.bookings", webpackPreload: true  */ "./components/Bookings"
+        /* webpackChunkName: "components.bookings", webpackPreload: true  */ "./components/Bookings.vue"
     );
 const PlanCard = () =>
     import(
-        /* webpackChunkName: "components.planCard", webpackPreload: true  */ "@/components/generic/PlanCard"
+        /* webpackChunkName: "components.planCard", webpackPreload: true  */ "../../../../../components/generic/PlanCard.vue"
     );
 const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../../../../components/generic/LabelWrapper.vue"
     );
 
-export default {
+@Component({
     components: {
         Bookings,
         PlanCard,
         LabelWrapper,
     },
-    async beforeRouteLeave(to, from, next) {
+})
+export default class Plan extends Vue {
+    tempEditorStore: string | null = "";
+    editingClientNotes: boolean = false;
+
+    get dontLeave() {
+        return appState.dontLeave;
+    }
+    get loading() {
+        return appState.loading;
+    }
+    get clientDetails() {
+        return clientStore.clientDetails;
+    }
+    set clientDetails(value) {
+        clientStore.setClientDetails(value);
+    }
+
+    async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await this.$store.dispatch("openConfirmPopUp", {
+                ? await utilsStore.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
                 : true
         ) {
-            this.$store.dispatch("setLoading", {
-                dontLeave: false,
-            });
+            appState.setDontLeave(false);
             next();
         }
-    },
-    data() {
-        return {
-            tempEditorStore: null,
-            editingClientNotes: false,
-        };
-    },
-    computed: mapState(["loading", "dontLeave", "clients", "clientDetails"]),
-    methods: {
-        /**
-         * Resolves the client information editor.
-         * @param {string} state - The returned state from the editor.
-         */
-        async resolve_client_info_editor(state) {
-            switch (state) {
-                case "edit":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: true,
-                    });
-                    this.editingClientNotes = true;
-                    this.tempEditorStore = this.clientDetails.notes;
-                    break;
-                case "save":
-                    this.editingClientNotes = false;
-                    try {
-                        this.$store.dispatch("setLoading", {
-                            silentLoading: true,
-                            dontLeave: true,
-                        });
-                        await this.$store.dispatch("updateClient");
-                        this.$store.dispatch("setLoading", false);
-                    } catch (e) {
-                        this.$store.dispatch("resolveError", e);
-                    }
-                    break;
-                case "cancel":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: false,
-                    });
-                    this.editingClientNotes = false;
-                    this.clientDetails.notes = this.tempEditorStore;
-                    break;
-            }
-        },
-    },
-};
+    }
+
+    handleOpenNewPlan() {
+        utilsStore.openModal({
+            name: "new-plan",
+            size: "xs",
+        });
+    }
+
+    /** Resolves the client information editor. */
+    async resolve_client_info_editor(state: EditorState) {
+        switch (state) {
+            case "edit":
+                appState.setDontLeave(true);
+                this.editingClientNotes = true;
+                this.tempEditorStore = this.clientDetails?.notes ?? "";
+                break;
+            case "save":
+                this.editingClientNotes = false;
+                try {
+                    appState.setDontLeave(true);
+                    appState.setSilentLoading(true);
+                    await clientStore.updateClient();
+                    appState.stopLoaders();
+                } catch (e) {
+                    utilsStore.resolveError(e as string);
+                }
+                break;
+            case "cancel":
+                appState.setDontLeave(false);
+                this.editingClientNotes = false;
+                if (!this.clientDetails) return;
+                clientStore.setClientDetails({
+                    ...this.clientDetails,
+                    notes: this.tempEditorStore ?? "",
+                });
+                break;
+        }
+    }
+}
 </script>
