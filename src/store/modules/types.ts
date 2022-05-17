@@ -119,3 +119,28 @@ export type Coupon = {
     generated: boolean;
     code: string | null;
 };
+
+export type WhatsNewItem = {
+    title: string;
+    desc: string;
+    img: string;
+};
+
+export type ModalName =
+    | "new-client"
+    | "whats-new"
+    | "install-pwa"
+    | "reset-password"
+    | "client-user-profile"
+    | "preview"
+    | "info"
+    | "new-plan"
+    | "bookings"
+    | "toolkit"
+    | "duplicate-plan"
+    | "move"
+    | "shift"
+    | "progress"
+    | "statistics"
+    | "templates"
+    | "eula";

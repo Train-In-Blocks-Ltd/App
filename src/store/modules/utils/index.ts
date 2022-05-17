@@ -9,6 +9,7 @@ import store from "../..";
 import appState from "../appState";
 import {
     ConfirmPopUpRef,
+    ModalName,
     ModalSize,
     ResponsePopUpRef,
     TxtInputPopUpRef,
@@ -18,15 +19,15 @@ import { Editor } from "@tiptap/core";
 
 type ModalParams =
     | {
-          name: string;
-          size?: string;
+          name: ModalName;
+          size?: ModalSize;
           persist?: boolean;
           previewTitle?: never;
           previewHTML?: never;
       }
     | {
           name: "preview";
-          size?: string;
+          size?: ModalSize;
           persist?: boolean;
           previewTitle: string;
           previewHTML: string;
@@ -44,7 +45,7 @@ class UtilsModule extends VuexModule {
 
     // Modal and preview
     modalOpen: boolean = false;
-    modalContent: string | null = "";
+    modalContent: ModalName | null = null;
     modalSize: ModalSize = "sm";
     modalPersist: boolean = false;
     previewTitle: string | null = "";
@@ -107,7 +108,7 @@ class UtilsModule extends VuexModule {
     async closeModal() {
         return {
             modalOpen: false,
-            modalContent: "",
+            modalContent: null as ModalName | null,
             modalSize: "sm",
             modalPersist: false,
             previewTitle: "",

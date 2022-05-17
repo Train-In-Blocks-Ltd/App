@@ -19,7 +19,7 @@
                     <icon-button
                         v-if="!modalPersist"
                         svg="x"
-                        :on-click="() => $store.dispatch('closeModal')"
+                        :on-click="_close"
                         :icon-size="32"
                         aria-label="Close"
                         title="Close"
@@ -53,100 +53,96 @@
             <templates-modal v-else-if="modalContent === 'templates'" />
             <policy-modal v-else-if="modalContent === 'eula'" />
         </card-wrapper>
-        <backdrop
-            :on-click="
-                () => {
-                    if (!modalPersist) handleBackdropClick();
-                }
-            "
-        />
+        <backdrop :on-click="_close" />
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appState from "../../../store/modules/appState";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import utilsStore from "../../../store/modules/utils";
 
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPrefetch: true  */ "@/components/generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPrefetch: true  */ "../../../components/generic/CardWrapper.vue"
     );
 const Backdrop = () =>
     import(
-        /* webpackChunkName: "components.backdrop", webpackPrefetch: true  */ "@/components/generic/Backdrop"
+        /* webpackChunkName: "components.backdrop", webpackPrefetch: true  */ "../../../components/generic/Backdrop.vue"
     );
 const SecondaryHeader = () =>
     import(
-        /* webpackChunkName: "components.secondaryHeader", webpackPrefetch: true  */ "../SecondaryHeader"
+        /* webpackChunkName: "components.secondaryHeader", webpackPrefetch: true  */ "../SecondaryHeader/index.vue"
     );
 
 // Modals
 
 const NewClientModal = () =>
     import(
-        /* webpackChunkName: "components.newClientModal", webpackPrefetch: true  */ "@/pages/main/home/components/NewClientModal"
+        /* webpackChunkName: "components.newClientModal", webpackPrefetch: true  */ "../../../pages/main/home/components/NewClientModal.vue"
     );
 const WhatsNewModal = () =>
     import(
-        /* webpackChunkName: "components.whatsNewModal", webpackPrefetch: true  */ "@/pages/main/home/components/WhatsNewModal"
+        /* webpackChunkName: "components.whatsNewModal", webpackPrefetch: true  */ "../../../pages/main/home/components/WhatsNewModal.vue"
     );
 const InstallModal = () =>
     import(
-        /* webpackChunkName: "components.installModal", webpackPrefetch: true  */ "@/pages/main/home/components/InstallModal"
+        /* webpackChunkName: "components.installModal", webpackPrefetch: true  */ "../../../pages/main/home/components/InstallModal.vue"
     );
 const ResetPasswordModal = () =>
     import(
-        /* webpackChunkName: "components.resetPasswordModal", webpackPrefetch: true  */ "@/pages/main/account/components/ResetPasswordModal"
+        /* webpackChunkName: "components.resetPasswordModal", webpackPrefetch: true  */ "../../../pages/main/account/components/ResetPasswordModal.vue"
     );
 const ClientUserProfileModal = () =>
     import(
-        /* webpackChunkName: "components.clientUserProfileModal", webpackPrefetch: true  */ "@/pages/_clientUser/components/ClientUserProfileModal"
+        /* webpackChunkName: "components.clientUserProfileModal", webpackPrefetch: true  */ "../../../pages/_clientUser/components/ClientUserProfileModal.vue"
     );
 const PreviewModal = () =>
     import(
-        /* webpackChunkName: "components.previewModal", webpackPrefetch: true  */ "./components/PreviewModal"
+        /* webpackChunkName: "components.previewModal", webpackPrefetch: true  */ "./components/PreviewModal.vue"
     );
 const NewPlanModal = () =>
     import(
-        /* webpackChunkName: "components.newPlanModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/components/NewPlanModal"
+        /* webpackChunkName: "components.newPlanModal", webpackPrefetch: true  */ "../../../pages/main/home/client/plans/components/NewPlanModal.vue"
     );
 const AllBookingModal = () =>
     import(
-        /* webpackChunkName: "components.allBookingModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/components/AllBookingsModal"
+        /* webpackChunkName: "components.allBookingModal", webpackPrefetch: true  */ "../../../pages/main/home/client/plans/components/AllBookingsModal.vue"
     );
 const ToolkitModal = () =>
     import(
-        /* webpackChunkName: "components.toolkitModal", webpackPrefetch: true  */ "@/pages/main/home/client/components/ToolkitModal"
+        /* webpackChunkName: "components.toolkitModal", webpackPrefetch: true  */ "../../../pages/main/home/client/components/ToolkitModal.vue"
     );
 const DuplicatePlanModal = () =>
     import(
-        /* webpackChunkName: "components.duplicatePlanModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/DuplicatePlanModal"
+        /* webpackChunkName: "components.duplicatePlanModal", webpackPrefetch: true  */ "../../../pages/main/home/client/plans/sessions/components/DuplicatePlanModal.vue"
     );
 const MoveModal = () =>
     import(
-        /* webpackChunkName: "components.moveModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/MoveModal"
+        /* webpackChunkName: "components.moveModal", webpackPrefetch: true  */ "../../../pages/main/home/client/plans/sessions/components/MoveModal.vue"
     );
 const ShiftModal = () =>
     import(
-        /* webpackChunkName: "components.shiftModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/ShiftModal"
+        /* webpackChunkName: "components.shiftModal", webpackPrefetch: true  */ "../../../pages/main/home/client/plans/sessions/components/ShiftModal.vue"
     );
 const ProgressModal = () =>
     import(
-        /* webpackChunkName: "components.progressModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/ProgressModal"
+        /* webpackChunkName: "components.progressModal", webpackPrefetch: true  */ "../../../pages/main/home/client/plans/sessions/components/ProgressModal.vue"
     );
 const StatisticsModal = () =>
     import(
-        /* webpackChunkName: "components.statisticsModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/StatisticsModal"
+        /* webpackChunkName: "components.statisticsModal", webpackPrefetch: true  */ "../../../pages/main/home/client/plans/sessions/components/StatisticsModal.vue"
     );
 const TemplatesModal = () =>
     import(
-        /* webpackChunkName: "components.templatesModal", webpackPrefetch: true  */ "@/components/extensive/RichEditor/components/TemplatesModal"
+        /* webpackChunkName: "components.templatesModal", webpackPrefetch: true  */ "../../../components/extensive/RichEditor/components/TemplatesModal.vue"
     );
 const PolicyModal = () =>
     import(
-        /* webpackChunkName: "components.policyModal", webpackPrefetch: true  */ "@/components/extensive/Modal/components/PolicyModal"
+        /* webpackChunkName: "components.policyModal", webpackPrefetch: true  */ "../../../components/extensive/Modal/components/PolicyModal.vue"
     );
 
-export default {
+@Component({
     components: {
         CardWrapper,
         Backdrop,
@@ -168,63 +164,77 @@ export default {
         TemplatesModal,
         PolicyModal,
     },
-    computed: mapState([
-        "modalSize",
-        "modalOpen",
-        "modalContent",
-        "modalPersist",
-        "versionBuild",
-        "versionName",
-        "previewTitle",
-    ]),
-    watch: {
-        modalContent(val) {
-            if (val) document.body.style.overflow = "hidden";
-            else document.body.style.overflow = "auto";
-        },
-    },
-    methods: {
-        handleBackdropClick() {
-            this.$store.dispatch("closeModal");
-        },
-        title() {
-            switch (this.modalContent) {
-                case "new-client":
-                    return "New Client";
-                case "whats-new":
-                    return `${this.versionName} ${this.versionBuild}`;
-                case "install-pwa":
-                    return "Save the app to your phone";
-                case "reset-password":
-                    return "Reset password";
-                case "preview":
-                    return this.previewTitle ?? "Preview";
-                case "info":
-                    return "Information";
-                case "new-plan":
-                    return "New Plan";
-                case "bookings":
-                    return "All bookings";
-                case "toolkit":
-                    return "Toolkit";
-                case "duplicate-plan":
-                    return "Duplicate plan";
-                case "move":
-                    return "Move sessions";
-                case "shift":
-                    return "Shift sessions";
-                case "progress":
-                    return "Progress sessions";
-                case "statistics":
-                    return "Statistics";
-                case "templates":
-                    return "Templates";
-                case "eula":
-                    return "End-User License Agreement (EULA)";
-                default:
-                    return "";
-            }
-        },
-    },
-};
+})
+export default class Modal extends Vue {
+    get modalSize() {
+        return utilsStore.modalSize;
+    }
+    get modalOpen() {
+        return utilsStore.modalOpen;
+    }
+    get modalContent() {
+        return utilsStore.modalContent;
+    }
+    get modalPersist() {
+        return utilsStore.modalPersist;
+    }
+    get previewTitle() {
+        return utilsStore.previewTitle;
+    }
+    get versionName() {
+        return appState.versionName;
+    }
+    get versionBuild() {
+        return appState.versionBuild;
+    }
+
+    @Watch("modalContent")
+    onContentChange(old: string) {
+        if (old) document.body.style.overflow = "hidden";
+        else document.body.style.overflow = "auto";
+    }
+
+    _close() {
+        if (!this.modalPersist) utilsStore.closeModal();
+    }
+
+    title() {
+        switch (this.modalContent) {
+            case "new-client":
+                return "New Client";
+            case "whats-new":
+                return `${this.versionName} ${this.versionBuild}`;
+            case "install-pwa":
+                return "Save the app to your phone";
+            case "reset-password":
+                return "Reset password";
+            case "preview":
+                return this.previewTitle ?? "Preview";
+            case "info":
+                return "Information";
+            case "new-plan":
+                return "New Plan";
+            case "bookings":
+                return "All bookings";
+            case "toolkit":
+                return "Toolkit";
+            case "duplicate-plan":
+                return "Duplicate plan";
+            case "move":
+                return "Move sessions";
+            case "shift":
+                return "Shift sessions";
+            case "progress":
+                return "Progress sessions";
+            case "statistics":
+                return "Statistics";
+            case "templates":
+                return "Templates";
+            case "eula":
+                return "End-User License Agreement (EULA)";
+            default:
+                return "";
+        }
+    }
+}
 </script>

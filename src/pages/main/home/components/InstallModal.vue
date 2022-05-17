@@ -57,42 +57,35 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { mapState } from "vuex";
+import { Component, Vue } from "vue-property-decorator";
+import appState from "../../../../store/modules/appState";
+import utilsStore from "../../../../store/modules/utils";
 
-export default Vue.extend({
-    computed: mapState(["pwa"]),
-    methods: {
-        handleInstall() {
-            // Show the install prompt
-            this.pwa.deferredPrompt.prompt();
+@Component
+export default class InstallModal extends Vue {
+    get pwa() {
+        return appState.pwa;
+    }
 
-            // Wait for the user to respond to the prompt
-            this.pwa.deferredPrompt.userChoice.then(
-                (choiceResult: { outcome: string }) => {
-                    if (choiceResult.outcome === "accepted") {
-                        // Hide the app provided install promotion
-                        this.$store.commit("SET_DATA_DEEP", {
-                            attrParent: "pwa",
-                            attrChild: "canInstall",
-                            data: false,
-                        });
-                        this.$store.commit("SET_DATA_DEEP", {
-                            attrParent: "pwa",
-                            attrChild: "displayMode",
-                            data: "standalone",
-                        });
-                    } else {
-                        this.$store.commit("SET_DATA_DEEP", {
-                            attrParent: "pwa",
-                            attrChild: "canInstall",
-                            data: true,
-                        });
-                    }
+    handleInstall() {
+        // Show the install prompt
+        // @ts-expect-error
+        this.pwa.deferredPrompt?.prompt();
+
+        // Wait for the user to respond to the prompt
+        // @ts-expect-error
+        this.pwa.deferredPrompt?.userChoice.then(
+            (choiceResult: { outcome: string }) => {
+                if (choiceResult.outcome === "accepted") {
+                    // Hide the app provided install promotion
+                    appState.setPWACanInstall(false);
+                    appState.setPWADisplayMode("standalone");
+                } else {
+                    appState.setPWACanInstall(true);
                 }
-            );
-            this.$store.dispatch("closeModal");
-        },
-    },
-});
+            }
+        );
+        utilsStore.closeModal();
+    }
+}
 </script>

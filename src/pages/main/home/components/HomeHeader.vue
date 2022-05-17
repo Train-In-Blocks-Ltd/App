@@ -10,26 +10,14 @@
             <div class="flex items-center">
                 <icon-button
                     svg="user-plus"
-                    :on-click="
-                        () =>
-                            $store.dispatch('openModal', {
-                                name: 'new-client',
-                                size: 'xs',
-                            })
-                    "
+                    :on-click="handleOpenNewClient"
                     :icon-size="28"
                     aria-label="New client"
                     title="New client"
                 />
                 <icon-button
                     svg="bookmark"
-                    :on-click="
-                        () =>
-                            $store.dispatch('openModal', {
-                                name: 'whats-new',
-                                size: 'lg',
-                            })
-                    "
+                    :on-click="handleOpenWhatsNew"
                     :icon-size="28"
                     aria-label="What's new"
                     title="What's new"
@@ -38,12 +26,7 @@
                 <icon-button
                     v-if="pwa.displayMode === 'browser tab'"
                     svg="download"
-                    :on-click="
-                        () =>
-                            $store.dispatch('openModal', {
-                                name: 'install-pwa',
-                            })
-                    "
+                    :on-click="handleOpenInstall"
                     :icon-size="28"
                     aria-label="Install"
                     title="Install"
@@ -90,6 +73,26 @@ export default class HomeHeader extends Vue {
 
     handleSearch(value: string) {
         utilsStore.setSearch(value);
+    }
+
+    handleOpenNewClient() {
+        utilsStore.openModal({
+            name: "new-client",
+            size: "xs",
+        });
+    }
+
+    handleOpenWhatsNew() {
+        utilsStore.openModal({
+            name: "whats-new",
+        });
+    }
+
+    handleOpenInstall() {
+        utilsStore.openModal({
+            name: "install-pwa",
+            size: "lg",
+        });
     }
 }
 </script>

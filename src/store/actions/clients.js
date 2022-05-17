@@ -1,30 +1,6 @@
 const emailBuilder = require("../../components/js/email");
 
 export default {
-    /**
-     * Creates a new client.
-     * @param {string} payload.pt_id - The id of trainer that this client is assigned to.
-     * @param {string} payload.name - The name of the client.
-     * @param {string} payload.email - The email of the client.
-     * @param {string} payload.number - The mobile number of the client.
-     * @param {string} payload.notes - The client notes.
-     */
-    async createClient({ commit }, payload) {
-        const NEW_CLIENT = await this._vm.$axios.post(
-            "https://api.traininblocks.com/v2/clients",
-            {
-                ...payload,
-            }
-        );
-        delete payload.pt_id;
-        commit("addNewClient", {
-            client_id: NEW_CLIENT.data[0]["LAST_INSERT_ID()"],
-            notifications: 1,
-            profile_image: "",
-            ...payload,
-        });
-    },
-
     /** Updates a client. */
     async updateClient({ state }) {
         const CLIENT = state.clientDetails;

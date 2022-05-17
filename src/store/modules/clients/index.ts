@@ -56,6 +56,34 @@ class ClientsModule extends VuexModule {
     }
 
     @MutationAction
+    async createClient(
+        data: Pick<Client, "pt_id" | "name" | "email" | "number">
+    ) {
+        const response = await baseAPI.post(
+            "https://api.traininblocks.com/v2/clients",
+            {
+                ...data,
+                notes: "",
+            }
+        );
+
+        const clients: Client[] = [
+            ...this.clients,
+            {
+                notes: "",
+                notifications: 1,
+                archive: 0,
+                profile_image: "",
+                client_id: response.data[0]["LAST_INSERT_ID()"],
+                ...data,
+            },
+        ];
+        return {
+            clients,
+        };
+    }
+
+    @MutationAction
     async deleteClients(ids: number[]) {
         await baseAPI.delete("https://api.traininblocks.com/v2/batch/clients", {
             data: ids.map((i) => {

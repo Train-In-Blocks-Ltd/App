@@ -3,12 +3,7 @@
         name="add_client"
         class="grid gap-4 mt-8"
         spellcheck="false"
-        @submit.prevent="
-            () => {
-                createClient();
-                $store.dispatch('closeModal');
-            }
-        "
+        @submit.prevent="createClient"
     >
         <txt-input
             type="text"
@@ -71,74 +66,74 @@
     </form>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import accountStore from "../../../../store/modules/account";
+import appState from "../../../../store/modules/appState";
+import utilsStore from "../../../../store/modules/utils";
+import clientsStore from "../../../../store/modules/clients";
 
-export default {
-    data() {
-        return {
-            newClient: {
-                name: "",
-                email: "",
-                confirm: "",
-                number: "",
-                notes: "",
-            },
-            disableCreateClientButton: true,
-        };
-    },
-    computed: mapState(["claims"]),
-    methods: {
-        checkForm() {
-            this.disableCreateClientButton = !(
-                this.newClient.name &&
-                this.newClient.email &&
-                this.newClient.confirm
-            );
-        },
+@Component
+export default class NewClientModal extends Vue {
+    newClient = {
+        name: "",
+        email: "",
+        confirm: "",
+        number: "",
+        notes: "",
+    };
+    disableCreateClientButton: boolean = true;
 
-        createClient() {
-            if (this.newClient.email === this.claims.email) {
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "You cannot create a client with your own email address!",
-                    description: "Please use a different one.",
-                    persist: true,
-                    backdrop: true,
+    get claims() {
+        return accountStore.claims;
+    }
+
+    checkForm() {
+        this.disableCreateClientButton = !(
+            this.newClient.name &&
+            this.newClient.email &&
+            this.newClient.confirm
+        );
+    }
+
+    createClient() {
+        if (this.newClient.email === this.claims?.email) {
+            utilsStore.responsePopUpRef?.open({
+                title: "You cannot create a client with your own email address!",
+                text: "Please use a different one.",
+                persist: true,
+                backdrop: true,
+            });
+        } else {
+            try {
+                appState.setDontLeave(true);
+                clientsStore.createClient({
+                    pt_id: this.claims?.sub ?? "",
+                    name: this.newClient.name,
+                    email: this.newClient.email,
+                    number: this.newClient.number,
                 });
-                console.error(
-                    "You cannot create a client with your own email address!"
-                );
-            } else {
-                try {
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: true,
-                    });
-                    this.$store.dispatch("createClient", {
-                        name: this.newClient.name,
-                        pt_id: this.claims.sub,
-                        email: this.newClient.email,
-                        number: this.newClient.number,
-                        notes: this.newClient.notes,
-                    });
-                    this.$store.dispatch("openResponsePopUp", {
-                        title: `Added ${this.newClient.name}`,
-                        description: "Well done on getting a new client",
-                    });
-                    this.$parent.persistResponse = this.newClient.name;
-                    this.newClient = {
-                        name: "",
-                        email: "",
-                        confirm: "",
-                        number: "",
-                        notes: "",
-                    };
-                    this.$ga.event("Client", "new");
-                    this.$store.dispatch("setLoading", false);
-                } catch (e) {
-                    this.$store.dispatch("resolveError", e);
-                }
+                utilsStore.responsePopUpRef?.open({
+                    title: `Added ${this.newClient.name}`,
+                    text: "Well done on getting a new client",
+                });
+                // @ts-expect-error
+                this.$parent.persistResponse = this.newClient.name;
+                this.newClient = {
+                    name: "",
+                    email: "",
+                    confirm: "",
+                    number: "",
+                    notes: "",
+                };
+                this.$ga.event("Client", "new");
+                appState.stopLoaders();
+                appState.stopLoaders();
+            } catch (e) {
+                utilsStore.resolveError(e as string);
             }
-        },
-    },
-};
+        }
+        utilsStore.closeModal();
+    }
+}
 </script>
