@@ -9,10 +9,11 @@
     />
 </template>
 
-<script>
-export default {
-    props: {
-        onClick: Function,
-    },
-};
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+
+@Component
+export default class Backdrop extends Vue {
+    @Prop(Function) readonly onClick!: () => void;
+}
 </script>

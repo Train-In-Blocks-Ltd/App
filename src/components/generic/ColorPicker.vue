@@ -10,11 +10,11 @@
             />
             <div v-if="editingWeekColor" class="absolute top-8 left-0 z-10">
                 <div
-                    v-for="(paint, index) in colorPalette"
+                    v-for="(color, index) in colorPalette"
                     :key="'color_' + index"
-                    :style="{ backgroundColor: paint.color }"
+                    :style="{ backgroundColor: color }"
                     class="h-8 w-16 rounded cursor-pointer hover:opacity-60 transition-opacity mt-2"
-                    @click="handleSelect(paint.color)"
+                    @click="handleSelect(color)"
                 />
             </div>
         </div>
@@ -25,38 +25,36 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+
 const Backdrop = () =>
     import(
-        /* webpackChunkName: "components.backdrop", webpackPreload: true */ "@/components/generic/Backdrop"
+        /* webpackChunkName: "components.backdrop", webpackPreload: true */ "../../components/generic/Backdrop.vue"
     );
 
-export default {
-    props: {
-        plan: Object,
-        weekColor: Array,
-        currentWeek: Number,
-    },
+@Component({
     components: {
         Backdrop,
     },
-    data() {
-        return {
-            editingWeekColor: false,
-            colorPalette: [
-                { color: "#EB4034" },
-                { color: "#EB9634" },
-                { color: "#34EB6B" },
-                { color: "#346BEB" },
-                { color: "#303030" },
-            ],
-        };
-    },
-    methods: {
-        handleSelect(color) {
-            this.$emit("output", color);
-            this.editingWeekColor = false;
-        },
-    },
-};
+})
+export default class ColorPicker extends Vue {
+    @Prop(Object) readonly plan!: any;
+    @Prop(Array) readonly weekColor!: string[];
+    @Prop(Number) readonly currentWeek!: number;
+
+    editingWeekColor: boolean = false;
+    colorPalette: string[] = [
+        "#EB4034",
+        "#EB9634",
+        "#34EB6B",
+        "#346BEB",
+        "#303030",
+    ];
+
+    handleSelect(color: string) {
+        this.$emit("output", color);
+        this.editingWeekColor = false;
+    }
+}
 </script>

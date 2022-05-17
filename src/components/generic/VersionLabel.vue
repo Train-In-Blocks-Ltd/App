@@ -7,10 +7,17 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appState from "../../store/modules/appState";
+import { Component, Vue } from "vue-property-decorator";
 
-export default {
-    computed: mapState(["versionName", "versionBuild"]),
-};
+@Component
+export default class VersionLabel extends Vue {
+    get versionName() {
+        return appState.versionName;
+    }
+    get versionBuild() {
+        return appState.versionBuild;
+    }
+}
 </script>

@@ -12,18 +12,20 @@
     </card-wrapper>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "../../components/generic/CardWrapper.vue"
     );
 
-export default {
+@Component({
     components: {
         CardWrapper,
     },
-    props: {
-        title: String,
-    },
-};
+})
+export default class LabelWrapper extends Vue {
+    @Prop(String) readonly title!: string;
+}
 </script>

@@ -33,20 +33,22 @@
     </card-wrapper>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "../../components/generic/CardWrapper.vue"
     );
 
-export default {
+@Component({
     components: {
         CardWrapper,
     },
-    props: {
-        plan: Object,
-        link: String,
-        isTrainer: Boolean,
-    },
-};
+})
+export default class PlanCard extends Vue {
+    @Prop(Object) readonly plan!: any;
+    @Prop(String) readonly link!: string;
+    @Prop(Boolean) readonly isTrainer!: boolean;
+}
 </script>
