@@ -29,7 +29,7 @@ class AccountModule extends VuexModule {
     }
     @MutationAction
     async setClaims(claims: TIBUserClaims | null) {
-        return { claims };
+        return await { claims };
     }
     @MutationAction
     async setClaimsAnalytics(ga: boolean) {

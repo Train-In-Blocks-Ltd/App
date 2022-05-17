@@ -288,7 +288,7 @@ export default class App extends Vue {
         baseAPI.interceptors.request.use(
             (config) => {
                 if (
-                    accountStore.claims?.email === "demo@traininblocks.com" &&
+                    this.claims?.email === "demo@traininblocks.com" &&
                     config.method !== "get"
                 ) {
                     this.$store.dispatch("openResponsePopUp", {
@@ -341,32 +341,26 @@ export default class App extends Vue {
     async setup() {
         if (!this.instanceReady) {
             // Set claims
-            accountStore.setClaims(
-                (await this.$auth.getUser()) as TIBUserClaims
-            );
+            const claims = (await this.$auth.getUser()) as TIBUserClaims;
+            accountStore.setClaims(claims);
 
             // Sets demo flag
-            appState.setIsDemo(
-                accountStore.claims?.email === "demo@traininblocks.com"
-            );
+            appState.setIsDemo(claims.email === "demo@traininblocks.com");
 
             // Sets trainer flag
             appState.setIsTrainer(
-                accountStore.claims?.user_type === "Trainer" ||
-                    accountStore.claims?.user_type === "Admin"
+                claims.user_type === "Trainer" || claims.user_type === "Admin"
             );
 
-            if (accountStore.claims) {
-                if (!accountStore.claims.ga || !accountStore.claims)
+            if (claims) {
+                if (!claims.ga || !claims)
                     accountStore.setClaimsAnalytics(true);
 
-                if (!accountStore.claims.theme || !accountStore.claims)
+                if (!claims.theme || !claims)
                     accountStore.setClaimsTheme("system");
 
                 // Set analytics and theme
-                accountStore.claims.ga !== false
-                    ? this.$ga.enable()
-                    : this.$ga.disable();
+                claims.ga !== false ? this.$ga.enable() : this.$ga.disable();
 
                 if (localStorage.getItem("darkmode"))
                     this.darkmode(
@@ -375,10 +369,9 @@ export default class App extends Vue {
 
                 // Set EULA
                 if (
-                    (!accountStore.claims.policy ||
-                        appState.policyVersion !==
-                            accountStore.claims.policy[2]) &&
-                    accountStore.claims.email !== "demo@traininblocks.com" &&
+                    (!claims.policy ||
+                        appState.policyVersion !== claims.policy[2]) &&
+                    claims.email !== "demo@traininblocks.com" &&
                     this.authenticated
                 ) {
                     utilsStore.openModal({
@@ -406,8 +399,8 @@ export default class App extends Vue {
 
             // Get data if not client
             if (
-                accountStore.claims?.user_type === "Admin" ||
-                accountStore.claims?.user_type === "Trainer"
+                claims.user_type === "Admin" ||
+                claims.user_type === "Trainer"
             ) {
                 try {
                     const {
@@ -416,7 +409,7 @@ export default class App extends Vue {
                         sortedBookings,
                         templates,
                         portfolio,
-                    } = await useGetHighLevelData();
+                    } = await useGetHighLevelData(claims.sub);
                     clientsStore.setClients(sortedClients);
                     clientsStore.setArchivedClients(sortedArchiveClients);
                     bookingsStore.setBookings(sortedBookings);
