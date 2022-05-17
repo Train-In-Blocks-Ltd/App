@@ -102,11 +102,6 @@ export default {
     newBuild: false,
 
     // Coupons
-    coupon: {
-        checked: false,
-        generated: false,
-        code: null,
-    },
 
     // Sessions
     currentWeek: 1,

@@ -19,12 +19,7 @@
                         Manage Subscription
                     </default-button>
                     <default-button
-                        :on-click="
-                            () =>
-                                $store.dispatch('openModal', {
-                                    name: 'reset-password',
-                                })
-                        "
+                        :on-click="handlePasswordReset"
                         aria-label="Change password"
                     >
                         Change Password
@@ -148,15 +143,27 @@
     </wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appState from "../../../store/modules/appState";
+import accountStore from "../../../store/modules/account";
+import utilsStore from "../../../store/modules/utils";
+import { Component, Vue } from "vue-property-decorator";
+import { NavigationGuardNext, Route } from "vue-router";
+import {
+    CalendarGuide,
+    Coupon,
+    DarkmodeType,
+    DropdownItem,
+    PolicyLink,
+} from "../../../store/modules/types";
+import { baseAPI } from "../../../api";
 
 const VersionLabel = () =>
     import(
-        /* webpackChunkName: "components.versionLabel", webpackPreload: true  */ "@/components/generic/VersionLabel"
+        /* webpackChunkName: "components.versionLabel", webpackPreload: true  */ "../../../components/generic/VersionLabel.vue"
     );
 
-export default {
+@Component({
     metaInfo() {
         return {
             title: "Account",
@@ -165,90 +172,97 @@ export default {
     components: {
         VersionLabel,
     },
-    async beforeRouteLeave(to, from, next) {
+})
+export default class Account extends Vue {
+    dropdownItems: DropdownItem[] = [
+        {
+            label: "System Default",
+            value: "system",
+        },
+        {
+            label: "Light",
+            value: "light",
+        },
+        {
+            label: "Dark",
+            value: "dark",
+        },
+    ];
+    calendarText: string = "Get your calendar link";
+    calendarGuides: CalendarGuide[] = [
+        {
+            name: "Google",
+            link: "",
+        },
+        {
+            name: "Outlook",
+            link: "https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c",
+        },
+        {
+            name: "Apple",
+            link: "https://support.apple.com/en-gb/guide/calendar/icl1022/mac",
+        },
+    ];
+    policies: PolicyLink[] = [
+        {
+            title: "Privacy and Data Policy",
+            link: "http://traininblocks.com/legal/privacy-and-data-policy",
+        },
+        {
+            title: "Cookies Policy",
+            link: "http://traininblocks.com/legal/cookies-policy",
+        },
+        {
+            title: "Terms of Use",
+            link: "http://traininblocks.com/legal/terms-of-use",
+        },
+    ];
+
+    get dontLeave() {
+        return appState.dontLeave;
+    }
+    get claims() {
+        return appState.claims;
+    }
+    get versionName() {
+        return appState.versionName;
+    }
+    get versionBuild() {
+        return appState.versionBuild;
+    }
+    get isTrainer() {
+        return appState.isTrainer;
+    }
+    get darkmodeTheme() {
+        const theme = localStorage.getItem("darkmode");
+        if (theme) return theme;
+        return "system";
+    }
+    get coupon() {
+        return accountStore.coupon;
+    }
+
+    async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await this.$store.dispatch("openConfirmPopUp", {
+                ? await utilsStore.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
                 : true
         ) {
-            this.$store.dispatch("setLoading", {
-                dontLeave: false,
-            });
+            appState.setDontLeave(false);
             next();
         }
-    },
-    data() {
-        return {
-            dropdownItems: [
-                {
-                    label: "System Default",
-                    value: "system",
-                },
-                {
-                    label: "Light",
-                    value: "light",
-                },
-                {
-                    label: "Dark",
-                    value: "dark",
-                },
-            ],
-            calendarText: "Get your calendar link",
-            calendarGuides: [
-                {
-                    name: "Google",
-                    link: "",
-                },
-                {
-                    name: "Outlook",
-                    link: "https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c",
-                },
-                {
-                    name: "Apple",
-                    link: "https://support.apple.com/en-gb/guide/calendar/icl1022/mac",
-                },
-            ],
-            policies: [
-                {
-                    title: "Privacy and Data Policy",
-                    link: "http://traininblocks.com/legal/privacy-and-data-policy",
-                },
-                {
-                    title: "Cookies Policy",
-                    link: "http://traininblocks.com/legal/cookies-policy",
-                },
-                {
-                    title: "Terms of Use",
-                    link: "http://traininblocks.com/legal/terms-of-use",
-                },
-            ],
-        };
-    },
-    computed: {
-        ...mapState([
-            "dontLeave",
-            "claims",
-            "versionName",
-            "versionBuild",
-            "coupon",
-            "isTrainer",
-        ]),
-        darkmodeTheme() {
-            const theme = localStorage.getItem("darkmode");
-            if (theme) return theme;
-            return "system";
-        },
-    },
+    }
+
     async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
+        appState.setLoading(true);
+        // @ts-expect-error
         await this.$parent.setup();
-        this.$store.dispatch("setLoading", false);
-    },
+        appState.stopLoaders();
+    }
+
     async mounted() {
         if (!this.coupon.checked) {
             await this.checkCoupon();
@@ -257,177 +271,157 @@ export default {
             window.location.host === "localhost:8080"
                 ? "http://" + window.location.host
                 : "https://" + window.location.host
-        }/.netlify/functions/calendar?email=${this.claims.email}`;
-    },
-    methods: {
-        /** Stores theme in local storage. */
-        handleThemeSelect(theme) {
-            localStorage.setItem("darkmode", theme);
-            this.$parent.darkmode(theme);
-        },
+        }/.netlify/functions/calendar?email=${this.claims?.email}`;
+    }
 
-        /** Opens EULA modal respective to user type. */
-        openEULA() {
-            this.$store.commit("SET_DATA", {
-                attr: "previewTitle",
-                data: "EULA",
-            });
-            this.$store.commit("SET_DATA", {
-                attr: "previewHTML",
-                data: require(`@/components/legal/eula${
-                    this.claims.user_type === "Client" ? "-client" : ""
-                }.md`).html,
-            });
-            this.$store.dispatch("openModal", {
-                name: "preview",
-            });
-        },
+    /** Opens password reset modal. */
+    handlePasswordReset() {
+        utilsStore.openModal({
+            name: "reset-password",
+        });
+    }
 
-        /** Redirects the user to their Stripe management page. */
-        async manageSubscription() {
-            try {
-                const RESPONSE = await this.$axios.post(
-                    "/.netlify/functions/create-manage-link",
-                    {
-                        id: this.claims.stripeId,
-                    }
-                );
-                window.location.href = RESPONSE.data;
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
+    /** Stores theme in local storage. */
+    handleThemeSelect(theme: DarkmodeType) {
+        localStorage.setItem("darkmode", theme);
+        // @ts-expect-error
+        this.$parent.darkmode(theme);
+    }
 
-        /** Generates the user's calendar link. */
-        copyCalendarLink() {
-            const link = `${
-                window.location.host === "localhost:8080"
-                    ? "http://" + window.location.host
-                    : "https://" + window.location.host
-            }/.netlify/functions/calendar?email=${this.claims.email}`;
-            const self = this;
-            navigator.clipboard.writeText(link).then(
-                function () {
-                    self.calendarText = "Copied!";
-                    setTimeout(function () {
-                        self.calendarText = "Get your calendar link";
-                    }, 2000);
-                },
-                function (err) {
-                    self.calendarText = "Could not copy text: " + err;
+    /** Opens EULA modal respective to user type. */
+    openEULA() {
+        utilsStore.openModal({
+            name: "preview",
+            previewTitle: "EULA",
+            previewHTML: require(`@/components/legal/eula${
+                this.claims?.user_type === "Client" ? "-client" : ""
+            }.md`).html,
+        });
+    }
+
+    /** Redirects the user to their Stripe management page. */
+    async manageSubscription() {
+        try {
+            const RESPONSE = await baseAPI.post(
+                "/.netlify/functions/create-manage-link",
+                {
+                    id: this.claims?.stripeId,
                 }
             );
-        },
+            window.location.href = RESPONSE.data;
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+    }
 
-        /** Checks if the user already has coupons activated. */
-        async checkCoupon() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                const RESPONSE = await this.$axios.post(
-                    "/.netlify/functions/check-coupon",
-                    {
-                        email: this.claims.email,
-                    }
-                );
-                if (
-                    RESPONSE.data.data.find(
-                        (coupon) =>
-                            coupon.code ===
-                            this.claims.email
-                                .toUpperCase()
-                                .replace(/[\W_]+/g, "")
-                    ) &&
-                    RESPONSE.data.data.find(
-                        (coupon) =>
-                            coupon.code ===
-                            this.claims.email
-                                .toUpperCase()
-                                .replace(/[\W_]+/g, "")
-                    ).active
-                ) {
-                    this.$store.commit("SET_DATA_DEEP", {
-                        attrParent: "coupon",
-                        attrChild: "generated",
-                        data: this.claims.email
-                            .toUpperCase()
-                            .replace(/[\W_]+/g, ""),
-                    });
-                    this.$store.commit("SET_DATA_DEEP", {
-                        attrParent: "coupon",
-                        attrChild: "code",
-                        data: this.claims.email
-                            .toUpperCase()
-                            .replace(/[\W_]+/g, ""),
-                    });
-                }
-                this.$store.commit("SET_DATA_DEEP", {
-                    attrParent: "coupon",
-                    attrChild: "checked",
-                    data: true,
-                });
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
+    /** Generates the user's calendar link. */
+    copyCalendarLink() {
+        const link = `${
+            window.location.host === "localhost:8080"
+                ? "http://" + window.location.host
+                : "https://" + window.location.host
+        }/.netlify/functions/calendar?email=${this.claims?.email}`;
+        const self = this;
+        navigator.clipboard.writeText(link).then(
+            function () {
+                self.calendarText = "Copied!";
+                setTimeout(function () {
+                    self.calendarText = "Get your calendar link";
+                }, 2000);
+            },
+            function (err) {
+                self.calendarText = "Could not copy text: " + err;
             }
-        },
-        async generateCoupon() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                await this.$axios.post("/.netlify/functions/create-coupon", {
-                    email: this.claims.email,
-                });
-                this.$store.commit("SET_DATA_DEEP", {
-                    attrParent: "coupon",
-                    attrChild: "generated",
-                    data: this.claims.email
-                        .toUpperCase()
-                        .replace(/[\W_]+/g, ""),
-                });
-                this.$store.commit("SET_DATA_DEEP", {
-                    attrParent: "coupon",
-                    attrChild: "code",
-                    data: this.claims.email
-                        .toUpperCase()
-                        .replace(/[\W_]+/g, ""),
-                });
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-        copyCoupon() {
-            const link = this.claims.email.toUpperCase().replace(/[\W_]+/g, "");
-            const self = this;
-            navigator.clipboard.writeText(link).then(
-                function () {
-                    self.$store.commit("SET_DATA_DEEP", {
-                        attrParent: "coupon",
-                        attrChild: "code",
-                        data: "Copied!",
-                    });
-                    setTimeout(function () {
-                        self.$store.commit("SET_DATA_DEEP", {
-                            attrParent: "coupon",
-                            attrChild: "code",
-                            data: self.claims.email
-                                .toUpperCase()
-                                .replace(/[\W_]+/g, ""),
-                        });
-                    }, 2000);
-                },
-                function (err) {
-                    self.$store.commit("SET_DATA_DEEP", {
-                        attrParent: "coupon",
-                        attrChild: "code",
-                        data: "Could not copy text: " + err,
-                    });
+        );
+    }
+
+    /** Checks if the user already has coupons activated. */
+    async checkCoupon() {
+        try {
+            appState.setDontLeave(true);
+            const response = await baseAPI.post(
+                "/.netlify/functions/check-coupon",
+                {
+                    email: this.claims?.email,
                 }
             );
-        },
-    },
-};
+            const foundCoupon = response.data.data.find(
+                (coupon: Coupon) =>
+                    coupon.code ===
+                    this.claims?.email?.toUpperCase().replace(/[\W_]+/g, "")
+            );
+            if (foundCoupon && foundCoupon.active) {
+                accountStore.setCoupon({
+                    checked: true,
+                    code:
+                        this.claims?.email
+                            ?.toUpperCase()
+                            .replace(/[\W_]+/g, "") ?? "",
+                    generated: !!this.claims?.email
+                        ?.toUpperCase()
+                        .replace(/[\W_]+/g, ""),
+                });
+            }
+            appState.stopLoaders();
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+    }
+
+    /** Creates a new discount coupon */
+    async generateCoupon() {
+        try {
+            appState.setDontLeave(true);
+            await baseAPI.post("/.netlify/functions/create-coupon", {
+                email: this.claims?.email,
+            });
+            accountStore.setCoupon({
+                checked: this.coupon.checked,
+                code:
+                    this.claims?.email?.toUpperCase().replace(/[\W_]+/g, "") ??
+                    "",
+                generated: !!this.claims?.email
+                    ?.toUpperCase()
+                    .replace(/[\W_]+/g, ""),
+            });
+            appState.stopLoaders();
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+    }
+
+    /** Copies user's coupon. */
+    copyCoupon() {
+        const link = this.claims?.email?.toUpperCase().replace(/[\W_]+/g, "");
+        const self = this;
+        navigator.clipboard.writeText(link ?? "").then(
+            () => {
+                const { checked, generated } = self.coupon;
+                accountStore.setCoupon({
+                    checked,
+                    generated,
+                    code: "Copied!",
+                });
+                setTimeout(() => {
+                    accountStore.setCoupon({
+                        checked,
+                        generated,
+                        code:
+                            self.claims?.email
+                                ?.toUpperCase()
+                                .replace(/[\W_]+/g, "") ?? "",
+                    });
+                }, 2000);
+            },
+            (e) => {
+                const { checked, generated } = self.coupon;
+                accountStore.setCoupon({
+                    checked,
+                    generated,
+                    code: "Could not copy text: " + e,
+                });
+            }
+        );
+    }
+}
 </script>

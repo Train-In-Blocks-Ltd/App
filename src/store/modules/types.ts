@@ -97,3 +97,24 @@ export type TxtInputPopUpParams = {
     onSuccess: (link: string) => void;
 } & BasePopUpParams;
 export type TxtInputPopUpRef = BasePopUpMethods<TxtInputPopUpParams> | null;
+
+export type DropdownItem = {
+    label: string;
+    value: string;
+};
+
+export type CalendarGuide = {
+    name: string;
+    link: string;
+};
+
+export type PolicyLink = {
+    title: string;
+    link: string;
+};
+
+export type Coupon = {
+    checked: boolean;
+    generated: boolean;
+    code: string | null;
+};
