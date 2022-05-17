@@ -377,7 +377,7 @@ export default class App extends Vue {
                     appState.claims.email !== "demo@traininblocks.com" &&
                     this.authenticated
                 ) {
-                    this.$store.dispatch("openModal", {
+                    utilsStore.openModal({
                         name: "eula",
                         persist: true,
                     });
@@ -426,17 +426,6 @@ export default class App extends Vue {
 
             // Stops setup from running more than once
             appState.setInstanceReady();
-        }
-    }
-
-    /** Saves the user's claims to Okta. */
-    async saveClaims() {
-        try {
-            appState.setLoading(true);
-            await this.$store.dispatch("saveClaims");
-            appState.setLoading(false);
-        } catch (e) {
-            utilsStore.resolveError(e as string);
         }
     }
 

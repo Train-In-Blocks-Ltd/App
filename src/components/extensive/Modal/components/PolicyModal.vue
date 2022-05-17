@@ -51,47 +51,41 @@
     </form>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appState from "../../../../store/modules/appState";
+import utilsStore from "../../../../store/modules/utils";
+import { Component, Mixins } from "vue-property-decorator";
+import GeneralMixins from "../../../../generalMixins";
 
-export default {
-    data() {
-        return {
-            name: undefined,
-            eula: null,
-        };
-    },
+@Component
+export default class PolicyModal extends Mixins(GeneralMixins) {
+    name: string | null = null;
+    eula: string | null = null;
+
+    get claims() {
+        return appState.claims;
+    }
+    get policyVersion() {
+        return appState.policyVersion;
+    }
+
     created() {
-        if (this.claims.user_type === "Client")
-            this.eula = require("@/components/legal/eula-client.md");
-        else this.eula = require("@/components/legal/eula.md");
-    },
-    computed: mapState(["claims"]),
-    methods: {
-        /**
-         * Agree to EULA terms.
-         */
-        async agreeToTerms() {
-            this.$store.commit("SET_DATA_DEEP", {
-                attrParent: "claims",
-                attrChild: "policy",
-                data: [
-                    this.name,
-                    this.today(),
-                    this.$store.state.policyVersion,
-                ],
-            });
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                await this.$store.dispatch("saveClaims");
-                this.$store.dispatch("setLoading", false);
-                this.$store.dispatch("closeModal");
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-    },
-};
+        if (this.claims?.user_type === "Client")
+            this.eula = require("../../../../components/legal/eula-client.md");
+        else this.eula = require("../../../../components/legal/eula.md");
+    }
+
+    /** Agree to EULA terms. */
+    async agreeToTerms() {
+        appState.setClaimsPolicy([this.name, this.today(), this.policyVersion]);
+        try {
+            appState.setDontLeave(true);
+            await appState.updateClaims();
+            appState.stopLoaders();
+            utilsStore.closeModal();
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+    }
+}
 </script>

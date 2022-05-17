@@ -53,6 +53,7 @@ export type PWASettings = {
 export type TIBUserClaims = UserClaims & {
     ga: boolean;
     theme: DarkmodeType;
+    policy: any[];
 };
 
 export type NavLinkType = {

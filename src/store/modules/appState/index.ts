@@ -12,6 +12,7 @@ import {
     TIBUserClaims,
 } from "../types";
 import store from "../..";
+import { baseAPI } from "../../../api";
 
 @Module({
     namespaced: true,
@@ -91,7 +92,7 @@ class AppStateModule extends VuexModule {
         return { newBuild };
     }
     @MutationAction
-    async setClaims(claims: TIBUserClaims) {
+    async setClaims(claims: TIBUserClaims | null) {
         return { claims };
     }
     @MutationAction
@@ -109,6 +110,32 @@ class AppStateModule extends VuexModule {
                 theme,
             },
         };
+    }
+    @MutationAction
+    async setClaimsPolicy(policy: TIBUserClaims["policy"]) {
+        return {
+            claims: {
+                policy,
+            },
+        };
+    }
+    @MutationAction
+    async updateClaims() {
+        const { ga, theme, policy, calendar } = this.claims!;
+        await baseAPI.post("/.netlify/functions/okta", {
+            type: "POST",
+            body: {
+                profile: {
+                    ga,
+                    theme,
+                    policy,
+                    calendar,
+                },
+            },
+            url: `${this.claims?.sub}`,
+        });
+
+        return {};
     }
     @MutationAction
     async setPWADeferredPrompt(deferredPrompt: Event | null) {

@@ -74,7 +74,7 @@
                             v-model="claims.calendar"
                             class="claims-calendar"
                             type="checkbox"
-                            @change="$parent.saveClaims()"
+                            @change="handleEnableCalendar"
                         />
                     </label>
                     <txt type="tiny">
@@ -132,7 +132,7 @@
                         <input
                             v-model="claims.ga"
                             type="checkbox"
-                            @change="$parent.saveClaims()"
+                            @change="handleAllowCookies"
                             class="ml-4"
                         />
                     </label>
@@ -155,6 +155,7 @@ import {
     DarkmodeType,
     DropdownItem,
     PolicyLink,
+    TIBUserClaims,
 } from "../../../store/modules/types";
 import { baseAPI } from "../../../api";
 
@@ -224,6 +225,9 @@ export default class Account extends Vue {
     get claims() {
         return appState.claims;
     }
+    set claims(value: TIBUserClaims | null) {
+        appState.setClaims(value);
+    }
     get versionName() {
         return appState.versionName;
     }
@@ -286,6 +290,16 @@ export default class Account extends Vue {
         localStorage.setItem("darkmode", theme);
         // @ts-expect-error
         this.$parent.darkmode(theme);
+    }
+
+    /** Toggles enabled calendar. */
+    handleEnableCalendar() {
+        appState.updateClaims();
+    }
+
+    /** Toggles tracking. */
+    handleAllowCookies() {
+        appState.updateClaims();
     }
 
     /** Opens EULA modal respective to user type. */

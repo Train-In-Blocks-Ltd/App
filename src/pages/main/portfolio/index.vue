@@ -191,49 +191,5 @@ export default class Portfolio extends Vue {
             utilsStore.resolveError(e as string);
         }
     }
-
-    // TODO: Stripe integration
-    // async stripeConnect() {
-    //     try {
-    //         this.$store.dispatch("setLoading", {
-    //             dontLeave: true,
-    //         });
-    //         const RESPONSE = await this.$axios.post(
-    //             "/.netlify/functions/create-connected-account",
-    //             {
-    //                 email: this.claims.email,
-    //                 connectedAccountId: this.claims.connectedAccountId,
-    //             }
-    //         );
-    //         this.claims.connectedAccountId =
-    //             RESPONSE.data.connectedAccountId;
-    //         await this.$store.dispatch("saveClaims");
-    //         window.location.href = RESPONSE.data.url;
-    //         this.$store.dispatch("setLoading", false);
-    //     } catch (e) {
-    //         this.$store.dispatch("resolveError", e);
-    //     }
-    // },
-
-    // async checkStripeConnect() {
-    //     if (!this.hasCheckedStripeConnect) {
-    //         const RESPONSE_STRIPE = await this.$axios.post(
-    //             "/.netlify/functions/check-connected-account",
-    //             {
-    //                 connectedAccountId: this.claims.connectedAccountId,
-    //             }
-    //         );
-    //         this.$store.commit("SET_DATA", {
-    //             attr: "isStripeConnected",
-    //             data:
-    //                 this.claims.email === "demo@traininblocks.com" ||
-    //                 RESPONSE_STRIPE.data,
-    //         });
-    //         this.$store.commit("SET_DATA", {
-    //             attr: "hasCheckedStripeConnect",
-    //             data: true,
-    //         });
-    //     }
-    // },
 }
 </script>
