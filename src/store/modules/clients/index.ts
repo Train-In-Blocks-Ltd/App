@@ -57,8 +57,8 @@ class ClientsModule extends VuexModule {
 
             const clients = this.clients.filter((c) => c.client_id !== id);
             const archivedClients = [
-                this.archivedClients.find((c) => c.client_id === id),
-                ...this.clients,
+                this.clients.find((c) => c.client_id === id),
+                ...this.archivedClients,
             ];
             return {
                 clients,
