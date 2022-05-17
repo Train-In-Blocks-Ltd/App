@@ -125,6 +125,9 @@ export default class ClientHeader extends Vue {
     get clientDetails() {
         return clientStore.clientDetails;
     }
+    set clientDetails(value) {
+        clientStore.setClientDetails(value);
+    }
     get silentLoading() {
         return appState.silentLoading;
     }
@@ -151,7 +154,7 @@ export default class ClientHeader extends Vue {
         try {
             appState.setSilentLoading(true);
             appState.setDontLeave(true);
-            await this.$store.dispatch("updateClient");
+            await clientStore.updateClient();
             appState.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);

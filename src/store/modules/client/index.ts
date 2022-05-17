@@ -19,6 +19,13 @@ class ClientModule extends VuexModule {
     clientDetails: Client | null = null;
 
     @MutationAction
+    async setClientDetails(clientDetails: Client | null) {
+        return {
+            clientDetails,
+        };
+    }
+
+    @MutationAction
     async setCurrentClient(id: number) {
         const clientDetails = clientsStore.clients.find(
             (c) => c.client_id === id
