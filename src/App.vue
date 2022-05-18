@@ -130,6 +130,7 @@ body {
 import { Component, Ref, Vue, Watch } from "vue-property-decorator";
 import { baseAPI } from "./api";
 import appState from "./store/modules/appState";
+import clientStore from "./store/modules/client";
 import accountStore from "./store/modules/account";
 import utilsStore from "./store/modules/utils";
 import clientsStore from "./store/modules/clients";
@@ -410,6 +411,13 @@ export default class App extends Vue {
             } catch (e) {
                 utilsStore.resolveError(e as string);
             }
+        }
+
+        if (this.$route.path.includes("client")) {
+            clientStore.setCurrentClient(
+                parseInt(this.$route.params.client_id)
+            );
+            await clientStore.getPlans(parseInt(this.$route.params.client_id));
         }
 
         appState.stopLoaders();

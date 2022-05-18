@@ -1,7 +1,7 @@
 <template>
     <wrapper v-if="clientDetails" id="client">
         <!-- Client header -->
-        <client-header />
+        <client-header v-if="!loading" />
 
         <!-- Session view container -->
         <transition
@@ -43,13 +43,6 @@ export default class Client extends Vue {
     }
     get clientDetails() {
         return clientStore.clientDetails;
-    }
-
-    async created() {
-        appState.setLoading(true);
-        clientStore.setCurrentClient(parseInt(this.$route.params.client_id));
-        await clientStore.getPlans(parseInt(this.$route.params.client_id));
-        appState.stopLoaders();
     }
 }
 </script>

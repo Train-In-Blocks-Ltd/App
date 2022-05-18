@@ -31,7 +31,7 @@ class ClientModule extends VuexModule {
             (c) => c.client_id === id
         );
 
-        return await {
+        return {
             clientDetails,
         };
     }
@@ -55,7 +55,7 @@ class ClientModule extends VuexModule {
                 }),
             } as Client;
 
-            return await {
+            return {
                 clientDetails,
             };
         } catch (e) {
