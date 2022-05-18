@@ -31,7 +31,7 @@ export type Booking = {
 
 export type Session = {
     id: number;
-    plan_id: number;
+    programme_id: number;
     week_id: number;
     name: string;
     date: string;

@@ -43,13 +43,14 @@ class ClientModule extends VuexModule {
                 `https://api.traininblocks.com/v2/plans/${id}`
             );
 
+            console.log(response.data);
             const clientDetails = {
                 ...this.clientDetails,
                 plans: response.data[0].map((p: Plan) => {
                     return {
                         ...p,
                         sessions: response.data[1].filter(
-                            (s: Session) => s.plan_id === p.id
+                            (s: Session) => s.programme_id === p.id
                         ),
                     };
                 }),
