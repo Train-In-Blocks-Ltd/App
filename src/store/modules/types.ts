@@ -175,3 +175,12 @@ export type Calculator = {
     metric: string;
     units: string;
 };
+
+export type EventRow = {
+    title: string;
+    date: string;
+    color: string;
+    textColor: string;
+    week_id: number;
+    session_id: number;
+};

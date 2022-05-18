@@ -1,6 +1,6 @@
 <template>
     <label-wrapper
-        :title="`${get_month(thisWeek[0].date_split[1])} ${
+        :title="`${getMonth(thisWeek[0].date_split[1])} ${
             thisWeek[0].date_split[0]
         }`"
         no-hover
@@ -59,7 +59,7 @@
                 <!-- Date -->
                 <div class="flex items-center w-1/3 md:w-1/6 mr-4">
                     <txt type="large-body" class="mr-4" bold>
-                        {{ get_day(index) }}
+                        {{ getDay(index) }}
                     </txt>
                     <txt type="large-body" grey>
                         {{ day.date_split[2] }}
@@ -97,133 +97,118 @@
     </label-wrapper>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { EventRow } from "../../store/modules/types";
+
 const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../components/generic/LabelWrapper.vue"
     );
 
-export default {
+@Component({
     components: {
         LabelWrapper,
     },
-    props: {
-        events: Array,
-        onEventPress: Function,
-    },
-    data() {
-        return {
-            currentWeekStart: null,
-            thisWeek: [],
-            weekDiff: 0,
-        };
-    },
-    watch: {
-        events() {
-            this.getWeek();
-        },
-    },
+})
+export default class WeekCalendar extends Vue {
+    @Prop(Array) readonly events!: EventRow[];
+    @Prop(Function) readonly onEventPress!: () => void;
+
+    currentWeekStart: {
+        date: string;
+        date_split: string[];
+        events: EventRow[];
+    } | null = null;
+    thisWeek: { date: string; date_split: string[]; events: EventRow[] }[] = [];
+    weekDiff: number = 0;
+
+    @Watch("events")
+    onEventsChange() {
+        this.getWeek();
+    }
+
     created() {
         this.getWeek();
-    },
-    methods: {
-        /**
-         * Adds the event to the correct day of the week.
-         */
-        appendEvents() {
-            this.thisWeek.forEach((day) => {
-                this.events.forEach((event) => {
-                    if (day.date === event.date) {
-                        day.events.push(event);
-                    }
-                });
+    }
+
+    /** Adds the event to the correct day of the week. */
+    appendEvents() {
+        this.thisWeek.forEach((day) => {
+            this.events.forEach((event) => {
+                if (day.date === event.date) {
+                    day.events.push(event);
+                }
             });
-        },
+        });
+    }
 
-        /**
-         * Determines the day based on the date provided.
-         * @param {date} date - The date provided.
-         * @returns The day of the week.
-         */
-        get_day(date) {
-            const DAYS = ["M", "T", "W", "T", "F", "S", "S"];
-            return DAYS[date];
-        },
+    /** Determines the day based on the date provided. */
+    getDay(date: number) {
+        const DAYS = ["M", "T", "W", "T", "F", "S", "S"];
+        return DAYS[date];
+    }
 
-        /**
-         * Generates the current week.
-         */
-        getWeek() {
-            this.thisWeek = [];
-            const DATE_CLASS = new Date();
-            const DAY = DATE_CLASS.getDay();
-            const DAYS_DIFFERENCE =
-                DATE_CLASS.getDate() - DAY + (DAY === 0 ? -6 : 1);
-            const WEEK_START = new Date(
-                DATE_CLASS.setDate(DAYS_DIFFERENCE + 7 * this.weekDiff)
-            );
-            const YEAR = String(WEEK_START.getFullYear());
-            const MONTH = String(WEEK_START.getMonth() + 1).padStart(2, "0");
-            const DATE = String(WEEK_START.getDate()).padStart(2, "0");
-            const CURRENT_MONDAY = {
-                date: `${YEAR}-${MONTH}-${DATE}`,
-                date_split: [YEAR, MONTH, DATE],
+    /** Generates the current week. */
+    getWeek() {
+        this.thisWeek = [];
+        const DATE_CLASS = new Date();
+        const DAY = DATE_CLASS.getDay();
+        const DAYS_DIFFERENCE =
+            DATE_CLASS.getDate() - DAY + (DAY === 0 ? -6 : 1);
+        const WEEK_START = new Date(
+            DATE_CLASS.setDate(DAYS_DIFFERENCE + 7 * this.weekDiff)
+        );
+        const YEAR = String(WEEK_START.getFullYear());
+        const MONTH = String(WEEK_START.getMonth() + 1).padStart(2, "0");
+        const DATE = String(WEEK_START.getDate()).padStart(2, "0");
+        const CURRENT_MONDAY = {
+            date: `${YEAR}-${MONTH}-${DATE}`,
+            date_split: [YEAR, MONTH, DATE],
+            events: [],
+        };
+        this.currentWeekStart = CURRENT_MONDAY;
+        this.thisWeek.push(CURRENT_MONDAY);
+        for (let i = 1; i < 7; i++) {
+            this.thisWeek.push({
+                date: this.addDays(this.thisWeek[0].date, i),
+                date_split: this.addDays(this.thisWeek[0].date, i).split("-"),
                 events: [],
-            };
-            this.currentWeekStart = CURRENT_MONDAY;
-            this.thisWeek.push(CURRENT_MONDAY);
-            for (let i = 1; i < 7; i++) {
-                this.thisWeek.push({
-                    date: this.addDays(this.thisWeek[0].date, i),
-                    date_split: this.addDays(this.thisWeek[0].date, i).split(
-                        "-"
-                    ),
-                    events: [],
-                });
-            }
-            setTimeout(() => {
-                this.appendEvents();
-            }, 100);
-        },
+            });
+        }
+        setTimeout(() => {
+            this.appendEvents();
+        }, 100);
+    }
 
-        /**
-         * Adds specified days to the date provided.
-         * @param {date} date - The date provided.
-         * @param {integer} days - The days to add.
-         * @returns The new date.
-         */
-        addDays(date, days) {
-            const DATE_CLASS = new Date(date);
-            DATE_CLASS.setDate(DATE_CLASS.getDate() + days);
-            const YEAR = DATE_CLASS.getFullYear();
-            const MONTH = String(DATE_CLASS.getMonth() + 1).padStart(2, "0");
-            const DATE = String(DATE_CLASS.getDate()).padStart(2, "0");
-            return `${YEAR}-${MONTH}-${DATE}`;
-        },
+    /** Adds specified days to the date provided. */
+    addDays(datetime: string, days: number) {
+        const d = new Date(datetime);
+        d.setDate(d.getDate() + days);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const date = String(d.getDate()).padStart(2, "0");
+        return `${year}-${month}-${date}`;
+    }
 
-        /**
-         * Determines the month based on the month index provided.
-         * @param {integer} month - The month index provided.
-         * @returns The month as a string.
-         */
-        get_month(month) {
-            const MONTHS = [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
-            ];
-            month = parseInt(month) - 1;
-            return MONTHS[month];
-        },
-    },
-};
+    /** Determines the month based on the month index provided. */
+    getMonth(month: number) {
+        const MONTHS = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
+        month = month - 1;
+        return MONTHS[month];
+    }
+}
 </script>
