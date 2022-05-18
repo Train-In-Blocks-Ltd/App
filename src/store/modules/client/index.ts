@@ -43,7 +43,6 @@ class ClientModule extends VuexModule {
                 `https://api.traininblocks.com/v2/plans/${id}`
             );
 
-            console.log(response.data);
             const clientDetails = {
                 ...this.clientDetails,
                 plans: response.data[0].map((p: Plan) => {
