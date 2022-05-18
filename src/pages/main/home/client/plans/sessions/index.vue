@@ -420,7 +420,7 @@ export default class Session extends Mixins(GeneralMixins) {
     }
     get weekColor() {
         const colors = planStore.plan?.block_color;
-        if (!colors) return new Array(planStore.plan?.duration).fill("#E3E3E3");
+        if (!colors) return new Array(planStore.plan?.duration).fill("#282828");
         return JSON.parse(colors);
     }
     get selectedIds() {

@@ -170,7 +170,7 @@ class PlanModule extends VuexModule {
         if (!plan) return;
         if (!plan.block_color) {
             plan.block_color = JSON.stringify(
-                new Array(plan.duration).fill("#E3E3E3")
+                new Array(plan.duration).fill("#282828")
             );
         } else {
             plan.block_color = JSON.stringify(
