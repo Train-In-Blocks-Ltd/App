@@ -1,15 +1,12 @@
 <template>
     <div>
-        <div
-            v-if="getClientBookings(bookings).length !== 0"
-            class="flex flex-col mt-8"
-        >
+        <div v-if="bookings.length !== 0" class="flex flex-col mt-8">
             <booking
-                v-for="(booking, index) in getClientBookings(bookings)"
+                v-for="(booking, index) in bookings"
                 :key="`all-booking-${index}}`"
                 :booking="booking"
                 :class="{
-                    'mb-4': index !== getClientBookings(bookings).length - 1,
+                    'mb-4': index !== bookings.length - 1,
                 }"
                 is-trainer
             />
@@ -18,29 +15,26 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import bookingsStore from "../../../../../../store/modules/bookings";
 
 const Booking = () =>
     import(
-        /* webpackChunkName: "components.booking", webpackPreload: true  */ "@/components/generic/Booking"
+        /* webpackChunkName: "components.booking", webpackPreload: true  */ "../../../../../../components/generic/Booking.vue"
     );
 
-export default {
+@Component({
     components: {
         Booking,
     },
-    computed: mapState(["bookings"]),
-    methods: {
-        /**
-         * Gets all the bookings for this client.
-         */
-        getClientBookings(bookings) {
-            return bookings.filter(
-                (booking) =>
-                    booking.client_id === parseInt(this.$route.params.client_id)
-            );
-        },
-    },
-};
+})
+export default class AllBookingsModal extends Vue {
+    get bookings() {
+        return bookingsStore.bookings.filter(
+            (booking) =>
+                booking.client_id === parseInt(this.$route.params.client_id)
+        );
+    }
+}
 </script>
