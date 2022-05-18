@@ -55,7 +55,7 @@ class ClientModule extends VuexModule {
                 }),
             } as Client;
 
-            return {
+            return await {
                 clientDetails,
             };
         } catch (e) {

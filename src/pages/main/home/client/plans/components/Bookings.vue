@@ -4,12 +4,7 @@
             <txt type="title">Bookings</txt>
             <icon-button
                 svg="list"
-                :on-click="
-                    () =>
-                        $store.dispatch('openModal', {
-                            name: 'bookings',
-                        })
-                "
+                :on-click="handleOpenAllBookings"
                 :icon-size="28"
                 aria-label="See all bookings"
                 title="See all bookings"
@@ -50,9 +45,9 @@
 
         <!-- Booking grid -->
         <div v-else class="grid sm:grid-cols-2 sm:gap-8">
-            <div v-if="upcoming().length > 0" class="flex flex-col">
+            <div v-if="bookings.length > 0" class="flex flex-col">
                 <booking
-                    v-for="(booking, bookingIndex) in upcoming().slice(0, 3)"
+                    v-for="(booking, bookingIndex) in bookings.slice(0, 3)"
                     :key="`bookings_${bookingIndex}`"
                     :booking="booking"
                     class="mb-4"
@@ -68,9 +63,11 @@
 </template>
 
 <script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
 import appState from "../../../../../../store/modules/appState";
 import bookingsStore from "../../../../../../store/modules/bookings";
-import { Component, Vue } from "vue-property-decorator";
+import utilsStore from "../../../../../../store/modules/utils";
+import { Booking } from "../../../../../../store/modules/types";
 
 const Booking = () =>
     import(
@@ -89,15 +86,8 @@ const BookingForm = () =>
 })
 export default class Bookings extends Vue {
     get bookings() {
-        return bookingsStore.bookings;
-    }
-    get loading() {
-        return appState.loading;
-    }
-
-    upcoming() {
         return (
-            this.bookings
+            bookingsStore.bookings
                 .filter((booking) => new Date(booking.datetime) > new Date())
                 .filter(
                     (booking) =>
@@ -105,6 +95,16 @@ export default class Bookings extends Vue {
                         parseInt(this.$route.params.client_id)
                 ) ?? []
         );
+    }
+    get loading() {
+        return appState.loading;
+    }
+
+    /** Opens all bookings modal. */
+    handleOpenAllBookings() {
+        utilsStore.openModal({
+            name: "bookings",
+        });
     }
 }
 </script>
