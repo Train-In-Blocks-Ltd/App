@@ -260,13 +260,6 @@ export default class Account extends Vue {
         }
     }
 
-    async created() {
-        appState.setLoading(true);
-        // @ts-expect-error
-        await this.$parent.setup();
-        appState.stopLoaders();
-    }
-
     async mounted() {
         if (!this.coupon.checked) {
             await this.checkCoupon();

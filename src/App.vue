@@ -199,9 +199,6 @@ export default class App extends Vue {
     get connected() {
         return appState.connected;
     }
-    get instanceReady() {
-        return appState.instanceReady;
-    }
 
     // Pop-up refs
     @Ref("responsePopUp") readonly responsePopUpRef!: ResponsePopUpRef;
@@ -218,10 +215,12 @@ export default class App extends Vue {
         this.isAuthenticated();
     }
 
-    created() {
+    async created() {
         appState.setLoading(true);
         this.isAuthenticated();
+        await this.setup();
     }
+
     async mounted() {
         // Sets refs after app mount
         utilsStore.setResponsePopUpRef(this.responsePopUpRef);
@@ -339,91 +338,81 @@ export default class App extends Vue {
 
     /** Initiates all the crucial setup for the app. */
     async setup() {
-        if (!this.instanceReady) {
-            // Set claims
-            const claims = (await this.$auth.getUser()) as TIBUserClaims;
-            accountStore.setClaims(claims);
+        // Set claims
+        const claims = (await this.$auth.getUser()) as TIBUserClaims;
+        accountStore.setClaims(claims);
 
-            // Sets demo flag
-            appState.setIsDemo(claims.email === "demo@traininblocks.com");
+        // Sets demo flag
+        appState.setIsDemo(claims.email === "demo@traininblocks.com");
 
-            // Sets trainer flag
-            appState.setIsTrainer(
-                claims.user_type === "Trainer" || claims.user_type === "Admin"
-            );
+        // Sets trainer flag
+        appState.setIsTrainer(
+            claims.user_type === "Trainer" || claims.user_type === "Admin"
+        );
 
-            if (claims) {
-                if (!claims.ga || !claims)
-                    accountStore.setClaimsAnalytics(true);
+        if (claims) {
+            if (!claims.ga || !claims) accountStore.setClaimsAnalytics(true);
 
-                if (!claims.theme || !claims)
-                    accountStore.setClaimsTheme("system");
+            if (!claims.theme || !claims) accountStore.setClaimsTheme("system");
 
-                // Set analytics and theme
-                claims.ga !== false ? this.$ga.enable() : this.$ga.disable();
+            // Set analytics and theme
+            claims.ga !== false ? this.$ga.enable() : this.$ga.disable();
 
-                if (localStorage.getItem("darkmode"))
-                    this.darkmode(
-                        localStorage.getItem("darkmode") as DarkmodeType
-                    );
+            if (localStorage.getItem("darkmode"))
+                this.darkmode(localStorage.getItem("darkmode") as DarkmodeType);
 
-                // Set EULA
-                if (
-                    (!claims.policy ||
-                        appState.policyVersion !== claims.policy[2]) &&
-                    claims.email !== "demo@traininblocks.com" &&
-                    this.authenticated
-                ) {
-                    utilsStore.openModal({
-                        name: "eula",
-                        persist: true,
-                    });
-                }
-            }
-
-            // Set auth header
-            baseAPI.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
-
-            // Set connection
-            appState.setConnected(navigator.onLine);
-            window.addEventListener("offline", () => {
-                appState.setConnected(false);
-            });
-            window.addEventListener("online", () => {
-                appState.setConnected(true);
-            });
-
-            // Check build
-            if (localStorage.getItem("versionBuild") !== appState.versionBuild)
-                appState.setNewBuild(true);
-
-            // Get data if not client
+            // Set EULA
             if (
-                claims.user_type === "Admin" ||
-                claims.user_type === "Trainer"
+                (!claims.policy ||
+                    appState.policyVersion !== claims.policy[2]) &&
+                claims.email !== "demo@traininblocks.com" &&
+                this.authenticated
             ) {
-                try {
-                    const {
-                        sortedClients,
-                        sortedArchiveClients,
-                        sortedBookings,
-                        templates,
-                        portfolio,
-                    } = await useGetHighLevelData(claims.sub);
-                    clientsStore.setClients(sortedClients);
-                    clientsStore.setArchivedClients(sortedArchiveClients);
-                    bookingsStore.setBookings(sortedBookings);
-                    templatesStore.setTemplates(templates);
-
-                    if (!!portfolio) portfolioStore.setPortfolio(portfolio);
-                } catch (e) {
-                    utilsStore.resolveError(e as string);
-                }
+                utilsStore.openModal({
+                    name: "eula",
+                    persist: true,
+                });
             }
-
-            // Stops setup from running more than once
-            appState.setInstanceReady();
         }
+
+        // Set auth header
+        baseAPI.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
+
+        // Set connection
+        appState.setConnected(navigator.onLine);
+        window.addEventListener("offline", () => {
+            appState.setConnected(false);
+        });
+        window.addEventListener("online", () => {
+            appState.setConnected(true);
+        });
+
+        // Check build
+        if (localStorage.getItem("versionBuild") !== appState.versionBuild)
+            appState.setNewBuild(true);
+
+        // Get data if not client
+        if (claims.user_type === "Admin" || claims.user_type === "Trainer") {
+            try {
+                const {
+                    sortedClients,
+                    sortedArchiveClients,
+                    sortedBookings,
+                    templates,
+                    portfolio,
+                } = await useGetHighLevelData(claims.sub);
+                clientsStore.setClients(sortedClients);
+                clientsStore.setArchivedClients(sortedArchiveClients);
+                bookingsStore.setBookings(sortedBookings);
+                templatesStore.setTemplates(templates);
+
+                if (!!portfolio) portfolioStore.setPortfolio(portfolio);
+            } catch (e) {
+                utilsStore.resolveError(e as string);
+            }
+        }
+
+        appState.stopLoaders();
     }
 
     /** Gets all the data for setup on the client-side. */

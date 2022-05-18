@@ -1,9 +1,6 @@
 <template>
     <div
-        v-if="
-            (!authenticated || (loading && !instanceReady)) &&
-            $route.path !== '/login'
-        "
+        v-if="(!authenticated || loading) && $route.path !== '/login'"
         class="fixed bottom-0 md:top-0 left-0 flex md:flex-col items-center justify-evenly md:justify-end w-full md:w-24 h-16 md:h-full py-6 rounded-r-xl z-10 shadow-lg bg-skeleton-light-back dark:bg-skeleton-dark-back animate-pulse"
     >
         <div class="hidden md:block skeleton-item h-10 w-10 mb-auto" />
@@ -145,9 +142,6 @@ export default class NavBar extends Vue {
     }
     get loading() {
         return appState.loading;
-    }
-    get instanceReady() {
-        return appState.instanceReady;
     }
 
     hardRefresh() {

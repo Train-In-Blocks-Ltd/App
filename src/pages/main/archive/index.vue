@@ -109,13 +109,6 @@ export default class Archive extends Vue {
         return utilsStore.selectedIds;
     }
 
-    async created() {
-        appState.setLoading(true);
-        // @ts-expect-error
-        await this.$parent.setup();
-        appState.stopLoaders();
-    }
-
     handleSelectAll() {
         utilsStore.selectAll(this.archivedClients.map((c) => c.client_id));
     }

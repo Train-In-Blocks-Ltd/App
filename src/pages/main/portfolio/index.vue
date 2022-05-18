@@ -136,14 +136,6 @@ export default class Portfolio extends Vue {
         }
     }
 
-    async created() {
-        appState.setLoading(true);
-        // @ts-expect-error
-        await this.$parent.setup();
-        // await this.checkStripeConnect()
-        appState.stopLoaders();
-    }
-
     /** Resolves the state of the portfolio editor. */
     resolve_portfolio_editor(state: EditorState) {
         switch (state) {

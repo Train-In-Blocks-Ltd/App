@@ -193,13 +193,6 @@ export default class Templates extends Vue {
         }
     }
 
-    async created() {
-        appState.setLoading(true);
-        // @ts-expect-error
-        await this.$parent.setup();
-        appState.setLoading(false);
-    }
-
     /** Resolves the action taken from the multi-select. */
     resolve_template_multiselect(res: string) {
         switch (res) {

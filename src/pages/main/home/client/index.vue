@@ -49,8 +49,6 @@ export default class Client extends Vue {
 
     async created() {
         appState.setLoading(true);
-        // @ts-expect-error
-        await this.$parent.setup();
         clientStore.setCurrentClient(parseInt(this.$route.params.client_id));
         await clientStore.getPlans(parseInt(this.$route.params.client_id));
         appState.stopLoaders();

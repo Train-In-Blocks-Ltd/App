@@ -28,17 +28,5 @@ const ClientsList = () =>
 })
 export default class Home extends Vue {
     persistResponse: string = "";
-
-    // TODO: Need to readd modal
-    get modalOpen() {
-        return false;
-    }
-
-    async created() {
-        appState.setLoading(true);
-        // @ts-expect-error
-        await this.$parent.setup();
-        appState.setLoading(false);
-    }
 }
 </script>

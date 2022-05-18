@@ -217,7 +217,6 @@ export default {
         this.$store.dispatch("setLoading", {
             loading: true,
         });
-        await this.$parent.setup();
         await this.$parent.getClientSideData();
         this.$store.dispatch("setLoading", false);
     },

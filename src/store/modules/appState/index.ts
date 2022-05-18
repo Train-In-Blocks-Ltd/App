@@ -35,9 +35,6 @@ class AppStateModule extends VuexModule {
     versionBuild: string = "4.1";
     newBuild: boolean = false;
 
-    //! To remove
-    instanceReady: boolean = false;
-
     @MutationAction
     async setAuthenticated(authenticated: boolean) {
         return {
@@ -117,14 +114,6 @@ class AppStateModule extends VuexModule {
     @MutationAction
     async setClientUserLoaded(clientUserLoaded: boolean) {
         return { clientUserLoaded };
-    }
-
-    //! To remove
-    @MutationAction
-    async setInstanceReady() {
-        return {
-            instanceReady: true,
-        };
     }
 }
 
