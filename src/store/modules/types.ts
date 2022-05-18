@@ -32,6 +32,10 @@ export type Booking = {
 export type Session = {
     id: number;
     plan_id: number;
+    week_id: number;
+    name: string;
+    date: string;
+    notes: string;
 } & GenericResponse;
 
 export type Plan = {
@@ -40,6 +44,7 @@ export type Plan = {
     name: string;
     duration: number;
     block_color: string;
+    notes: string;
     sessions?: Session[];
 } & GenericResponse;
 
