@@ -83,8 +83,6 @@ export default class UploadPopUp extends Vue {
                         file: reader.result?.toString(),
                     })
                     .then((response) => {
-                        console.log(response);
-                        console.log(this.onSuccess);
                         if (this.onSuccess) this.onSuccess(response);
                     });
             },

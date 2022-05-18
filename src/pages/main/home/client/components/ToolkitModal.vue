@@ -213,7 +213,6 @@ export default class ToolkitModal extends Vue {
 
     /** Calculates based on the calculator selected. */
     calculate(cal: string) {
-        console.log(cal);
         switch (cal) {
             case "mhr_tanaka": {
                 this.result = (

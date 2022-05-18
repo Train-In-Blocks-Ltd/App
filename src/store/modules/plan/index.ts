@@ -134,7 +134,9 @@ class PlanModule extends VuexModule {
     @MutationAction
     async deleteSessions() {
         const data = utilsStore.selectedIds.map((id) => {
-            id;
+            return {
+                id,
+            };
         });
         await baseAPI.delete(
             "https://api.traininblocks.com/v2/batch/sessions",
