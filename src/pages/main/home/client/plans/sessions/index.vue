@@ -13,7 +13,7 @@
                 name="name"
                 :value="plan.name"
                 :is-disabled="silentLoading"
-                :on-blur="handleUpdatePlan"
+                :on-blur="updatePlan"
                 @output="(data) => (plan.name = data)"
             />
 
@@ -558,10 +558,10 @@ export default class Session extends Mixins(GeneralMixins) {
     handleMultiselectResponse(res: string) {
         switch (res) {
             case "Complete":
-                this.handleCheckedChange(1);
+                this.updateCheckedState(1);
                 break;
             case "Incomplete":
-                this.handleCheckedChange(0);
+                this.updateCheckedState(0);
                 break;
             case "Progress":
                 utilsStore.openModal({
@@ -586,7 +586,7 @@ export default class Session extends Mixins(GeneralMixins) {
                 this.print();
                 break;
             case "Delete":
-                this.handleDeleteSessions();
+                this.deleteSessions();
                 break;
             case "Deselect":
                 utilsStore.deselectAll();
@@ -602,7 +602,7 @@ export default class Session extends Mixins(GeneralMixins) {
                 this.tempEditorStore = this.plan?.notes ?? "";
                 break;
             case "save":
-                this.handleUpdatePlan();
+                this.updatePlan();
                 break;
             case "cancel":
                 appState.setDontLeave(false);
@@ -690,7 +690,7 @@ export default class Session extends Mixins(GeneralMixins) {
     }
 
     /** Toggles the complete/incomplete state of the selected sessions. */
-    async handleCheckedChange(checked: 1 | 0) {
+    async updateCheckedState(checked: 1 | 0) {
         appState.setDontLeave(true);
         if (
             await utilsStore.confirmPopUpRef?.open({
@@ -714,7 +714,7 @@ export default class Session extends Mixins(GeneralMixins) {
     }
 
     /** Deletes all the selected sessions. */
-    async handleDeleteSessions() {
+    async deleteSessions() {
         appState.setDontLeave(true);
         if (
             await utilsStore.confirmPopUpRef?.open({
@@ -798,7 +798,7 @@ export default class Session extends Mixins(GeneralMixins) {
     }
 
     /** Updates the details of the plan. */
-    async handleUpdatePlan() {
+    async updatePlan() {
         try {
             appState.setLoading(true);
             await planStore.updatePlan();
