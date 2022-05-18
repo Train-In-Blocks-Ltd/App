@@ -24,11 +24,9 @@ const ClientHeader = () =>
     );
 
 @Component({
-    metaInfo() {
+    metaInfo(this: Client) {
         return {
-            title: appState.loading
-                ? "Loading..."
-                : clientStore.clientDetails?.name ?? "",
+            title: appState.loading ? "Loading..." : this.clientDetails?.name,
         };
     },
     components: {
