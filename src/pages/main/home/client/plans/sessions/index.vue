@@ -586,7 +586,7 @@ export default class Session extends Mixins(GeneralMixins) {
                 this.print();
                 break;
             case "Delete":
-                this.useDeleteSessionMutation();
+                this.handleDeleteSessions();
                 break;
             case "Deselect":
                 utilsStore.deselectAll();
@@ -714,38 +714,26 @@ export default class Session extends Mixins(GeneralMixins) {
     }
 
     /** Deletes all the selected sessions. */
-    async useDeleteSessionMutation() {
+    async handleDeleteSessions() {
         appState.setDontLeave(true);
-        if (this.selectedIds.length !== 0) {
-            if (
-                await utilsStore.confirmPopUpRef?.open({
-                    title: "Are you sure that you want to delete all the selected sessions?",
-                    text: "We will remove these sessions from our database and it won't be recoverable.",
-                })
-            ) {
-                try {
-                    await this.$store.dispatch("deleteSession", {
-                        clientId: this.$route.params.client_id,
-                        planId: this.$route.params.id,
-                        sessionIds: this.selectedIds,
-                    });
-                } catch (e) {
-                    utilsStore.resolveError(e as string);
-                }
-                utilsStore.deselectAll();
-                this.toggleExpandAll("Collapse");
-                this.$ga.event("Session", "delete");
-                utilsStore.responsePopUpRef?.open({
-                    title:
-                        this.selectedIds.length > 1
-                            ? "Sessions deleted"
-                            : "Session deleted",
-                    text: "Your changes have been saved",
-                });
-                appState.stopLoaders();
-            }
+        if (
+            await utilsStore.confirmPopUpRef?.open({
+                title: "Are you sure that you want to delete all the selected sessions?",
+                text: "We will remove these sessions from our database and it won't be recoverable.",
+            })
+        ) {
+            await planStore.deleteSessions();
+            utilsStore.deselectAll();
+            this.$ga.event("Session", "delete");
+            utilsStore.responsePopUpRef?.open({
+                title:
+                    this.selectedIds.length > 1
+                        ? "Sessions deleted"
+                        : "Session deleted",
+                text: "Your changes have been saved",
+            });
+            appState.stopLoaders();
         }
-        appState.stopLoaders();
     }
 
     /** Selects all the sessions in the plan or week. */

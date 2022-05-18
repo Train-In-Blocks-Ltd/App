@@ -130,6 +130,28 @@ class PlanModule extends VuexModule {
             plan,
         };
     }
+
+    @MutationAction
+    async deleteSessions() {
+        const data = utilsStore.selectedIds.map((id) => {
+            id;
+        });
+        await baseAPI.delete(
+            "https://api.traininblocks.com/v2/batch/sessions",
+            {
+                data,
+            }
+        );
+
+        const plan = this.plan;
+        if (!plan) return;
+        plan.sessions = plan.sessions?.filter(
+            (s) => !utilsStore.selectedIds.includes(s.id)
+        );
+        return {
+            plan,
+        };
+    }
 }
 
 export default getModule(PlanModule);
