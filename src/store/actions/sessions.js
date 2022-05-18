@@ -1,34 +1,5 @@
 export default {
     /**
-     * Creates a new session.
-     * @param {number} payload.client_id - The id of the client that the session belongs to.
-     * @param {number} payload.data.programme_id - The id of the programme that the session belongs to.
-     * @param {string} payload.data.name - The name of the session.
-     * @param {string} payload.data.date - The date of the session.
-     * @param {string} payload.data.notes - The content of the session.
-     * @param {number} payload.data.week_id - The week/micro-cycle of the session.
-     * @returns The new session's id.
-     */
-    async addSession({ commit }, payload) {
-        const RESPONSE = await this._vm.$axios
-            .post("https://api.traininblocks.com/v2/sessions", {
-                ...payload.data,
-            })
-            .catch((e) => {
-                console.error(e);
-            });
-        const NEW_SESSION_ID = RESPONSE.data[0]["LAST_INSERT_ID()"];
-        commit("addNewSession", {
-            client_id: payload.client_id,
-            id: NEW_SESSION_ID,
-            feedback: null,
-            checked: 0,
-            ...payload.data,
-        });
-        return NEW_SESSION_ID;
-    },
-
-    /**
      * Updates a session.
      * @param {number} payload.clientId - The id of the client.
      * @param {number} payload.planId - The id of the plan.

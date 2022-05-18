@@ -192,7 +192,7 @@
                             />
                             <icon-button
                                 svg="plus"
-                                :on-click="() => createNewSession()"
+                                :on-click="createSingleSession"
                                 :icon-size="28"
                                 aria-label="New session"
                                 title="New session"
@@ -654,8 +654,6 @@ export default class Session extends Mixins(GeneralMixins) {
         appState.setDontLeave(true);
         appState.setLoading(true);
         const TO_DUPLICATE: SessionType[] = [];
-        const CLIENT_ID = this.$route.params.client_id;
-        const PLAN_ID = this.$route.params.id;
         const SESSIONS = this.$store.getters.getPlan({
             clientId: this.$route.params.client_id,
             planId: this.$route.params.id,
@@ -667,16 +665,6 @@ export default class Session extends Mixins(GeneralMixins) {
                 )
             );
         });
-        for (const SESSION of TO_DUPLICATE) {
-            await this.useCreateSessionMutation({
-                clientId: CLIENT_ID,
-                planId: PLAN_ID,
-                sessionName: `Copy of ${SESSION.name}`,
-                sessionDate: SESSION.date,
-                sessionNotes: SESSION.notes,
-                sessionWeek: SESSION.week_id,
-            });
-        }
         this.$ga.event("Session", "duplicate");
         utilsStore.responsePopUpRef?.open({
             title: `${
@@ -797,26 +785,6 @@ export default class Session extends Mixins(GeneralMixins) {
         );
     }
 
-    /** Creates a new session. */
-    async createNewSession() {
-        appState.setDontLeave(true);
-        const NEW_SESSION_ID = await this.useCreateSessionMutation({
-            clientId: this.$route.params.client_id,
-            planId: this.$route.params.id,
-            sessionName: "Untitled",
-            sessionDate: this.today(),
-            sessionNotes: "",
-            sessionWeek: this.currentWeek,
-        });
-        this.goToEvent(NEW_SESSION_ID, this.currentWeek);
-        this.$ga.event("Session", "new");
-        utilsStore.responsePopUpRef?.open({
-            title: "New session added",
-            text: "Get programming!",
-        });
-        appState.stopLoaders();
-    }
-
     /** Scrolls to session. */
     goToEvent(id: number, week: number) {
         this.toggleExpandAll("Expand");
@@ -918,20 +886,20 @@ export default class Session extends Mixins(GeneralMixins) {
     }
 
     /** Creates a new session with our without existing data. */
-    async useCreateSessionMutation(data: any) {
+    async createSingleSession() {
         try {
-            const NEW_SESSION_ID = await this.$store.dispatch("addSession", {
-                client_id: parseInt(data.clientId),
-                data: {
-                    programme_id: parseInt(data.planId),
-                    name: data.sessionName,
-                    date: data.sessionDate,
-                    notes: data.sessionNotes,
-                    week_id: data.sessionWeek,
-                },
+            appState.setDontLeave(true);
+            await planStore.addSession({
+                programme_id: parseInt(this.$route.params.id),
+                date: this.today(),
+                week_id: this.currentWeek,
             });
-            this.loadPlanData();
-            return NEW_SESSION_ID;
+            this.$ga.event("Session", "new");
+            utilsStore.responsePopUpRef?.open({
+                title: "New session added",
+                text: "Get programming!",
+            });
+            appState.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }

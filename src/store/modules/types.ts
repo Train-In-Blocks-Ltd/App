@@ -36,6 +36,8 @@ export type Session = {
     name: string;
     date: string;
     notes: string;
+    feedback: string | null;
+    checked: number;
 } & GenericResponse;
 
 export type Plan = {
