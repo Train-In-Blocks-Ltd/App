@@ -202,6 +202,7 @@ class PlanModule extends VuexModule {
                     .map(
                         (_, i) => (JSON.parse(plan.block_color) as string[])[i]
                     )
+                    .map((c) => c || "#282828")
             );
         }
 
