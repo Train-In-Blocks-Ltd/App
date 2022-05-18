@@ -28,7 +28,7 @@ const ClientHeader = () =>
         return {
             title: appState.loading
                 ? "Loading..."
-                : clientStore.clientDetails?.name,
+                : clientStore.clientDetails?.name ?? "",
         };
     },
     components: {
