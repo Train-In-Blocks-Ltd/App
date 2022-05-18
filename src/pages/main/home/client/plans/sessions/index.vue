@@ -558,10 +558,10 @@ export default class Session extends Mixins(GeneralMixins) {
     handleMultiselectResponse(res: string) {
         switch (res) {
             case "Complete":
-                this.useUpdateCheckedMutation(1);
+                this.handleCheckedChange(1);
                 break;
             case "Incomplete":
-                this.useUpdateCheckedMutation(0);
+                this.handleCheckedChange(0);
                 break;
             case "Progress":
                 utilsStore.openModal({
@@ -613,19 +613,16 @@ export default class Session extends Mixins(GeneralMixins) {
 
     /** Resolves the state of the session editor. */
     handleSessionNotesChange(state: EditorState, id: number) {
-        const SESSION = this.$store.getters.getSession({
-            clientId: this.$route.params.client_id,
-            planId: this.$route.params.id,
-            sessionId: id,
-        });
+        const session = this.plan?.sessions?.find((s) => s.id === id);
+        if (!session) return;
         switch (state) {
             case "edit":
                 appState.setDontLeave(true);
                 this.isEditingSession = true;
                 this.editSession = id;
                 this.forceStop += 1;
-                this.tempEditorStore = SESSION.notes;
-                this.goToEvent(SESSION.id, SESSION.week_id);
+                this.tempEditorStore = session.notes;
+                this.goToEvent(session.id, session.week_id);
                 break;
             case "save":
                 appState.setDontLeave(true);
@@ -642,7 +639,7 @@ export default class Session extends Mixins(GeneralMixins) {
                 appState.setDontLeave(false);
                 this.isEditingSession = false;
                 this.editSession = null;
-                SESSION.notes = this.tempEditorStore;
+                session.notes = this.tempEditorStore ?? "";
                 break;
         }
     }
@@ -651,19 +648,11 @@ export default class Session extends Mixins(GeneralMixins) {
     async duplicate() {
         appState.setDontLeave(true);
         appState.setLoading(true);
-        const TO_DUPLICATE: SessionType[] = [];
-        const SESSIONS = this.$store.getters.getPlan({
-            clientId: this.$route.params.client_id,
-            planId: this.$route.params.id,
-        }).sessions;
-        this.selectedIds.forEach((sessionId) => {
-            TO_DUPLICATE.push(
-                SESSIONS.find(
-                    (session: SessionType) => session.id === sessionId
-                )
-            );
-        });
-        this.$ga.event("Session", "duplicate");
+        const sessions = this.plan?.sessions;
+        if (!sessions) return;
+        const toDuplicate = this.plan?.sessions?.filter((s) =>
+            this.selectedIds.includes(s.id)
+        );
         utilsStore.responsePopUpRef?.open({
             title: `${
                 this.selectedIds.length > 1 ? "Sessions" : "Session"
@@ -701,38 +690,25 @@ export default class Session extends Mixins(GeneralMixins) {
     }
 
     /** Toggles the complete/incomplete state of the selected sessions. */
-    async useUpdateCheckedMutation(boolState: number) {
+    async handleCheckedChange(checked: 1 | 0) {
         appState.setDontLeave(true);
-        if (this.selectedIds.length !== 0) {
-            if (
-                await utilsStore.confirmPopUpRef?.open({
-                    title: `Are you sure that you want to ${
-                        boolState === 1 ? "complete" : "incomplete"
-                    } all the selected sessions?`,
-                    text: "You can update this later if anything changes.",
-                })
-            ) {
-                this.plan?.sessions?.forEach((session) => {
-                    if (this.selectedIds.includes(session.id)) {
-                        this.$store.commit("updateSessionAttr", {
-                            clientId: this.$route.params.client_id,
-                            planId: this.$route.params.id,
-                            sessionId: session.id,
-                            attr: "checked",
-                            data: boolState,
-                        });
-                    }
-                });
-                this.useUpdateSessionsMutation(this.selectedIds);
-                utilsStore.responsePopUpRef?.open({
-                    title:
-                        this.selectedIds.length > 1
-                            ? "Sessions updated"
-                            : "Session updated",
-                    text: "Your changes have been saved",
-                });
-                utilsStore.deselectAll();
-            }
+        if (
+            await utilsStore.confirmPopUpRef?.open({
+                title: `Are you sure that you want to ${
+                    checked === 1 ? "complete" : "incomplete"
+                } all the selected sessions?`,
+                text: "You can update this later if anything changes.",
+            })
+        ) {
+            planStore.toggleSessionChecked(checked);
+            utilsStore.responsePopUpRef?.open({
+                title:
+                    this.selectedIds.length > 1
+                        ? "Sessions updated"
+                        : "Session updated",
+                text: "Your changes have been saved",
+            });
+            utilsStore.deselectAll();
         }
         appState.stopLoaders();
     }
@@ -840,22 +816,6 @@ export default class Session extends Mixins(GeneralMixins) {
             await planStore.updatePlan();
             this.loadPlanData();
             this.$ga.event("Plan", "update");
-            appState.stopLoaders();
-        } catch (e) {
-            utilsStore.resolveError(e as string);
-        }
-    }
-
-    /** Updates the selected sessions. */
-    async useUpdateSessionsMutation(sessionIds: number[]) {
-        try {
-            await this.$store.dispatch("batchUpdateSession", {
-                clientId: this.$route.params.client_id,
-                planId: this.$route.params.id,
-                sessionIds,
-            });
-            this.loadPlanData();
-            this.$ga.event("Session", "update");
             appState.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);

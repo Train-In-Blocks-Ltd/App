@@ -6,8 +6,9 @@ import {
     VuexModule,
 } from "vuex-module-decorators";
 import { Plan, Session } from "../types";
-import clientStore from "../client";
 import { baseAPI } from "../../../api";
+import clientStore from "../client";
+import utilsStore from "../utils";
 
 @Module({
     name: "plan",
@@ -104,6 +105,30 @@ class PlanModule extends VuexModule {
         });
 
         return {};
+    }
+
+    @MutationAction
+    async toggleSessionChecked(checked: 1 | 0) {
+        const plan = this.plan;
+        if (!plan) return;
+        const sessions = plan.sessions
+            ?.filter((s) => utilsStore.selectedIds.includes(s.id))
+            .map((s) => {
+                return {
+                    ...s,
+                    checked,
+                };
+            });
+        if (!sessions) return;
+        await baseAPI.put(
+            "https://api.traininblocks.com/v2/batch/sessions",
+            sessions
+        );
+
+        plan.sessions = sessions;
+        return {
+            plan,
+        };
     }
 }
 
