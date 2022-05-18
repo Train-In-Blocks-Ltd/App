@@ -260,19 +260,16 @@ export default class RichEditor extends Vue {
     }
 
     /** Tests injected html to see if it's empty. */
-    test_empty_html(text: string) {
-        if (text !== null) {
-            const REMOVE_TAGS_AND_SPACE = text
-                .replace(/<[^>]*>?/gm, "")
-                .replace(/&nbsp;/g, "")
-                .replace(/ /g, "");
-            if (REMOVE_TAGS_AND_SPACE === "") {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
+    test_empty_html(text?: string) {
+        if (!text) return true;
+        const REMOVE_TAGS_AND_SPACE = text
+            .replace(/<[^>]*>?/gm, "")
+            .replace(/&nbsp;/g, "")
+            .replace(/ /g, "");
+        if (REMOVE_TAGS_AND_SPACE === "") {
             return true;
+        } else {
+            return false;
         }
     }
 }
