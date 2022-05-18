@@ -26,7 +26,7 @@ const ClientHeader = () =>
 @Component({
     metaInfo(this: Client) {
         return {
-            title: appState.loading ? "Loading..." : this.clientDetails?.name,
+            title: this.loading ? "Loading..." : this.clientDetails?.name,
         };
     },
     components: {
@@ -43,6 +43,11 @@ export default class Client extends Vue {
     }
     get clientDetails() {
         return clientStore.clientDetails;
+    }
+
+    async created() {
+        clientStore.setCurrentClient(parseInt(this.$route.params.client_id));
+        await clientStore.getPlans(parseInt(this.$route.params.client_id));
     }
 }
 </script>

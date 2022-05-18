@@ -20,7 +20,7 @@ class ClientModule extends VuexModule {
 
     @MutationAction
     async setClientDetails(clientDetails: Client | null) {
-        return await {
+        return {
             clientDetails,
         };
     }

@@ -38,7 +38,9 @@
                 </div>
             </div>
             <div
-                v-else-if="clientDetails.plans.length !== 0"
+                v-else-if="
+                    !!clientDetails.plans && clientDetails.plans.length !== 0
+                "
                 class="grid sm:grid-cols-2 gap-4"
             >
                 <plan-card
