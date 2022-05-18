@@ -163,6 +163,29 @@ class PlanModule extends VuexModule {
             plan,
         };
     }
+
+    @MutationAction
+    async updateWeekColor(color: string) {
+        const plan = this.plan;
+        if (!plan) return;
+        if (!plan.block_color) {
+            plan.block_color = JSON.stringify(
+                new Array(plan.duration).fill("#E3E3E3")
+            );
+        } else {
+            plan.block_color = JSON.stringify(
+                (JSON.parse(plan.block_color) as string[]).map((c, i) =>
+                    this.currentWeek - 1 === i ? color : c
+                )
+            );
+        }
+
+        await baseAPI.put("https://api.traininblocks.com/v2/plans", plan);
+
+        return {
+            plan,
+        };
+    }
 }
 
 export default getModule(PlanModule);

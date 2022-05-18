@@ -3,7 +3,7 @@
         <div class="relative z-40">
             <div
                 :style="{
-                    backgroundColor: weekColor[currentWeek - 1],
+                    backgroundColor,
                 }"
                 class="h-8 w-16 rounded border-2 border-gray-800: dark:border-white hover:opacity-60 transition-opacity mr-4 cursor-pointer"
                 @click="editingWeekColor = !editingWeekColor"
@@ -14,7 +14,7 @@
                     :key="'color_' + index"
                     :style="{ backgroundColor: color }"
                     class="h-8 w-16 rounded cursor-pointer hover:opacity-60 transition-opacity mt-2"
-                    @click="handleSelect(color)"
+                    @click="updateWeekColor(color)"
                 />
             </div>
         </div>
@@ -27,6 +27,8 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
+import planStore from "../../store/modules/plan";
+import utilsStore from "../../store/modules/utils";
 
 const Backdrop = () =>
     import(
@@ -39,9 +41,12 @@ const Backdrop = () =>
     },
 })
 export default class ColorPicker extends Vue {
-    @Prop(Object) readonly plan!: any;
     @Prop(Array) readonly weekColor!: string[];
-    @Prop(Number) readonly currentWeek!: number;
+
+    get backgroundColor() {
+        if (!this.weekColor) return "#FFFFFF";
+        return this.weekColor[planStore.currentWeek - 1];
+    }
 
     editingWeekColor: boolean = false;
     colorPalette: string[] = [
@@ -52,8 +57,12 @@ export default class ColorPicker extends Vue {
         "#303030",
     ];
 
-    handleSelect(color: string) {
-        this.$emit("output", color);
+    async updateWeekColor(color: string) {
+        try {
+            await planStore.updateWeekColor(color);
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
         this.editingWeekColor = false;
     }
 }

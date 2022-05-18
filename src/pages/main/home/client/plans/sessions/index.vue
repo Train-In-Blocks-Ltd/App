@@ -82,7 +82,7 @@
                     class="w-1/3 lg:w-1/4 my-4"
                     inputmode="decimal"
                     :value="plan.duration"
-                    :on-blur="handleUpdatePlan"
+                    :on-blur="updatePlan"
                     @output="(data) => (plan.duration = data)"
                 />
 
@@ -169,17 +169,7 @@
 
                         <!-- Right side  -->
                         <div class="flex items-center">
-                            <color-picker
-                                :plan="plan"
-                                :week-color="weekColor"
-                                :current-week="currentWeek"
-                                @output="
-                                    (data) => {
-                                        weekColor[currentWeek - 1] = data;
-                                        useUpdateWeekColorMutation();
-                                    }
-                                "
-                            />
+                            <color-picker :week-color="weekColor" />
                             <icon-button
                                 svg="info"
                                 :on-click="handleOpenInfo"
@@ -428,6 +418,11 @@ export default class Session extends Mixins(GeneralMixins) {
     get currentWeek() {
         return planStore.currentWeek;
     }
+    get weekColor() {
+        const colors = planStore.plan?.block_color;
+        if (!colors) return new Array(planStore.plan?.duration).fill("#E3E3E3");
+        return JSON.parse(colors);
+    }
     get selectedIds() {
         return utilsStore.selectedIds;
     }
@@ -473,7 +468,6 @@ export default class Session extends Mixins(GeneralMixins) {
     // WEEK
 
     weekSessions: number[] = [];
-    weekColor: string[] = [];
 
     // CALENDAR
 
@@ -504,17 +498,7 @@ export default class Session extends Mixins(GeneralMixins) {
 
     /** Loads new data into the plan. */
     loadPlanData() {
-        this.__getWeekColor();
         this.__getCalendarSessions();
-    }
-
-    /** Gets the week colors. */
-    __getWeekColor() {
-        this.weekColor =
-            this.plan?.block_color
-                .replace("[", "")
-                .replace("]", "")
-                .split(",") ?? [];
     }
 
     /** Updates calendar events. */
@@ -837,25 +821,6 @@ export default class Session extends Mixins(GeneralMixins) {
                 text: "Get programming!",
             });
             appState.stopLoaders();
-        } catch (e) {
-            utilsStore.resolveError(e as string);
-        }
-    }
-
-    /** Updates the week color. */
-    async useUpdateWeekColorMutation() {
-        this.$store.dispatch("updatePlanAttr", {
-            clientId: this.clientDetails?.client_id,
-            planId: this.plan?.id,
-            attr: "block_color",
-            data: JSON.stringify(this.weekColor)
-                .replace(/"/g, "")
-                .replace(/[[\]]/g, "")
-                .replace(/\//g, ""),
-        });
-        try {
-            await this.$store.dispatch("updatePlan", this.plan);
-            this.loadPlanData();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }
