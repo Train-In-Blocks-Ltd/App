@@ -90,14 +90,12 @@
                 <div class="flex mb-4">
                     <week
                         v-for="weekNumber in planDuration(plan.duration)"
+                        :key="weekNumber"
                         :class="{
                             'mr-2': weekNumber !== plan.duration,
                         }"
-                        :key="weekNumber"
                         :week-number="weekNumber"
                         :week-color="weekColor"
-                        :current-week="currentWeek"
-                        :plan="plan"
                     />
                 </div>
             </div>
@@ -803,11 +801,6 @@ export default class Session extends Mixins(GeneralMixins) {
                 (sId) => sId !== id
             );
         } else this.expandedSessions.push(id);
-    }
-
-    /** Switch to a different week. */
-    changeWeek(weekID: number) {
-        planStore.setCurrentWeek(weekID);
     }
 
     /** Returns the duration of the plan as an array to be iterated. */
