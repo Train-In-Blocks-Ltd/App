@@ -7,6 +7,7 @@ import {
 } from "vuex-module-decorators";
 import { Plan } from "../types";
 import clientStore from "../client";
+import { baseAPI } from "../../../api";
 
 @Module({
     name: "plan",
@@ -38,6 +39,38 @@ class PlanModule extends VuexModule {
         return {
             currentWeek,
         };
+    }
+
+    @MutationAction
+    async setPlanNotes(notes: string) {
+        return {
+            plan: {
+                ...this.plan,
+                notes,
+            },
+        };
+    }
+
+    @MutationAction
+    async createDuplicatePlan(id: number) {
+        if (!this.plan) return;
+        const { name, client_id, duration, block_color } = this.plan;
+        const planResponse = await baseAPI.post(
+            "https://api.traininblocks.com/v2/plans",
+            {
+                name: `Copy of ${name}`,
+                client_id,
+                duration,
+                block_color,
+            }
+        );
+
+        clientStore.addPlan({
+            ...this.plan,
+            id: planResponse.data[0]["LAST_INSERT_ID()"],
+        });
+
+        return {};
     }
 }
 

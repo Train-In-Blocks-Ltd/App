@@ -608,12 +608,7 @@ export default class Session extends Mixins(GeneralMixins) {
                 break;
             case "cancel":
                 appState.setDontLeave(false);
-                this.$store.commit("updatePlanAttr", {
-                    clientId: this.clientDetails?.client_id,
-                    planId: this.plan?.id,
-                    attr: "notes",
-                    data: this.tempEditorStore,
-                });
+                planStore.setPlanNotes(this.tempEditorStore ?? "");
                 break;
         }
     }
@@ -849,7 +844,9 @@ export default class Session extends Mixins(GeneralMixins) {
 
     /** Returns the duration of the plan as an array to be iterated. */
     planDuration(duration: number) {
-        return new Array(duration).map((_, i) => i);
+        const arr = [];
+        for (let i = 1; i <= duration; i++) arr.push(i);
+        return arr;
     }
 
     /** Expand or de-expand all sessions. */

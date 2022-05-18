@@ -37,6 +37,15 @@ class ClientModule extends VuexModule {
     }
 
     @MutationAction
+    async addPlan(plan: Plan) {
+        const clientDetails = this.clientDetails;
+        clientDetails?.plans?.push(plan);
+        return {
+            clientDetails,
+        };
+    }
+
+    @MutationAction
     async getPlans(id: number) {
         try {
             const response = await baseAPI.get(
