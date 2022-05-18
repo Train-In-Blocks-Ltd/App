@@ -192,17 +192,7 @@
                                 />
                                 <icon-button
                                     svg="info"
-                                    :on-click="
-                                        () => {
-                                            $store.commit('SET_DATA', {
-                                                attr: 'previewHTML',
-                                                data: '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>',
-                                            });
-                                            $store.dispatch('openModal', {
-                                                name: 'info',
-                                            });
-                                        }
-                                    "
+                                    :on-click="handleOpenInfo"
                                     :icon-size="28"
                                     class="mr-4"
                                     aria-label="Info"
@@ -301,22 +291,10 @@
                                             "
                                             class="mr-4 hover:opacity-60 transition-opacity cursor-pointer"
                                             @click="
-                                                () => {
-                                                    $store.commit('SET_DATA', {
-                                                        attr: 'previewTitle',
-                                                        data: 'Feedback',
-                                                    });
-                                                    $store.commit('SET_DATA', {
-                                                        attr: 'previewHTML',
-                                                        data: session.feedback,
-                                                    });
-                                                    $store.dispatch(
-                                                        'openModal',
-                                                        {
-                                                            name: 'preview',
-                                                        }
-                                                    );
-                                                }
+                                                () =>
+                                                    handleOpenFeedback(
+                                                        session.feedback
+                                                    )
                                             "
                                             ><txt type="tiny" bold
                                                 >Feedback</txt
@@ -529,15 +507,13 @@ export default class SessionPage extends Mixins(GeneralMixins) {
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await this.$store.dispatch("openConfirmPopUp", {
+                ? await utilsStore.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
                 : true
         ) {
-            this.$store.dispatch("setLoading", {
-                dontLeave: false,
-            });
+            appState.setDontLeave(true);
             next();
         }
     }
@@ -583,6 +559,22 @@ export default class SessionPage extends Mixins(GeneralMixins) {
             });
     }
 
+    handleOpenInfo() {
+        utilsStore.openModal({
+            name: "info",
+            previewHTML:
+                "<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>",
+        });
+    }
+
+    handleOpenFeedback(previewHTML: string) {
+        utilsStore.openModal({
+            name: "preview",
+            previewTitle: "Feedback",
+            previewHTML,
+        });
+    }
+
     /** Resolves the actions taken from the session multi-select. */
     handleMultiselectResponse(res: string) {
         switch (res) {
@@ -593,24 +585,21 @@ export default class SessionPage extends Mixins(GeneralMixins) {
                 this.useUpdateCheckedMutation(0);
                 break;
             case "Progress":
-                this.$store.dispatch("openModal", {
+                utilsStore.openModal({
                     name: "progress",
                 });
                 break;
             case "Duplicate":
                 this.duplicate();
-                this.$store.commit("SET_DATA", {
-                    attr: "selectedIds",
-                    data: [],
-                });
+                utilsStore.deselectAll();
                 break;
             case "Move":
-                this.$store.dispatch("openModal", {
+                utilsStore.openModal({
                     name: "move",
                 });
                 break;
             case "Shift":
-                this.$store.dispatch("openModal", {
+                utilsStore.openModal({
                     name: "shift",
                 });
                 break;
@@ -621,10 +610,7 @@ export default class SessionPage extends Mixins(GeneralMixins) {
                 this.useDeleteSessionMutation();
                 break;
             case "Deselect":
-                this.$store.commit("SET_DATA", {
-                    attr: "selectedIds",
-                    data: [],
-                });
+                utilsStore.deselectAll();
                 break;
         }
     }
@@ -633,18 +619,14 @@ export default class SessionPage extends Mixins(GeneralMixins) {
     handlePlanNotesChange(state: EditorState) {
         switch (state) {
             case "edit":
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
+                appState.setDontLeave(true);
                 this.tempEditorStore = this.plan?.notes ?? "";
                 break;
             case "save":
                 this.useUpdatePlanMutation();
                 break;
             case "cancel":
-                this.$store.dispatch("setLoading", {
-                    dontLeave: false,
-                });
+                appState.setDontLeave(false);
                 this.$store.commit("updatePlanAttr", {
                     clientId: this.clientDetails?.client_id,
                     planId: this.plan?.id,
@@ -664,9 +646,7 @@ export default class SessionPage extends Mixins(GeneralMixins) {
         });
         switch (state) {
             case "edit":
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
+                appState.setDontLeave(true);
                 this.isEditingSession = true;
                 this.editSession = id;
                 this.forceStop += 1;
@@ -674,22 +654,18 @@ export default class SessionPage extends Mixins(GeneralMixins) {
                 this.goToEvent(SESSION.id, SESSION.week_id);
                 break;
             case "save":
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
+                appState.setDontLeave(true);
                 this.isEditingSession = false;
                 this.editSession = null;
                 this.useUpdateSessionMutation(id);
-                this.$store.dispatch("openResponsePopUp", {
+                utilsStore.responsePopUpRef?.open({
                     title: "Session updated",
-                    description: "Your changes have been saved",
+                    text: "Your changes have been saved",
                 });
-                this.$store.dispatch("setLoading", false);
+                appState.stopLoaders();
                 break;
             case "cancel":
-                this.$store.dispatch("setLoading", {
-                    dontLeave: false,
-                });
+                appState.setDontLeave(false);
                 this.isEditingSession = false;
                 this.editSession = null;
                 SESSION.notes = this.tempEditorStore;
@@ -699,10 +675,8 @@ export default class SessionPage extends Mixins(GeneralMixins) {
 
     /** Duplicates the selected sessions. */
     async duplicate() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-            dontLeave: true,
-        });
+        appState.setDontLeave(true);
+        appState.setLoading(true);
         const TO_DUPLICATE: Session[] = [];
         const CLIENT_ID = this.$route.params.client_id;
         const PLAN_ID = this.$route.params.id;
@@ -726,13 +700,13 @@ export default class SessionPage extends Mixins(GeneralMixins) {
             });
         }
         this.$ga.event("Session", "duplicate");
-        this.$store.dispatch("openResponsePopUp", {
+        utilsStore.responsePopUpRef?.open({
             title: `${
                 this.selectedIds.length > 1 ? "Sessions" : "Session"
             } duplicated`,
-            description: "Get programming!",
+            text: "Get programming!",
         });
-        this.$store.dispatch("setLoading", false);
+        appState.stopLoaders();
     }
 
     /** Opens a new tab with the print preview of all the selected sessions. */
@@ -759,20 +733,15 @@ export default class SessionPage extends Mixins(GeneralMixins) {
         NEW_WINDOW?.stop();
         NEW_WINDOW?.print();
         this.$ga.event("Plan", "print");
-        this.$store.commit("SET_DATA", {
-            attr: "selectedIds",
-            data: [],
-        });
+        utilsStore.deselectAll();
     }
 
     /** Toggles the complete/incomplete state of the selected sessions. */
     async useUpdateCheckedMutation(boolState: number) {
-        this.$store.dispatch("setLoading", {
-            dontLeave: true,
-        });
+        appState.setDontLeave(true);
         if (this.selectedIds.length !== 0) {
             if (
-                await this.$store.dispatch("openConfirmPopUp", {
+                await utilsStore.confirmPopUpRef?.open({
                     title: `Are you sure that you want to ${
                         boolState === 1 ? "complete" : "incomplete"
                     } all the selected sessions?`,
@@ -791,30 +760,25 @@ export default class SessionPage extends Mixins(GeneralMixins) {
                     }
                 });
                 this.useUpdateSessionsMutation(this.selectedIds);
-                this.$store.dispatch("openResponsePopUp", {
+                utilsStore.responsePopUpRef?.open({
                     title:
                         this.selectedIds.length > 1
                             ? "Sessions updated"
                             : "Session updated",
-                    description: "Your changes have been saved",
+                    text: "Your changes have been saved",
                 });
-                this.$store.commit("SET_DATA", {
-                    attr: "selectedIds",
-                    data: [],
-                });
+                utilsStore.deselectAll();
             }
         }
-        this.$store.dispatch("setLoading", false);
+        appState.stopLoaders();
     }
 
     /** Deletes all the selected sessions. */
     async useDeleteSessionMutation() {
-        this.$store.dispatch("setLoading", {
-            dontLeave: true,
-        });
+        appState.setDontLeave(true);
         if (this.selectedIds.length !== 0) {
             if (
-                await this.$store.dispatch("openConfirmPopUp", {
+                await utilsStore.confirmPopUpRef?.open({
                     title: "Are you sure that you want to delete all the selected sessions?",
                     text: "We will remove these sessions from our database and it won't be recoverable.",
                 })
@@ -826,44 +790,38 @@ export default class SessionPage extends Mixins(GeneralMixins) {
                         sessionIds: this.selectedIds,
                     });
                 } catch (e) {
-                    this.$store.dispatch("resolveError", e);
+                    utilsStore.resolveError(e as string);
                 }
-                this.$store.commit("SET_DATA", {
-                    attr: "selectedIds",
-                    data: [],
-                });
+                utilsStore.deselectAll();
                 this.toggleExpandAll("Collapse");
                 this.$ga.event("Session", "delete");
-                this.$store.dispatch("openResponsePopUp", {
+                utilsStore.responsePopUpRef?.open({
                     title:
                         this.selectedIds.length > 1
                             ? "Sessions deleted"
                             : "Session deleted",
-                    description: "Your changes have been saved",
+                    text: "Your changes have been saved",
                 });
-                this.$store.dispatch("setLoading", false);
+                appState.stopLoaders();
             }
         }
-        this.$store.dispatch("setLoading", false);
+        appState.stopLoaders();
     }
 
     /** Selects all the sessions in the plan or week. */
     selectAll(mode: string) {
-        this.$store.commit("SET_DATA", {
-            attr: "selectedIds",
-            data: this.plan?.sessions
+        utilsStore.selectAll(
+            this.plan?.sessions
                 ?.filter((session) =>
                     mode === "all" ? true : session.week_id === this.currentWeek
                 )
-                .map((session) => session.id),
-        });
+                .map((session) => session.id) ?? []
+        );
     }
 
     /** Creates a new session. */
     async createNewSession() {
-        this.$store.dispatch("setLoading", {
-            dontLeave: true,
-        });
+        appState.setDontLeave(true);
         const NEW_SESSION_ID = await this.useCreateSessionMutation({
             clientId: this.$route.params.client_id,
             planId: this.$route.params.id,
@@ -874,20 +832,17 @@ export default class SessionPage extends Mixins(GeneralMixins) {
         });
         this.goToEvent(NEW_SESSION_ID, this.currentWeek);
         this.$ga.event("Session", "new");
-        this.$store.dispatch("openResponsePopUp", {
+        utilsStore.responsePopUpRef?.open({
             title: "New session added",
-            description: "Get programming!",
+            text: "Get programming!",
         });
-        this.$store.dispatch("setLoading", false);
+        appState.stopLoaders();
     }
 
     /** Scrolls to session. */
     goToEvent(id: number, week: number) {
         this.toggleExpandAll("Expand");
-        this.$store.commit("SET_DATA", {
-            attr: "currentWeek",
-            data: week,
-        });
+        planStore.setCurrentWeek(week);
         setTimeout(() => {
             document
                 .getElementById(`session-${id}`)
@@ -905,10 +860,7 @@ export default class SessionPage extends Mixins(GeneralMixins) {
 
     /** Switch to a different week. */
     changeWeek(weekID: number) {
-        this.$store.commit("SET_DATA", {
-            attr: "currentWeek",
-            data: weekID,
-        });
+        planStore.setCurrentWeek(weekID);
     }
 
     /** Returns the duration of the plan as an array to be iterated. */
@@ -942,15 +894,13 @@ export default class SessionPage extends Mixins(GeneralMixins) {
     /** Updates the details of the plan. */
     async useUpdatePlanMutation() {
         try {
-            this.$store.dispatch("setLoading", {
-                loading: true,
-            });
+            appState.setLoading(true);
             await this.$store.dispatch("updatePlan", this.plan);
             this.loadPlanData();
             this.$ga.event("Plan", "update");
-            this.$store.dispatch("setLoading", false);
+            appState.stopLoaders();
         } catch (e) {
-            this.$store.dispatch("resolveError", e);
+            utilsStore.resolveError(e as string);
         }
     }
 
@@ -964,9 +914,9 @@ export default class SessionPage extends Mixins(GeneralMixins) {
             });
             this.loadPlanData();
             this.$ga.event("Session", "update");
-            this.$store.dispatch("setLoading", false);
+            appState.stopLoaders();
         } catch (e) {
-            this.$store.dispatch("resolveError", e);
+            utilsStore.resolveError(e as string);
         }
     }
 
@@ -980,9 +930,9 @@ export default class SessionPage extends Mixins(GeneralMixins) {
             });
             this.loadPlanData();
             this.$ga.event("Session", "update");
-            this.$store.dispatch("setLoading", false);
+            appState.stopLoaders();
         } catch (e) {
-            this.$store.dispatch("resolveError", e);
+            utilsStore.resolveError(e as string);
         }
     }
 
@@ -1002,7 +952,7 @@ export default class SessionPage extends Mixins(GeneralMixins) {
             this.loadPlanData();
             return NEW_SESSION_ID;
         } catch (e) {
-            this.$store.dispatch("resolveError", e);
+            utilsStore.resolveError(e as string);
         }
     }
 
@@ -1021,7 +971,7 @@ export default class SessionPage extends Mixins(GeneralMixins) {
             await this.$store.dispatch("updatePlan", this.plan);
             this.loadPlanData();
         } catch (e) {
-            this.$store.dispatch("resolveError", e);
+            utilsStore.resolveError(e as string);
         }
     }
 }

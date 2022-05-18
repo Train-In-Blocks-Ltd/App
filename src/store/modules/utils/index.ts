@@ -31,6 +31,13 @@ type ModalParams =
           persist?: boolean;
           previewTitle: string;
           previewHTML: string;
+      }
+    | {
+          name: "info";
+          size?: ModalSize;
+          persist?: boolean;
+          previewTitle?: string;
+          previewHTML: string;
       };
 
 @Module({
