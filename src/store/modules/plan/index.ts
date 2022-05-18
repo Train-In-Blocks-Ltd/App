@@ -186,6 +186,31 @@ class PlanModule extends VuexModule {
             plan,
         };
     }
+
+    @MutationAction
+    async updateDuration() {
+        const plan = this.plan;
+        if (!plan) return;
+        if (!plan.block_color) {
+            plan.block_color = JSON.stringify(
+                new Array(plan.duration).fill("#282828")
+            );
+        } else {
+            plan.block_color = JSON.stringify(
+                new Array(plan.duration)
+                    .fill("#282828")
+                    .map(
+                        (_, i) => (JSON.parse(plan.block_color) as string[])[i]
+                    )
+            );
+        }
+
+        await baseAPI.put("https://api.traininblocks.com/v2/plans", plan);
+
+        return {
+            plan,
+        };
+    }
 }
 
 export default getModule(PlanModule);

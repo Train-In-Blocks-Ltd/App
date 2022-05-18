@@ -82,8 +82,8 @@
                     class="w-1/3 lg:w-1/4 my-4"
                     inputmode="decimal"
                     :value="plan.duration"
-                    :on-blur="updatePlan"
-                    @output="(data) => (plan.duration = data)"
+                    :on-blur="updateDuration"
+                    @output="(data) => (plan.duration = parseInt(data))"
                 />
 
                 <!-- Week table -->
@@ -787,6 +787,18 @@ export default class Session extends Mixins(GeneralMixins) {
             appState.setLoading(true);
             await planStore.updatePlan();
             this.loadPlanData();
+            this.$ga.event("Plan", "update");
+            appState.stopLoaders();
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+    }
+
+    /** Updates the duration of the plan. */
+    async updateDuration() {
+        try {
+            appState.setLoading(true);
+            await planStore.updateDuration();
             this.$ga.event("Plan", "update");
             appState.stopLoaders();
         } catch (e) {
