@@ -45,12 +45,16 @@ class ClientModule extends VuexModule {
 
             const clientDetails = {
                 ...this.clientDetails,
-                plans: response.data[0].map((p: Plan) => {
+                plans: (response.data[0] as Plan[]).map((p) => {
                     return {
                         ...p,
-                        sessions: response.data[1].filter(
-                            (s: Session) => s.programme_id === p.id
-                        ),
+                        sessions: (response.data[1] as Session[])
+                            .filter((s) => s.programme_id === p.id)
+                            .sort(
+                                (a, b) =>
+                                    new Date(a.date).getTime() -
+                                    new Date(b.date).getTime()
+                            ),
                     };
                 }),
             } as Client;

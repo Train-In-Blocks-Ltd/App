@@ -207,11 +207,7 @@
                     >
                         <!-- Session -->
                         <card-wrapper
-                            v-for="(
-                                session, sessionIndex
-                            ) in plan.sessions.sort(
-                                (a, b) => new Date(a.date) - new Date(b.date)
-                            )"
+                            v-for="(session, sessionIndex) in plan.sessions"
                             v-show="session.week_id === currentWeek"
                             :id="'session-' + session.id"
                             :key="`session-${sessionIndex}`"
