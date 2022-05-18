@@ -132,6 +132,15 @@ class PlanModule extends VuexModule {
     }
 
     @MutationAction
+    async updateSession(id: number) {
+        const session = this.plan?.sessions?.find((s) => s.id === id);
+        if (!session) return;
+        await baseAPI.put("https://api.traininblocks.com/v2/sessions", session);
+
+        return {};
+    }
+
+    @MutationAction
     async deleteSessions() {
         const data = utilsStore.selectedIds.map((id) => {
             return {

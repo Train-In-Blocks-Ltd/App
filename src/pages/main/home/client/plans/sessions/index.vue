@@ -628,7 +628,7 @@ export default class Session extends Mixins(GeneralMixins) {
                 appState.setDontLeave(true);
                 this.isEditingSession = false;
                 this.editSession = null;
-                this.useUpdateSessionMutation(id);
+                this.updateSingleSession(id);
                 utilsStore.responsePopUpRef?.open({
                     title: "Session updated",
                     text: "Your changes have been saved",
@@ -811,14 +811,10 @@ export default class Session extends Mixins(GeneralMixins) {
     }
 
     /** Updates a single session. */
-    async useUpdateSessionMutation(sessionId: number) {
+    async updateSingleSession(id: number) {
         try {
-            await this.$store.dispatch("updateSession", {
-                clientId: this.$route.params.client_id,
-                planId: this.$route.params.id,
-                sessionId,
-            });
-            this.loadPlanData();
+            appState.setDontLeave(true);
+            await planStore.updateSession(id);
             this.$ga.event("Session", "update");
             appState.stopLoaders();
         } catch (e) {
