@@ -13,7 +13,7 @@
                 name="name"
                 :value="plan.name"
                 :is-disabled="silentLoading"
-                :on-blur="() => useUpdatePlanMutation()"
+                :on-blur="handleUpdatePlan"
                 @output="(data) => (plan.name = data)"
             />
 
@@ -82,7 +82,7 @@
                     class="w-1/3 lg:w-1/4 my-4"
                     inputmode="decimal"
                     :value="plan.duration"
-                    :on-blur="() => useUpdatePlanMutation()"
+                    :on-blur="handleUpdatePlan"
                     @output="(data) => (plan.duration = data)"
                 />
 
@@ -602,7 +602,7 @@ export default class Session extends Mixins(GeneralMixins) {
                 this.tempEditorStore = this.plan?.notes ?? "";
                 break;
             case "save":
-                this.useUpdatePlanMutation();
+                this.handleUpdatePlan();
                 break;
             case "cancel":
                 appState.setDontLeave(false);
@@ -834,10 +834,10 @@ export default class Session extends Mixins(GeneralMixins) {
     }
 
     /** Updates the details of the plan. */
-    async useUpdatePlanMutation() {
+    async handleUpdatePlan() {
         try {
             appState.setLoading(true);
-            await this.$store.dispatch("updatePlan", this.plan);
+            await planStore.updatePlan();
             this.loadPlanData();
             this.$ga.event("Plan", "update");
             appState.stopLoaders();

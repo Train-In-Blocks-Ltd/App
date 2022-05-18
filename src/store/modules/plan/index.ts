@@ -74,6 +74,13 @@ class PlanModule extends VuexModule {
     }
 
     @MutationAction
+    async updatePlan() {
+        await baseAPI.put("https://api.traininblocks.com/v2/plans", this.plan);
+
+        return {};
+    }
+
+    @MutationAction
     async addSession(
         session: Pick<Session, "programme_id" | "date" | "week_id">
     ) {

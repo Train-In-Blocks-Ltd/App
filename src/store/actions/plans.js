@@ -81,26 +81,6 @@ export default {
     },
 
     /**
-     * Updates a plan.
-     * @param {number} payload.client_id - The id of the client.
-     * @param {number} payload.id - The id of the plan.
-     * @param {string} payload.name - The name of the plan.
-     * @param {number} payload.duration - The duration of the plan.
-     * @param {string} payload.notes - The colors for the micro-cycles.
-     * @param {string} payload.block_color - The plan notes.
-     */
-    async updatePlan({ commit }, payload) {
-        await this._vm.$axios.put("https://api.traininblocks.com/v2/plans", {
-            ...payload,
-        });
-        commit("updateEntirePlan", payload);
-    },
-
-    updatePlanAttr({ commit }, payload) {
-        commit("updatePlanAttr", payload);
-    },
-
-    /**
      * Deletes a plan.
      * @param {number} payload.clientId - The id of the client.
      * @param {number} payload.planId - The id of the plan.
