@@ -173,11 +173,17 @@ class PlanModule extends VuexModule {
                 new Array(plan.duration).fill("#999999")
             );
         } else {
-            plan.block_color = JSON.stringify(
-                (JSON.parse(plan.block_color) as string[]).map((c, i) =>
-                    this.currentWeek - 1 === i ? color : c
-                )
-            );
+            try {
+                plan.block_color = JSON.stringify(
+                    (JSON.parse(plan.block_color) as string[]).map((c, i) =>
+                        this.currentWeek - 1 === i ? color : c
+                    )
+                );
+            } catch {
+                plan.block_color = JSON.stringify(
+                    new Array(plan.duration).fill("#999999")
+                );
+            }
         }
 
         await baseAPI.put("https://api.traininblocks.com/v2/plans", plan);
@@ -196,14 +202,21 @@ class PlanModule extends VuexModule {
                 new Array(plan.duration).fill("#999999")
             );
         } else {
-            plan.block_color = JSON.stringify(
-                new Array(plan.duration)
-                    .fill("#999999")
-                    .map(
-                        (_, i) => (JSON.parse(plan.block_color) as string[])[i]
-                    )
-                    .map((c) => c || "#999999")
-            );
+            try {
+                plan.block_color = JSON.stringify(
+                    new Array(plan.duration)
+                        .fill("#999999")
+                        .map(
+                            (_, i) =>
+                                (JSON.parse(plan.block_color) as string[])[i]
+                        )
+                        .map((c) => c || "#999999")
+                );
+            } catch {
+                plan.block_color = JSON.stringify(
+                    new Array(plan.duration).fill("#999999")
+                );
+            }
         }
 
         await baseAPI.put("https://api.traininblocks.com/v2/plans", plan);

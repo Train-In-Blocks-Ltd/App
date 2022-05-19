@@ -91,6 +91,18 @@ class ClientModule extends VuexModule {
             utilsStore.resolveError(e as string);
         }
     }
+
+    @MutationAction
+    async deletePlan(id: number) {
+        await baseAPI.delete(`https://api.traininblocks.com/v2/plans/${id}`);
+
+        const clientDetails = this.clientDetails;
+        if (!clientDetails) return;
+        clientDetails.plans = clientDetails.plans?.filter((p) => p.id !== id);
+        return {
+            clientDetails,
+        };
+    }
 }
 
 export default getModule(ClientModule);

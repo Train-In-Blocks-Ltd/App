@@ -338,7 +338,6 @@ import { NavigationGuardNext, Route } from "vue-router";
 import {
     EditorState,
     MultiselectOption,
-    Session as SessionType,
 } from "../../../../../../store/modules/types";
 import GeneralMixins from "../../../../../..//generalMixins";
 
@@ -421,7 +420,13 @@ export default class Session extends Mixins(GeneralMixins) {
     get weekColor() {
         const colors = planStore.plan?.block_color;
         if (!colors) return new Array(planStore.plan?.duration).fill("#282828");
-        return JSON.parse(colors);
+        try {
+            const arr = JSON.parse(colors);
+            return arr;
+        } catch {
+            this.updateDuration();
+            return [];
+        }
     }
     get selectedIds() {
         return utilsStore.selectedIds;

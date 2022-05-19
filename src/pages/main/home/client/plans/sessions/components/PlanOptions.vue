@@ -11,12 +11,7 @@
         <icon-button
             class="mr-4"
             svg="copy"
-            :on-click="
-                () =>
-                    $store.dispatch('openModal', {
-                        name: 'duplicate-plan',
-                    })
-            "
+            :on-click="handleOpenDuplicate"
             :icon-size="32"
             aria-label="Duplicate plan"
             title="Duplicate plan"
@@ -24,12 +19,7 @@
         <icon-button
             class="mr-4"
             svg="pie-chart"
-            :on-click="
-                () =>
-                    $store.dispatch('openModal', {
-                        name: 'statistics',
-                    })
-            "
+            :on-click="handleOpenStatistics"
             :icon-size="32"
             aria-label="Statistics"
             title="Statistics"
@@ -37,7 +27,7 @@
         <icon-button
             v-if="!isDemo"
             svg="trash"
-            :on-click="() => deletePlan()"
+            :on-click="deletePlan"
             :icon-size="32"
             class="text-red-700"
             aria-label="Delete plan"
@@ -46,42 +36,57 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appState from "../../../../../../../store/modules/appState";
+import utilsStore from "../../../../../../../store/modules/utils";
+import clientStore from "../../../../../../../store/modules/client";
 
-export default {
-    computed: mapState(["isDemo"]),
-    methods: {
-        /** Deletes the plan. */
-        async deletePlan() {
-            if (
-                await this.$store.dispatch("openConfirmPopUp", {
-                    title: "Are you sure you want to delete this plan?",
-                    text: "We will remove this plan from our database and it won't be recoverable.",
-                })
-            ) {
-                try {
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: true,
-                    });
-                    await this.$store.dispatch("deletePlan", {
-                        clientId: this.$route.params.client_id,
-                        planId: this.$route.params.id,
-                    });
-                    this.$ga.event("Session", "delete");
-                    this.$store.dispatch("openResponsePopUp", {
-                        title: "Plan deleted",
-                        description: "Your changes have been saved",
-                    });
-                    this.$store.dispatch("setLoading", false);
-                    this.$router.push({
-                        path: `/client/${this.clientDetails.client_id}/`,
-                    });
-                } catch (e) {
-                    this.$store.dispatch("resolveError", e);
-                }
+@Component
+export default class PlanOptions extends Vue {
+    get isDemo() {
+        return appState.isDemo;
+    }
+    get clientDetails() {
+        return clientStore.clientDetails;
+    }
+
+    handleOpenDuplicate() {
+        utilsStore.openModal({
+            name: "duplicate-plan",
+        });
+    }
+
+    handleOpenStatistics() {
+        utilsStore.openModal({
+            name: "statistics",
+        });
+    }
+
+    /** Deletes the plan. */
+    async deletePlan() {
+        if (
+            await utilsStore.confirmPopUpRef?.open({
+                title: "Are you sure you want to delete this plan?",
+                text: "We will remove this plan from our database and it won't be recoverable.",
+            })
+        ) {
+            try {
+                appState.setLoading(true);
+                clientStore.deletePlan(parseInt(this.$route.params.id));
+                this.$ga.event("Session", "delete");
+                utilsStore.responsePopUpRef?.open({
+                    title: "Plan deleted",
+                    text: "Your changes have been saved",
+                });
+                appState.stopLoaders();
+                this.$router.push({
+                    path: `/client/${this.clientDetails?.client_id}/`,
+                });
+            } catch (e) {
+                utilsStore.resolveError(e as string);
             }
-        },
-    },
-};
+        }
+    }
+}
 </script>

@@ -79,19 +79,4 @@ export default {
             });
         }
     },
-
-    /**
-     * Deletes a plan.
-     * @param {number} payload.clientId - The id of the client.
-     * @param {number} payload.planId - The id of the plan.
-     */
-    async deletePlan({ commit }, payload) {
-        await this._vm.$axios.delete(
-            `https://api.traininblocks.com/v2/plans/${payload.planId}`
-        );
-        commit("removePlan", {
-            clientId: payload.clientId,
-            planId: payload.planId,
-        });
-    },
 };
