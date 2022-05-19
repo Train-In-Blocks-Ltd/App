@@ -20,14 +20,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import utilsStore from "../../../../../../../store/modules/utils";
 import appState from "../../../../../../../store/modules/appState";
 import planStore from "../../../../../../../store/modules/plan";
-import GeneralMixins from "../../../../../../../generalMixins";
 
 @Component
-export default class ShiftModal extends Mixins(GeneralMixins) {
+export default class ShiftModal extends Vue {
     shiftDays: number = 1;
 
     get selectedIds() {

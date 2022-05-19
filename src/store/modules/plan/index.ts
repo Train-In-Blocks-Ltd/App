@@ -251,6 +251,31 @@ class PlanModule extends VuexModule {
             plan,
         };
     }
+
+    @MutationAction
+    async moveSessions(week_id: number) {
+        const plan = this.plan;
+        if (!plan) return;
+
+        const sessions = plan.sessions?.map((s) => {
+            return {
+                ...s,
+                week_id: utilsStore.selectedIds.includes(s.id)
+                    ? week_id
+                    : s.week_id,
+            };
+        });
+
+        await baseAPI.put(
+            "https://api.traininblocks.com/v2/batch/sessions",
+            sessions
+        );
+
+        plan.sessions = sessions;
+        return {
+            plan,
+        };
+    }
 }
 
 export default getModule(PlanModule);
