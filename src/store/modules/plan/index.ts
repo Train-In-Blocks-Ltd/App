@@ -9,6 +9,7 @@ import { Plan, Session } from "../types";
 import { baseAPI } from "../../../api";
 import clientStore from "../client";
 import utilsStore from "../utils";
+import { addDays } from "../../../common/helpers";
 
 @Module({
     name: "plan",
@@ -221,6 +222,31 @@ class PlanModule extends VuexModule {
 
         await baseAPI.put("https://api.traininblocks.com/v2/plans", plan);
 
+        return {
+            plan,
+        };
+    }
+
+    @MutationAction
+    async shiftSessions(shiftDays: number) {
+        const plan = this.plan;
+        if (!plan) return;
+
+        const sessions = plan.sessions?.map((s) => {
+            return {
+                ...s,
+                date: utilsStore.selectedIds.includes(s.id)
+                    ? addDays(s.date, shiftDays)
+                    : s.date,
+            };
+        });
+
+        await baseAPI.put(
+            "https://api.traininblocks.com/v2/batch/sessions",
+            sessions
+        );
+
+        plan.sessions = sessions;
         return {
             plan,
         };

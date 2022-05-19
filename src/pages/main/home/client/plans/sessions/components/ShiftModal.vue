@@ -19,67 +19,40 @@
     </form>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Mixins } from "vue-property-decorator";
+import utilsStore from "../../../../../../../store/modules/utils";
+import appState from "../../../../../../../store/modules/appState";
+import planStore from "../../../../../../../store/modules/plan";
+import GeneralMixins from "../../../../../../../generalMixins";
 
-export default {
-    data() {
-        return {
-            shiftDays: 1,
-        };
-    },
-    computed: {
-        ...mapState(["selectedIds"]),
-        plan() {
-            return this.$store.getters.getPlan({
-                clientId: this.$route.params.client_id,
-                planId: this.$route.params.id,
-            });
-        },
-    },
-    methods: {
-        /**
-         * Shifts the selected sessions by specified days.
-         */
-        async shiftAcross() {
-            this.$store.dispatch("setLoading", {
-                dontLeave: true,
-            });
-            this.plan.sessions.forEach((session) => {
-                if (this.selectedIds.includes(session.id)) {
-                    this.$store.commit("updateSessionAttr", {
-                        clientId: this.$route.params.client_id,
-                        planId: this.$route.params.id,
-                        sessionId: session.id,
-                        attr: "date",
-                        data: this.addDays(
-                            session.date,
-                            parseInt(this.shiftDays)
-                        ),
-                    });
-                }
-            });
-            await this.$store.dispatch("batchUpdateSession", {
-                clientId: this.$route.params.client_id,
-                planId: this.$route.params.id,
-                sessionIds: this.selectedIds,
-            });
-            this.$store.dispatch("closeModal");
-            this.$store.dispatch("openResponsePopUp", {
-                title:
-                    this.selectedIds.length > 1
-                        ? "Shifted sessions"
-                        : "Shifted session",
-                description: "Your changes have been saved",
-            });
-            this.shiftDays = 1;
-            this.$store.commit("SET_DATA", {
-                attr: "selectedIds",
-                data: [],
-            });
-            this.$ga.event("Session", "shift");
-            this.$store.dispatch("setLoading", false);
-        },
-    },
-};
+@Component
+export default class ShiftModal extends Mixins(GeneralMixins) {
+    shiftDays: number = 1;
+
+    get selectedIds() {
+        return utilsStore.selectedIds;
+    }
+    get plan() {
+        return planStore.plan;
+    }
+
+    /** Shifts the selected sessions by specified days. */
+    async shiftAcross() {
+        appState.setDontLeave(true);
+        await planStore.shiftSessions(this.shiftDays);
+        utilsStore.closeModal();
+        utilsStore.responsePopUpRef?.open({
+            title:
+                this.selectedIds.length > 1
+                    ? "Shifted sessions"
+                    : "Shifted session",
+            text: "Your changes have been saved",
+        });
+        this.shiftDays = 1;
+        utilsStore.deselectAll();
+        this.$ga.event("Session", "shift");
+        appState.stopLoaders();
+    }
+}
 </script>
