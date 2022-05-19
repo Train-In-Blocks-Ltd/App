@@ -7,7 +7,7 @@ import {
     VuexModule,
 } from "vuex-module-decorators";
 import store from "../..";
-import { Client } from "../types";
+import { Client, Plan, Session } from "../types";
 import utilsStore from "../utils";
 
 @Module({
@@ -132,6 +132,70 @@ class ClientsModule extends VuexModule {
         );
         return {
             archivedClients,
+        };
+    }
+
+    @MutationAction
+    async duplicatePlan({
+        client_id,
+        plan,
+    }: {
+        client_id: number;
+        plan: Plan;
+    }) {
+        const newPlan = plan;
+        const { name, duration, block_color } = newPlan;
+        const planResponse = await baseAPI.post(
+            "https://api.traininblocks.com/v2/plans",
+            {
+                name: `Copy of ${name}`,
+                client_id,
+                duration,
+                block_color,
+            }
+        );
+
+        newPlan.id = planResponse.data[0]["LAST_INSERT_ID()"];
+
+        await baseAPI.put("https://api.traininblocks.com/v2/plans", newPlan);
+
+        if (!plan.sessions) return;
+        const newSessions: Session[] = [];
+        for (const s of plan.sessions) {
+            const newSession: Omit<Session, "id"> = {
+                name: s.name,
+                programme_id: newPlan.id,
+                date: s.date,
+                notes: s.notes,
+                week_id: s.week_id,
+                checked: s.checked,
+                feedback: null,
+            };
+            const sessionResponse = await baseAPI.post(
+                "https://api.traininblocks.com/v2/sessions",
+                newSession
+            );
+            const newSessionId = sessionResponse.data[0]["LAST_INSERT_ID()"];
+            newSessions.push({
+                ...newSession,
+                id: newSessionId,
+            });
+            if (newSessions.length >= 30)
+                throw new Error("Too many sessions to duplicate");
+        }
+        newPlan.sessions = newSessions;
+
+        const clients = this.clients.map((c: Client) =>
+            c.client_id !== client_id
+                ? c
+                : {
+                      ...c,
+                      plans: [...(c.plans ?? []), newPlan],
+                  }
+        );
+
+        return {
+            clients,
         };
     }
 }

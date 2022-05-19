@@ -5,11 +5,11 @@
             name="duplicate_client"
             class="my-4 w-full sm:w-1/2"
             :items="dropdownItems"
-            @output="(data) => (duplicateId = data)"
+            @output="(data) => (client_id = data)"
             required
         />
         <default-button
-            :is-disabled="!duplicateId"
+            :is-disabled="!client_id"
             type="submit"
             aria-label="Duplicate"
         >
@@ -18,59 +18,47 @@
     </form>
 </template>
 
-<script>
-export default {
-    computed: {
-        dropdownItems() {
-            return this.$store.state.clients.map((client) => {
-                return {
-                    label: client.name,
-                    value: client.client_id,
-                };
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import utilsStore from "../../../../../../../store/modules/utils";
+import appState from "../../../../../../../store/modules/appState";
+import planStore from "../../../../../../../store/modules/plan";
+import clientsStore from "../../../../../../../store/modules/clients";
+
+@Component
+export default class DuplicatePlanModal extends Vue {
+    client_id: number | null = null;
+
+    get dropdownItems() {
+        return clientsStore.clients.map((client) => {
+            return {
+                label: client.name,
+                value: client.client_id,
+            };
+        });
+    }
+    get plan() {
+        return planStore.plan;
+    }
+
+    /** Duplicates the plan to select client. */
+    async duplicatePlan() {
+        try {
+            if (!this.plan || !this.client_id) return;
+            appState.setDontLeave(true);
+            const { plan, client_id } = this;
+            await clientsStore.duplicatePlan({ plan, client_id });
+            this.$ga.event("Plan", "duplicate");
+            utilsStore.responsePopUpRef?.open({
+                title: "Plan duplicated",
+                text: "Access it on your client's profile",
             });
-        },
-        plan() {
-            return this.$store.getters.getPlan({
-                clientId: this.$route.params.client_id,
-                planId: this.$route.params.id,
-            });
-        },
-    },
-    data() {
-        return {
-            duplicateId: undefined,
-        };
-    },
-    methods: {
-        /**
-         * Duplicates the plan to select client.
-         */
-        async duplicatePlan() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                await this.$store.dispatch("duplicatePlan", {
-                    clientId: this.duplicateId,
-                    planId: this.plan.id,
-                    planName: this.plan.name,
-                    planDuration: this.plan.duration,
-                    blockColor: this.plan.block_color,
-                    planNotes: this.plan.notes,
-                    planSessions: this.plan.sessions,
-                });
-                this.$ga.event("Plan", "duplicate");
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Plan duplicated",
-                    description: "Access it on your client's profile",
-                });
-                this.$store.dispatch("closeModal");
-                this.$store.dispatch("setLoading", false);
-                this.$router.push({ path: `/client/${this.duplicateId}/` });
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-    },
-};
+            utilsStore.closeModal();
+            appState.stopLoaders();
+            this.$router.push({ path: `/client/${this.client_id}/` });
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+    }
+}
 </script>
