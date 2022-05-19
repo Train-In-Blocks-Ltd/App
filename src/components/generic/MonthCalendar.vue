@@ -105,130 +105,125 @@
     </label-wrapper>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop, Watch } from "vue-property-decorator";
+import { EventRow } from "../../store/modules/types";
+
 const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../components/generic/LabelWrapper.vue"
     );
 
-export default {
+@Component({
     components: {
         LabelWrapper,
     },
-    props: {
-        events: Array,
-        onEventPress: Function,
-    },
-    data() {
-        return {
-            currentMonth: "",
-            currentYear: "",
-            monthDiff: 1,
-            month: [],
-        };
-    },
-    watch: {
-        events() {
-            this.getMonth();
-        },
-    },
-    mounted() {
-        this.getMonth();
-    },
-    methods: {
-        /**
-         * Converts index to month.
-         */
-        getMonthNumber(month) {
-            const MONTHS = [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
-            ];
-            return MONTHS.indexOf(month) + 1;
-        },
+})
+export default class MonthCalendar extends Vue {
+    @Prop(Array) readonly events!: EventRow[];
+    @Prop(Function) readonly onEventPress!: () => void;
 
-        /**
-         * Initiates the calendar and populates it.
-         */
-        getMonth() {
-            const MONTHS = [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
-            ];
-            const TODAY = new Date();
-            const LAST_DAY_OF_MONTH = new Date(
-                TODAY.getFullYear(),
-                TODAY.getMonth() + this.monthDiff,
-                "0"
-            );
-            this.month = [];
-            this.currentMonth = MONTHS[LAST_DAY_OF_MONTH.getMonth()];
-            this.currentYear = LAST_DAY_OF_MONTH.getFullYear();
-            const MONTH_END = LAST_DAY_OF_MONTH.getDate();
-            let date;
-            for (date = 1; date <= MONTH_END; date++) {
-                const WEEKDAY = new Date(
-                    `${this.currentYear}-${this.getMonthNumber(
-                        this.currentMonth
-                    ).toLocaleString("en-US", {
-                        minimumIntegerDigits: 2,
-                    })}-${date.toLocaleString("en-US", {
-                        minimumIntegerDigits: 2,
-                    })}`
-                ).getDay();
-                if (date === 1 && WEEKDAY !== 1) {
-                    let holder;
-                    if (WEEKDAY === 0) {
-                        for (holder = 1; holder < 7; holder++) {
-                            this.month.push([[], ""]);
-                        }
-                    } else {
-                        for (holder = 1; holder < WEEKDAY; holder++) {
-                            this.month.push([[], ""]);
-                        }
+    currentMonth: string = "";
+    currentYear: string = "";
+    monthDiff: number = 1;
+    month: any[] = [];
+
+    @Watch("events")
+    onEventsChange() {
+        this.getMonth();
+    }
+
+    created() {
+        this.getMonth();
+    }
+
+    /** Converts index to month. */
+    getMonthNumber(month: string) {
+        const MONTHS = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
+        return MONTHS.indexOf(month) + 1;
+    }
+
+    /** Initiates the calendar and populates it. */
+    getMonth() {
+        const MONTHS = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
+        const TODAY = new Date();
+        const LAST_DAY_OF_MONTH = new Date(
+            TODAY.getFullYear(),
+            TODAY.getMonth() + this.monthDiff,
+            0
+        );
+        this.month = [];
+        this.currentMonth = MONTHS[LAST_DAY_OF_MONTH.getMonth()];
+        this.currentYear = LAST_DAY_OF_MONTH.getFullYear().toString();
+        const MONTH_END = LAST_DAY_OF_MONTH.getDate();
+        for (let date = 1; date <= MONTH_END; date++) {
+            const WEEKDAY = new Date(
+                `${this.currentYear}-${this.getMonthNumber(
+                    this.currentMonth
+                ).toLocaleString("en-US", {
+                    minimumIntegerDigits: 2,
+                })}-${date.toLocaleString("en-US", {
+                    minimumIntegerDigits: 2,
+                })}`
+            ).getDay();
+            if (date === 1 && WEEKDAY !== 1) {
+                let holder;
+                if (WEEKDAY === 0) {
+                    for (holder = 1; holder < 7; holder++) {
+                        this.month.push([[], ""]);
+                    }
+                } else {
+                    for (holder = 1; holder < WEEKDAY; holder++) {
+                        this.month.push([[], ""]);
                     }
                 }
-                const DATA_PACKETS = [];
-                this.events.forEach((event) => {
-                    const DATE_SPLIT = event.date.split("-");
-                    if (
-                        parseInt(DATE_SPLIT[0]) === this.currentYear &&
-                        parseInt(DATE_SPLIT[1] - 1) ===
-                            LAST_DAY_OF_MONTH.getMonth() &&
-                        parseInt(DATE_SPLIT[2]) === date
-                    ) {
-                        DATA_PACKETS.push(event);
-                    }
-                });
-                this.month.push([
-                    DATA_PACKETS,
-                    date,
-                    `${this.currentYear}-${String(
-                        this.getMonthNumber(this.currentMonth)
-                    ).padStart(2, "0")}-${String(date).padStart(2, "0")}`,
-                ]);
             }
-        },
-    },
-};
+            const DATA_PACKETS: EventRow[] = [];
+            this.events.forEach((event) => {
+                const DATE_SPLIT = event.date.split("-");
+                if (
+                    DATE_SPLIT[0] === this.currentYear &&
+                    parseInt(DATE_SPLIT[1]) - 1 ===
+                        LAST_DAY_OF_MONTH.getMonth() &&
+                    parseInt(DATE_SPLIT[2]) === date
+                ) {
+                    DATA_PACKETS.push(event);
+                }
+            });
+            this.month.push([
+                DATA_PACKETS,
+                date,
+                `${this.currentYear}-${String(
+                    this.getMonthNumber(this.currentMonth)
+                ).padStart(2, "0")}-${String(date).padStart(2, "0")}`,
+            ]);
+        }
+    }
+}
 </script>

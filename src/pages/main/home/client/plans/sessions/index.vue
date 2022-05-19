@@ -56,13 +56,13 @@
             <!-- Calendars -->
             <week-calendar
                 v-if="!showMonthlyCal"
-                :events="sessionDates"
+                :events="events"
                 :is-trainer="true"
                 :on-event-press="goToEvent"
             />
             <month-calendar
                 v-else
-                :events="sessionDates"
+                :events="events"
                 :is-trainer="true"
                 :on-event-press="goToEvent"
             />
@@ -444,6 +444,26 @@ export default class Session extends Mixins(GeneralMixins) {
     get isDemo() {
         return appState.isDemo;
     }
+    /** Updates calendar events. */
+    get events() {
+        return planStore.plan?.sessions
+            ?.sort(
+                (a, b) =>
+                    new Date(a.date).getTime() - new Date(b.date).getTime()
+            )
+            .map((session) => {
+                return {
+                    title: session.name,
+                    date: session.date,
+                    color: this.weekColor[session.week_id - 1],
+                    textColor: this.accessible_colors(
+                        this.weekColor[session.week_id - 1]
+                    ),
+                    week_id: session.week_id,
+                    session_id: session.id,
+                };
+            });
+    }
 
     forceStop: number = 0;
     tempEditorStore: string | null = "";
@@ -472,7 +492,6 @@ export default class Session extends Mixins(GeneralMixins) {
     // CALENDAR
 
     showMonthlyCal: boolean = false;
-    sessionDates: any[] = [];
 
     // MICROCYCLE
 
@@ -494,32 +513,6 @@ export default class Session extends Mixins(GeneralMixins) {
 
     created() {
         planStore.setCurrentPlan(parseInt(this.$route.params.id));
-    }
-
-    /** Loads new data into the plan. */
-    loadPlanData() {
-        this.__getCalendarSessions();
-    }
-
-    /** Updates calendar events. */
-    __getCalendarSessions() {
-        if (!this.plan?.sessions) return [];
-
-        this.sessionDates = this.plan.sessions
-            // @ts-expect-error
-            .sort((a, b) => new Date(a.date) < new Date(b.date))
-            .map((session) => {
-                return {
-                    title: session.name,
-                    date: session.date,
-                    color: this.weekColor[session.week_id - 1],
-                    textColor: this.accessible_colors(
-                        this.weekColor[session.week_id - 1]
-                    ),
-                    week_id: session.week_id,
-                    session_id: session.id,
-                };
-            });
     }
 
     handleOpenInfo() {
@@ -650,8 +643,7 @@ export default class Session extends Mixins(GeneralMixins) {
     print() {
         const NOTES_ARR: string[] = [];
         this.plan?.sessions?.sort(
-            // @ts-expect-error
-            (a, b) => new Date(a.date) > new Date(b.date)
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
         );
         this.plan?.sessions?.forEach((session) => {
             if (this.selectedIds.includes(session.id)) {
@@ -786,7 +778,6 @@ export default class Session extends Mixins(GeneralMixins) {
         try {
             appState.setLoading(true);
             await planStore.updatePlan();
-            this.loadPlanData();
             this.$ga.event("Plan", "update");
             appState.stopLoaders();
         } catch (e) {

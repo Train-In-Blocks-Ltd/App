@@ -170,7 +170,7 @@ class PlanModule extends VuexModule {
         if (!plan) return;
         if (!plan.block_color) {
             plan.block_color = JSON.stringify(
-                new Array(plan.duration).fill("#282828")
+                new Array(plan.duration).fill("#999999")
             );
         } else {
             plan.block_color = JSON.stringify(
@@ -193,16 +193,16 @@ class PlanModule extends VuexModule {
         if (!plan) return;
         if (!plan.block_color) {
             plan.block_color = JSON.stringify(
-                new Array(plan.duration).fill("#282828")
+                new Array(plan.duration).fill("#999999")
             );
         } else {
             plan.block_color = JSON.stringify(
                 new Array(plan.duration)
-                    .fill("#282828")
+                    .fill("#999999")
                     .map(
                         (_, i) => (JSON.parse(plan.block_color) as string[])[i]
                     )
-                    .map((c) => c || "#282828")
+                    .map((c) => c || "#999999")
             );
         }
 

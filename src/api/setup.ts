@@ -29,9 +29,10 @@ export const useGetHighLevelData = async (
             return NAME_A < NAME_B ? -1 : NAME_A > NAME_B ? 1 : 0;
         }
     );
-    const sortedBookings = response.data[4].sort((a: Booking, b: Booking) => {
-        return new Date(a.datetime) < new Date(b.datetime);
-    });
+    const sortedBookings = response.data[4].sort(
+        (a: Booking, b: Booking) =>
+            new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+    );
     const templates = response.data[2] as Template[];
     const portfolio = response.data[3][0] as Portfolio | undefined;
 
