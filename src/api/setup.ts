@@ -1,7 +1,13 @@
 import { baseAPI } from ".";
-import { Booking, Client, Portfolio, Template } from "../store/modules/types";
+import {
+    Booking,
+    Client,
+    Plan,
+    Portfolio,
+    Template,
+} from "../store/modules/types";
 
-type HighLevelData = {
+export type TrainerUserData = {
     sortedClients: Client[];
     sortedArchiveClients: Client[];
     sortedBookings: Booking[];
@@ -9,10 +15,20 @@ type HighLevelData = {
     portfolio?: Portfolio;
 };
 
+export type ClientUserData = {
+    name: string;
+    number: string;
+    profile_image: string;
+    pt_id: string;
+    portfolio: Portfolio;
+    bookings: Booking[];
+    plans: Plan[];
+};
+
 /** Gets all the data for the trainer-user's session. */
-export const useGetHighLevelData = async (
+export const getTrainerUserData = async (
     id: string
-): Promise<HighLevelData> => {
+): Promise<TrainerUserData> => {
     const response = await baseAPI.get<(Client[] | any)[]>(
         `https://api.traininblocks.com/v2/${id}`
     );
@@ -42,5 +58,37 @@ export const useGetHighLevelData = async (
         sortedBookings,
         templates,
         portfolio,
+    };
+};
+
+export const getClientUserData = async (
+    id: string
+): Promise<ClientUserData> => {
+    const response = await baseAPI.get(
+        `https://api.traininblocks.com/v2/clientUser/${id}`
+    );
+    const plansResponse = await baseAPI.get(
+        `https://api.traininblocks.com/v2/plans/${id}`
+    );
+
+    const name = response.data[0][0].name;
+    const number = response.data[0][0].number;
+    const pt_id = response.data[0][0].pt_id;
+    const portfolio = response.data[1][0];
+    const profile_image = response.data[2][0].profile_image;
+    const bookings = response.data[3].sort(
+        (a: Booking, b: Booking) =>
+            new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+    );
+    const plans = plansResponse.data[0];
+
+    return {
+        name,
+        number,
+        pt_id,
+        portfolio,
+        profile_image,
+        bookings,
+        plans,
     };
 };

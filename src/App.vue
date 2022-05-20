@@ -128,7 +128,7 @@ body {
 
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from "vue-property-decorator";
-import { baseAPI } from "./api";
+import { baseAPI, getClientUserData } from "./api";
 import appState from "./store/modules/appState";
 import accountStore from "./store/modules/account";
 import utilsStore from "./store/modules/utils";
@@ -136,7 +136,8 @@ import clientsStore from "./store/modules/clients";
 import templatesStore from "./store/modules/templates";
 import bookingsStore from "./store/modules/bookings";
 import portfolioStore from "./store/modules/portfolio";
-import { useGetHighLevelData } from "./api";
+import clientUserStore from "./store/modules/clientUser";
+import { getTrainerUserData } from "./api";
 import {
     ConfirmPopUpRef,
     DarkmodeType,
@@ -394,24 +395,30 @@ export default class App extends Vue {
             appState.setNewBuild(true);
 
         // Get data if not client
-        if (claims.user_type === "Admin" || claims.user_type === "Trainer") {
-            try {
+        try {
+            if (["Trainer", "Admin"].includes(claims.user_type)) {
                 const {
                     sortedClients,
                     sortedArchiveClients,
                     sortedBookings,
                     templates,
                     portfolio,
-                } = await useGetHighLevelData(claims.sub);
+                } = await getTrainerUserData(claims.sub);
                 clientsStore.setClients(sortedClients);
                 clientsStore.setArchivedClients(sortedArchiveClients);
                 bookingsStore.setBookings(sortedBookings);
                 templatesStore.setTemplates(templates);
 
                 if (!!portfolio) portfolioStore.setPortfolio(portfolio);
-            } catch (e) {
-                utilsStore.resolveError(e as string);
             }
+            if (["Client", "Admin"].includes(claims.user_type)) {
+                const clientUserData = await getClientUserData(
+                    claims.client_id_db
+                );
+                clientUserStore.setClientUser(clientUserData);
+            }
+        } catch (e) {
+            utilsStore.resolveError(e as string);
         }
 
         this.loaded = true;

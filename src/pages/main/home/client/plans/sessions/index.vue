@@ -339,7 +339,7 @@ import {
     EditorState,
     MultiselectOption,
 } from "../../../../../../store/modules/types";
-import GeneralMixins from "../../../../../..//generalMixins";
+import GeneralMixins from "../../../../../../generalMixins";
 
 const Checkbox = () =>
     import(

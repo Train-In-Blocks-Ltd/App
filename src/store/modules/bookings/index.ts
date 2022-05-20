@@ -56,7 +56,7 @@ class BookingsModule extends VuexModule {
             await baseAPI.post("/.netlify/functions/send-email", {
                 to: PT_EMAIL.data[0].credentials.emails[0].value,
                 ...emailBuilder("booking-requested", {
-                    clientName: clientUserStore.clientUser.name,
+                    clientName: clientUserStore.name,
                     datetime: datetime,
                     link: `https://app.traininblocks.com/client/${client_id}`,
                 }),
@@ -142,7 +142,7 @@ class BookingsModule extends VuexModule {
             await baseAPI.post("/.netlify/functions/send-email", {
                 to: PT_EMAIL.data[0].credentials.emails[0].value,
                 ...emailBuilder("booking-request-cancelled", {
-                    clientName: clientUserStore.clientUser.name,
+                    clientName: clientUserStore.name,
                     datetime: datetime,
                     link: `https://app.traininblocks.com/client/${client_id}`,
                 }),
