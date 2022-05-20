@@ -83,4 +83,14 @@ export default class GeneralMixins extends Vue {
         }
         return protocols;
     }
+
+    /** Adds specified days to the date provided. */
+    addDays(datetime: string, days: number) {
+        const d = new Date(datetime);
+        d.setDate(d.getDate() + days);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const date = String(d.getDate()).padStart(2, "0");
+        return `${year}-${month}-${date}`;
+    }
 }

@@ -1,10 +1,5 @@
 <template>
-    <label-wrapper
-        :title="`${getMonth(thisWeek[0].date_split[1])} ${
-            thisWeek[0].date_split[0]
-        }`"
-        no-hover
-    >
+    <label-wrapper :title="title" no-hover>
         <!-- Calendar controls -->
         <div class="flex items-center justify-between my-8">
             <icon-button
@@ -13,7 +8,6 @@
                 :on-click="
                     () => {
                         weekDiff--;
-                        getWeek();
                     }
                 "
                 aria-label="Previous week"
@@ -26,7 +20,6 @@
                 @click="
                     () => {
                         weekDiff = 0;
-                        getWeek();
                     }
                 "
             >
@@ -38,7 +31,6 @@
                 :on-click="
                     () => {
                         weekDiff++;
-                        getWeek();
                     }
                 "
                 aria-label="Next week"
@@ -49,7 +41,7 @@
         <!-- Calendar content -->
         <div class="grid gap-2">
             <div
-                v-for="(day, index) in thisWeek"
+                v-for="(day, index) in week"
                 :key="'day-' + index"
                 :class="{
                     'bg-yellow-100 dark:bg-gray-400': today() === day.date,
@@ -62,7 +54,7 @@
                         {{ getDay(index) }}
                     </txt>
                     <txt type="large-body" grey>
-                        {{ day.date_split[2] }}
+                        {{ day.dateSplit[2] }}
                     </txt>
                 </div>
 
@@ -98,36 +90,28 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Prop, Mixins } from "vue-property-decorator";
 import { EventRow } from "../../store/modules/types";
+import GeneralMixins from "../../generalMixins";
 
 const LabelWrapper = () =>
     import(
         /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../components/generic/LabelWrapper.vue"
     );
 
-type WeekRow = { date: string; date_split: string[]; events: EventRow[] };
+type WeekRow = { date: string; dateSplit: number[]; events: EventRow[] };
 
 @Component({
     components: {
         LabelWrapper,
     },
 })
-export default class WeekCalendar extends Vue {
+export default class WeekCalendar extends Mixins(GeneralMixins) {
     @Prop(Array) readonly events!: EventRow[];
     @Prop(Function) readonly onEventPress!: () => void;
 
-    thisWeek: WeekRow[] = [];
+    currentMonday: WeekRow | null = null;
     weekDiff: number = 0;
-
-    @Watch("events")
-    onEventsChange() {
-        this.getWeek();
-    }
-
-    created() {
-        this.getWeek();
-    }
 
     /** Determines the day based on the date provided. */
     getDay(date: number) {
@@ -135,27 +119,29 @@ export default class WeekCalendar extends Vue {
         return DAYS[date];
     }
 
-    /** Generates the current week. */
-    getWeek() {
-        this.thisWeek = [];
+    get week() {
         const d = new Date();
         const day = d.getDay();
         const daysDiff = d.getDate() - day + (day === 0 ? -6 : 1);
         const weekStart = new Date(d.setDate(daysDiff + 7 * this.weekDiff));
-        const year = String(weekStart.getFullYear());
-        const month = String(weekStart.getMonth() + 1).padStart(2, "0");
-        const date = String(weekStart.getDate()).padStart(2, "0");
-        const week: WeekRow[] = [
-            {
-                date: `${year}-${month}-${date}`,
-                date_split: [year, month, date],
-                events: [],
-            },
-        ];
+        const year = weekStart.getFullYear();
+        const month = parseInt(
+            String(weekStart.getMonth() + 1).padStart(2, "0")
+        );
+        const date = parseInt(String(weekStart.getDate()).padStart(2, "0"));
+
+        this.currentMonday = {
+            date: `${year}-${month}-${date}`,
+            dateSplit: [year, month, date],
+            events: [],
+        };
+        const week: WeekRow[] = [this.currentMonday];
         for (let i = 1; i < 7; i++) {
             week.push({
                 date: this.addDays(week[0].date, i),
-                date_split: this.addDays(week[0].date, i).split("-"),
+                dateSplit: this.addDays(week[0].date, i)
+                    .split("-")
+                    .map((n) => Number(n)),
                 events: [],
             });
         }
@@ -166,22 +152,12 @@ export default class WeekCalendar extends Vue {
             });
         });
 
-        this.thisWeek = week;
+        return week;
     }
-
-    /** Adds specified days to the date provided. */
-    addDays(datetime: string, days: number) {
-        const d = new Date(datetime);
-        d.setDate(d.getDate() + days);
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, "0");
-        const date = String(d.getDate()).padStart(2, "0");
-        return `${year}-${month}-${date}`;
-    }
-
-    /** Determines the month based on the month index provided. */
-    getMonth(month: number) {
-        const MONTHS = [
+    get title() {
+        if (!this.currentMonday) return;
+        const d = new Date(this.currentMonday.date);
+        const month = [
             "January",
             "February",
             "March",
@@ -194,9 +170,9 @@ export default class WeekCalendar extends Vue {
             "October",
             "November",
             "December",
-        ];
-        month = month - 1;
-        return MONTHS[month];
+        ][d.getMonth()];
+        const year = d.getFullYear();
+        return `${month} ${year}`;
     }
 }
 </script>
