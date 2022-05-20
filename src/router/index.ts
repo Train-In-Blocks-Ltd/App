@@ -51,10 +51,6 @@ const ClientUserPlans = () =>
     import(
         /* webpackChunkName: "client-user.plans" */ "../pages/_clientUser/Plans.vue"
     );
-const ClientUserSuccess = () =>
-    import(
-        /* webpackChunkName: "client-user.success" */ "../pages/_clientUser/Success.vue"
-    );
 const NotFound = () =>
     import(/* webpackChunkName: "notfound" */ "../pages/NotFound.vue");
 
@@ -154,14 +150,6 @@ const router = new Router({
                     },
                 },
             ],
-        },
-        {
-            path: "/clientUser/success",
-            component: ClientUserSuccess,
-            meta: {
-                requiresAuth: true,
-                requiresClient: true,
-            },
         },
         {
             path: "/clientUser",
