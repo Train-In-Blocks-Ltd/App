@@ -106,6 +106,8 @@ const LabelWrapper = () =>
         /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../components/generic/LabelWrapper.vue"
     );
 
+type WeekRow = { date: string; date_split: string[]; events: EventRow[] };
+
 @Component({
     components: {
         LabelWrapper,
@@ -115,12 +117,7 @@ export default class WeekCalendar extends Vue {
     @Prop(Array) readonly events!: EventRow[];
     @Prop(Function) readonly onEventPress!: () => void;
 
-    currentWeekStart: {
-        date: string;
-        date_split: string[];
-        events: EventRow[];
-    } | null = null;
-    thisWeek: { date: string; date_split: string[]; events: EventRow[] }[] = [];
+    thisWeek: WeekRow[] = [];
     weekDiff: number = 0;
 
     @Watch("events")
@@ -132,17 +129,6 @@ export default class WeekCalendar extends Vue {
         this.getWeek();
     }
 
-    /** Adds the event to the correct day of the week. */
-    appendEvents() {
-        this.thisWeek.forEach((day) => {
-            this.events.forEach((event) => {
-                if (day.date === event.date) {
-                    day.events.push(event);
-                }
-            });
-        });
-    }
-
     /** Determines the day based on the date provided. */
     getDay(date: number) {
         const DAYS = ["M", "T", "W", "T", "F", "S", "S"];
@@ -152,33 +138,35 @@ export default class WeekCalendar extends Vue {
     /** Generates the current week. */
     getWeek() {
         this.thisWeek = [];
-        const DATE_CLASS = new Date();
-        const DAY = DATE_CLASS.getDay();
-        const DAYS_DIFFERENCE =
-            DATE_CLASS.getDate() - DAY + (DAY === 0 ? -6 : 1);
-        const WEEK_START = new Date(
-            DATE_CLASS.setDate(DAYS_DIFFERENCE + 7 * this.weekDiff)
-        );
-        const YEAR = String(WEEK_START.getFullYear());
-        const MONTH = String(WEEK_START.getMonth() + 1).padStart(2, "0");
-        const DATE = String(WEEK_START.getDate()).padStart(2, "0");
-        const CURRENT_MONDAY = {
-            date: `${YEAR}-${MONTH}-${DATE}`,
-            date_split: [YEAR, MONTH, DATE],
-            events: [],
-        };
-        this.currentWeekStart = CURRENT_MONDAY;
-        this.thisWeek.push(CURRENT_MONDAY);
+        const d = new Date();
+        const day = d.getDay();
+        const daysDiff = d.getDate() - day + (day === 0 ? -6 : 1);
+        const weekStart = new Date(d.setDate(daysDiff + 7 * this.weekDiff));
+        const year = String(weekStart.getFullYear());
+        const month = String(weekStart.getMonth() + 1).padStart(2, "0");
+        const date = String(weekStart.getDate()).padStart(2, "0");
+        const week: WeekRow[] = [
+            {
+                date: `${year}-${month}-${date}`,
+                date_split: [year, month, date],
+                events: [],
+            },
+        ];
         for (let i = 1; i < 7; i++) {
-            this.thisWeek.push({
-                date: this.addDays(this.thisWeek[0].date, i),
-                date_split: this.addDays(this.thisWeek[0].date, i).split("-"),
+            week.push({
+                date: this.addDays(week[0].date, i),
+                date_split: this.addDays(week[0].date, i).split("-"),
                 events: [],
             });
         }
-        setTimeout(() => {
-            this.appendEvents();
-        }, 100);
+
+        week.forEach((day) => {
+            this.events.forEach((event) => {
+                if (day.date === event.date) day.events.push(event);
+            });
+        });
+
+        this.thisWeek = week;
     }
 
     /** Adds specified days to the date provided. */
