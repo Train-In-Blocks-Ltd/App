@@ -5,7 +5,7 @@
             <icon-button
                 svg="list"
                 :on-click="handleOpenAllBookings"
-                :icon-size="28"
+                :size="28"
                 aria-label="See all bookings"
                 title="See all bookings"
             />

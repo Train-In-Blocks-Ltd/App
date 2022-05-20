@@ -8,14 +8,14 @@
                     v-if="pwa.displayMode === 'browser tab'"
                     svg="download"
                     :on-click="handleOpenInstall"
-                    :icon-size="28"
+                    :size="28"
                     class="mr-4"
                     aria-label="Install"
                     title="Install"
                 />
                 <icon-button
                     svg="info"
-                    :icon-size="32"
+                    :size="32"
                     class="mr-4"
                     :on-click="handleOpenInfo"
                     aria-label="Your trainer"
@@ -23,7 +23,7 @@
                 />
                 <icon-button
                     svg="user"
-                    :icon-size="32"
+                    :size="32"
                     :on-click="handleOpenProfile"
                     aria-label="Your profile"
                     title="Your profile"

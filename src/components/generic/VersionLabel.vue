@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-center">
-        <icon :svg="versionName.toLowerCase()" :icon-size="20" />
+        <icon :svg="versionName.toLowerCase()" :size="20" />
         <txt type="tiny" class="ml-2" bold>
             {{ versionName }} {{ versionBuild }}
         </txt>

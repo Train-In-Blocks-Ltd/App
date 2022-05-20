@@ -83,7 +83,7 @@ div#rich_show_content {
             "
         >
             <div v-html="updateHTML(value, true)" class="mr-4" />
-            <icon svg="edit-2" :icon-size="24" class="absolute top-2 right-2" />
+            <icon svg="edit-2" :size="24" class="absolute top-2 right-2" />
         </div>
 
         <!-- Editor -->
@@ -127,7 +127,7 @@ div#rich_show_content {
             <txt class="mr-4">
                 {{ placeholder }}
             </txt>
-            <icon svg="edit-2" :icon-size="24" class="absolute top-2 right-2" />
+            <icon svg="edit-2" :size="24" class="absolute top-2 right-2" />
         </div>
 
         <!-- Button options for editing -->

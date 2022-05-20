@@ -9,7 +9,7 @@
         <icon
             v-else
             svg="user"
-            :icon-size="144"
+            :size="144"
             class="m-auto p-8 border-3 border-gray-800 dark:border-white rounded-full"
         />
         <txt-input
@@ -38,7 +38,7 @@
             @output="(data) => (clientDetails.number = data)"
         />
         <div class="flex items-center mb-4">
-            <icon svg="mail" :icon-size="22" class="mr-2" />
+            <icon svg="mail" :size="22" class="mr-2" />
             <txt>
                 {{ clientDetails.email }}
             </txt>
@@ -82,7 +82,7 @@
                 <icon-button
                     svg="divide-square"
                     :on-click="handleOpenToolkit"
-                    :icon-size="32"
+                    :size="32"
                     class="mr-4"
                     aria-label="Toolkit"
                     title="Toolkit"
@@ -92,7 +92,7 @@
                     svg="archive"
                     class="ml-4"
                     :on-click="archiveClient"
-                    :icon-size="32"
+                    :size="32"
                     aria-label="Archive client"
                     title="Archive client"
                 />

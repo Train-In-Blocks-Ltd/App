@@ -10,7 +10,7 @@
     >
         <inline-svg
             :class="svgClass"
-            :style="{ height: `${iconSize}px`, width: `${iconSize}px` }"
+            :style="{ height: `${size}px`, width: `${size}px` }"
             :src="require(`@/assets/icons/${svg}.svg`)"
         />
     </div>
@@ -21,7 +21,7 @@ export default {
     props: {
         svg: String,
         svgClass: String,
-        iconSize: Number,
+        size: Number,
         onClick: Function,
         disabled: Boolean,
     },

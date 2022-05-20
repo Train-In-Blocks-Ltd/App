@@ -57,7 +57,7 @@
                 } view`"
                 @click="showMonthlyCal = !showMonthlyCal"
             >
-                <icon svg="calendar" :icon-size="20" class="mr-2" />
+                <icon svg="calendar" :size="20" class="mr-2" />
                 Switch to {{ !showMonthlyCal ? "month" : "week" }} view
             </a>
             <week-calendar
@@ -87,7 +87,7 @@
             <div class="flex items-center justify-between mb-8">
                 <icon-button
                     svg="arrow-left"
-                    :icon-size="32"
+                    :size="32"
                     :on-click="() => showing_current_session--"
                     :disabled="showing_current_session === 0"
                     aria-label="Previous session"
@@ -98,7 +98,7 @@
                 </txt>
                 <icon-button
                     svg="arrow-right"
-                    :icon-size="32"
+                    :size="32"
                     :on-click="() => showing_current_session++"
                     :disabled="
                         showing_current_session ===

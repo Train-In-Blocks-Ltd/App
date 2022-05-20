@@ -30,7 +30,7 @@
                         : '/clientUser'
                 "
             >
-                <icon svg="logo-icon" :icon-size="36" />
+                <icon svg="logo-icon" :size="36" />
             </router-link>
         </div>
 

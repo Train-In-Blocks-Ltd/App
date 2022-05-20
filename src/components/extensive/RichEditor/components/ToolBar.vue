@@ -8,7 +8,7 @@
             <icon-button
                 svg="bold"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{ 'opacity-60': editor.isActive('bold') }"
                 :on-click="() => editor.chain().focus().toggleBold().run()"
                 aria-label="Bold"
@@ -19,7 +19,7 @@
             <icon-button
                 svg="italic"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{ 'opacity-60': editor.isActive('italic') }"
                 :on-click="() => editor.chain().focus().toggleItalic().run()"
                 aria-label="Italic"
@@ -30,7 +30,7 @@
             <icon-button
                 svg="underline"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{ 'opacity-60': editor.isActive('underline') }"
                 :on-click="() => editor.chain().focus().toggleUnderline().run()"
                 aria-label="Underline"
@@ -41,7 +41,7 @@
             <icon-button
                 svg="ol"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{
                     'opacity-60': editor.isActive('ordered_list'),
                 }"
@@ -56,7 +56,7 @@
             <icon-button
                 svg="ul"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{
                     'opacity-60': editor.isActive('bullet_list'),
                 }"
@@ -71,7 +71,7 @@
             <icon-button
                 svg="check-square"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{
                     'opacity-60': editor.isActive('taskList'),
                 }"
@@ -84,7 +84,7 @@
             <icon-button
                 svg="horizontal-rule"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{
                     'opacity-60': editor.isActive('horizontalRule'),
                 }"
@@ -99,7 +99,7 @@
             <icon-button
                 svg="link"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{
                     'opacity-60': editor.isActive('link'),
                 }"
@@ -112,7 +112,7 @@
             <icon-button
                 svg="image"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :on-click="handleOpenUpload"
                 aria-label="Image"
                 title="Image"
@@ -123,7 +123,7 @@
                 v-if="templates"
                 svg="file-text"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :on-click="handleOpenTemplates"
                 aria-label="Templates"
                 title="Templates"
@@ -133,7 +133,7 @@
             <icon-button
                 svg="rotate-ccw"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :on-click="() => editor.chain().focus().undo().run()"
                 aria-label="Undo"
                 title="Undo"
@@ -143,7 +143,7 @@
             <icon-button
                 svg="rotate-cw"
                 class="mb-4"
-                :icon-size="22"
+                :size="22"
                 :on-click="() => editor.chain().focus().redo().run()"
                 aria-label="Redo"
                 title="redo"

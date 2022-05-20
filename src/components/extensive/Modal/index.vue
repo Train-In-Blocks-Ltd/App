@@ -20,7 +20,7 @@
                         v-if="!modalPersist"
                         svg="x"
                         :on-click="_close"
-                        :icon-size="32"
+                        :size="32"
                         aria-label="Close"
                         title="Close"
                     />

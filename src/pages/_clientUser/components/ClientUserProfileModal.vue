@@ -14,7 +14,7 @@
                 v-else
                 svg="user"
                 class="p-8 rounded-full mb-8 border-3 border-gray-800 dark:border-white cursor-pointer hover:opacity-60 transition-opacity"
-                :icon-size="64"
+                :size="64"
                 :on-click="handleOpenUpload"
                 aria-label="Upload profile image"
                 title="Upload profile image"

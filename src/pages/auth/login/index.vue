@@ -47,7 +47,7 @@
         class="p-8 md:p-0 w-full max-w-xl pb-16 md:pr-24 m-auto"
     >
         <splash v-if="!splashed" />
-        <icon svg="full-logo" :icon-size="150" />
+        <icon svg="full-logo" :size="150" />
         <a
             class="demo-details"
             href="javascript:void(0)"

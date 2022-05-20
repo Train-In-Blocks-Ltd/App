@@ -11,14 +11,14 @@
                 <icon-button
                     svg="user-plus"
                     :on-click="handleOpenNewClient"
-                    :icon-size="28"
+                    :size="28"
                     aria-label="New client"
                     title="New client"
                 />
                 <icon-button
                     svg="bookmark"
                     :on-click="handleOpenWhatsNew"
-                    :icon-size="28"
+                    :size="28"
                     aria-label="What's new"
                     title="What's new"
                     class="ml-4"
@@ -27,7 +27,7 @@
                     v-if="pwa.displayMode === 'browser tab'"
                     svg="download"
                     :on-click="handleOpenInstall"
-                    :icon-size="28"
+                    :size="28"
                     aria-label="Install"
                     title="Install"
                     class="ml-4"

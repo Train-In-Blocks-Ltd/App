@@ -17,7 +17,7 @@
         :class="{ 'md:hidden': name === 'Refresh' }"
         class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all"
     >
-        <icon :svg="svg" :icon-size="24" />
+        <icon :svg="svg" :size="24" />
     </router-link>
     <a
         v-else-if="
@@ -32,7 +32,7 @@
         :class="{ 'md:hidden': name === 'Refresh' }"
         class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all"
     >
-        <icon :svg="svg" :icon-size="24" />
+        <icon :svg="svg" :size="24" />
     </a>
 </template>
 

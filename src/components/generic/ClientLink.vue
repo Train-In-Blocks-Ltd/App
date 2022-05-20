@@ -27,7 +27,7 @@
             <icon
                 v-else
                 svg="user"
-                :icon-size="80"
+                :size="80"
                 class="p-4 border-3 border-gray-800 dark:border-white rounded-full mr-4"
             />
             <div class="mt-4 sm:mt-0">
@@ -35,13 +35,13 @@
                     {{ client.name }}
                 </txt>
                 <div v-if="client.email" class="flex items-center">
-                    <icon svg="mail" :icon-size="22" class="mr-2" />
+                    <icon svg="mail" :size="22" class="mr-2" />
                     <txt>
                         {{ client.email }}
                     </txt>
                 </div>
                 <div v-if="client.number" class="flex items-center">
-                    <icon svg="smartphone" :icon-size="22" class="mr-2" />
+                    <icon svg="smartphone" :size="22" class="mr-2" />
                     <txt>
                         {{ client.number }}
                     </txt>

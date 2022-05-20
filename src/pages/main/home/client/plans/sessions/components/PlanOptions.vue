@@ -4,7 +4,7 @@
             class="mr-4"
             svg="arrow-left"
             :on-click="() => $router.back()"
-            :icon-size="32"
+            :size="32"
             aria-label="Back"
             title="Back"
         />
@@ -12,7 +12,7 @@
             class="mr-4"
             svg="copy"
             :on-click="handleOpenDuplicate"
-            :icon-size="32"
+            :size="32"
             aria-label="Duplicate plan"
             title="Duplicate plan"
         />
@@ -20,7 +20,7 @@
             class="mr-4"
             svg="pie-chart"
             :on-click="handleOpenStatistics"
-            :icon-size="32"
+            :size="32"
             aria-label="Statistics"
             title="Statistics"
         />
@@ -28,7 +28,7 @@
             v-if="!isDemo"
             svg="trash"
             :on-click="deletePlan"
-            :icon-size="32"
+            :size="32"
             class="text-red-700"
             aria-label="Delete plan"
             title="Delete plan"

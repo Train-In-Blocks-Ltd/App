@@ -39,7 +39,7 @@
                     <icon
                         v-if="option.svg"
                         :svg="option.svg"
-                        :icon-size="31"
+                        :size="31"
                         :class="{ 'text-red-700': option.name === 'Delete' }"
                     />
                 </a>

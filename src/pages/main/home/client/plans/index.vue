@@ -20,7 +20,7 @@
                 <icon-button
                     svg="file-plus"
                     :on-click="handleOpenNewPlan"
-                    :icon-size="28"
+                    :size="28"
                     aria-label="New plan"
                     title="New plan"
                 />

@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between my-8">
             <icon-button
                 svg="arrow-left"
-                :icon-size="32"
+                :size="32"
                 :on-click="
                     () => {
                         monthDiff--;
@@ -27,7 +27,7 @@
             </a>
             <icon-button
                 svg="arrow-right"
-                :icon-size="32"
+                :size="32"
                 :on-click="
                     () => {
                         monthDiff++;

@@ -48,7 +48,7 @@
                 } view`"
                 @click="showMonthlyCal = !showMonthlyCal"
             >
-                <icon svg="calendar" :icon-size="20" class="mr-2" />
+                <icon svg="calendar" :size="20" class="mr-2" />
                 Switch to
                 {{ !showMonthlyCal ? "month" : "week" }} view
             </a>
@@ -173,7 +173,7 @@
                             <icon-button
                                 svg="info"
                                 :on-click="handleOpenInfo"
-                                :icon-size="28"
+                                :size="28"
                                 class="mr-4"
                                 aria-label="Info"
                                 title="Info"
@@ -181,7 +181,7 @@
                             <icon-button
                                 svg="plus"
                                 :on-click="createSingleSession"
-                                :icon-size="28"
+                                :size="28"
                                 aria-label="New session"
                                 title="New session"
                             />
@@ -291,7 +291,7 @@
                                                     : 'corner-right-down'
                                             "
                                             class="ml-auto"
-                                            :icon-size="20"
+                                            :size="20"
                                             :on-click="
                                                 () =>
                                                     toggleExpandedSessions(
