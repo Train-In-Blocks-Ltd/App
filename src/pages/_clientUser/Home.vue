@@ -242,11 +242,11 @@ export default class ClientHome extends Mixins(GeneralMixins) {
     }
 
     handleOpenInfo() {
-        utilsStore.openModal({
-            name: "preview",
-            previewTitle: "",
-            previewHTML: this.portfolio?.notes ?? "",
-        });
+        if (this.portfolio?.notes)
+            utilsStore.openModal({
+                name: "info",
+                previewHTML: this.portfolio.notes,
+            });
     }
 
     handleOpenProfile() {

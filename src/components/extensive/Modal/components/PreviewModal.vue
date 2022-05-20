@@ -5,10 +5,14 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import utilsStore from "../../../../store/modules/utils";
 
-export default {
-    computed: mapState(["previewHTML"]),
-};
+@Component
+export default class PreviewModal extends Vue {
+    get previewHTML() {
+        return utilsStore.previewHTML;
+    }
+}
 </script>
