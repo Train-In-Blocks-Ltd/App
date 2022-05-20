@@ -46,6 +46,47 @@ class ClientModule extends VuexModule {
     }
 
     @MutationAction
+    async createPlan({
+        client_id,
+        name,
+        duration,
+    }: {
+        client_id: number;
+        name: string;
+        duration: number;
+    }) {
+        const block_color = JSON.stringify(new Array(duration).fill("#999999"));
+        const response = await baseAPI.post(
+            "https://api.traininblocks.com/v2/plans",
+            {
+                name,
+                client_id,
+                duration,
+                block_color,
+            }
+        );
+
+        const clientDetails = this.clientDetails;
+        if (!clientDetails) return;
+        clientDetails.plans = [
+            ...(clientDetails.plans ?? []),
+            {
+                id: response.data[0]["LAST_INSERT_ID()"] as number,
+                name,
+                client_id,
+                duration,
+                block_color,
+                notes: "",
+                sessions: [],
+            },
+        ];
+
+        return {
+            clientDetails,
+        };
+    }
+
+    @MutationAction
     async getPlans(id: number) {
         try {
             const response = await baseAPI.get(
