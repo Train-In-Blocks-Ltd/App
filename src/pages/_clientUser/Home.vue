@@ -134,11 +134,11 @@
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
+import { EditorState, Plan, Session } from "../../store/modules/types";
 import appState from "../../store/modules/appState";
 import clientUserStore from "../../store/modules/clientUser";
-import { EditorState, Plan, Session } from "../../store/modules/types";
-import GeneralMixins from "../../generalMixins";
 import utilsStore from "../../store/modules/utils";
+import GeneralMixins from "../../generalMixins";
 
 const PlanCard = () =>
     import(
@@ -202,7 +202,6 @@ export default class ClientHome extends Mixins(GeneralMixins) {
         plans.forEach((p) => {
             if (!!p.sessions) allSessions.push(...p.sessions);
         });
-        console.log(plans);
         return allSessions
             .filter((s) => this.today() === s.date)
             .sort(

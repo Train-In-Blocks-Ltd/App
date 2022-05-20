@@ -36,14 +36,9 @@ class ClientUserModule extends VuexModule {
         };
     }
 
-    /** Updates a client-user's session. */
-    async updateSession({
-        id,
-        name,
-        checked,
-        feedback,
-        programme_id,
-    }: Session) {
+    @MutationAction
+    async updateSession(updatedSession: Session) {
+        const { id, name, checked, feedback, programme_id } = updatedSession;
         await baseAPI.put("https://api.traininblocks.com/v2/client-sessions", {
             id,
             name,
@@ -70,6 +65,20 @@ class ClientUserModule extends VuexModule {
                 });
             }
         }
+
+        const plans: Plan[] = this.plans.map((p) =>
+            p.id !== programme_id
+                ? p
+                : {
+                      ...p,
+                      sessions: p.sessions?.map((s) =>
+                          s.id !== id ? s : updatedSession
+                      ),
+                  }
+        );
+        return {
+            plans,
+        };
     }
 }
 
