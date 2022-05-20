@@ -8,7 +8,7 @@
             enter-active-class="fadeIn fill_mode_both delay"
             leave-active-class="fadeOut fill_mode_both"
         >
-            <router-view :key="$route.fullPath" />
+            <router-view v-if="loaded" :key="$route.fullPath" />
         </transition>
     </wrapper>
 </template>
@@ -37,6 +37,7 @@ export default class Client extends Vue {
     showOptions: boolean = false;
     showToolkit: boolean = false;
     sessions: boolean = false;
+    loaded: boolean = false;
 
     get loading() {
         return appState.loading;
@@ -46,8 +47,10 @@ export default class Client extends Vue {
     }
 
     async created() {
+        this.loaded = false;
         clientStore.setCurrentClient(parseInt(this.$route.params.client_id));
         await clientStore.getPlans(parseInt(this.$route.params.client_id));
+        this.loaded = true;
     }
 }
 </script>

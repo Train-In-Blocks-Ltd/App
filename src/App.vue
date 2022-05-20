@@ -120,7 +120,7 @@ body {
                 enter-active-class="fadeIn fill_mode_both delay"
                 leave-active-class="fadeOut fill_mode_both"
             >
-                <router-view :key="$route.fullPath" />
+                <router-view v-if="loaded" :key="$route.fullPath" />
             </transition>
         </main>
     </div>
@@ -169,7 +169,6 @@ const TopBanner = () =>
     metaInfo() {
         return {
             title: "Home",
-            // all titles will be injected into this template
             titleTemplate: "%s | Train In Blocks",
         };
     },
@@ -199,6 +198,8 @@ export default class App extends Vue {
     get connected() {
         return appState.connected;
     }
+
+    loaded: boolean = false;
 
     // Pop-up refs
     @Ref("responsePopUp") readonly responsePopUpRef!: ResponsePopUpRef;
@@ -338,6 +339,7 @@ export default class App extends Vue {
 
     /** Initiates all the crucial setup for the app. */
     async setup() {
+        this.loaded = false;
         // Set claims
         const claims = (await this.$auth.getUser()) as TIBUserClaims;
         accountStore.setClaims(claims);
@@ -412,6 +414,7 @@ export default class App extends Vue {
             }
         }
 
+        this.loaded = true;
         appState.stopLoaders();
     }
 
