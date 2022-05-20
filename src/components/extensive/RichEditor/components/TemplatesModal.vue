@@ -24,12 +24,7 @@
         >
             <div v-html="system.html" />
             <default-button
-                :on-click="
-                    () => {
-                        editor.commands.insertContent(system.html);
-                        $store.dispatch('closeModal');
-                    }
-                "
+                :on-click="() => handleInsert(system.html)"
                 :aria-label="system.name"
             >
                 {{ system.name }}
@@ -50,12 +45,7 @@
             >
                 <div v-html="item.template" />
                 <default-button
-                    :on-click="
-                        () => {
-                            editor.commands.insertContent(item.template);
-                            $store.dispatch('closeModal');
-                        }
-                    "
+                    :on-click="() => handleInsert(item.template)"
                     :aria-label="item.name"
                 >
                     {{ item.name }}
@@ -112,6 +102,11 @@ export default class TemplatesModal extends Vue {
                     .startsWith(this.search?.toLowerCase())
             ).length === 0
         );
+    }
+
+    handleInsert(html: string) {
+        this.editor?.commands.insertContent(html);
+        utilsStore.closeModal();
     }
 }
 </script>
