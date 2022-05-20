@@ -75,12 +75,10 @@
                                 ? 'border-gray-800'
                                 : 'border-transparent'
                         "
-                        @click="
-                            () => onEventPress(event.session_id, event.week_id)
-                        "
+                        @click="() => onEventPress(event.id, event.week_id)"
                     >
                         <txt :style="{ color: event.textColor }">
-                            {{ event.title }}
+                            {{ event.name }}
                         </txt>
                     </div>
                 </div>

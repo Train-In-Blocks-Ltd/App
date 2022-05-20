@@ -28,7 +28,7 @@ export default class GeneralMixins extends Vue {
             const g = parseInt(hex.substring(2, 4), 16);
             const b = parseInt(hex.substring(4, 6), 16);
             const result = ((r * 299 + g * 587 + b * 114) / 1000 - 128) * -1000;
-            return `rgb(${r}, ${r}, ${r})`;
+            return `rgb(${result}, ${result}, ${result})`;
         }
     }
 

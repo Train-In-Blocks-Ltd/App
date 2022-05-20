@@ -456,16 +456,16 @@ export default class Session extends Mixins(GeneralMixins) {
                 (a, b) =>
                     new Date(a.date).getTime() - new Date(b.date).getTime()
             )
-            .map((session) => {
+            .map(({ name, date, week_id, id }) => {
                 return {
-                    title: session.name,
-                    date: session.date,
-                    color: this.weekColor[session.week_id - 1],
+                    id,
+                    name,
+                    date,
+                    week_id,
+                    color: this.weekColor[week_id - 1],
                     textColor: this.accessible_colors(
-                        this.weekColor[session.week_id - 1]
+                        this.weekColor[week_id - 1]
                     ),
-                    week_id: session.week_id,
-                    session_id: session.id,
                 };
             });
     }

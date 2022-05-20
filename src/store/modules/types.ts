@@ -177,12 +177,12 @@ export type Calculator = {
 };
 
 export type EventRow = {
-    title: string;
+    name: string;
     date: string;
     color: string;
     textColor: string;
     week_id: number;
-    session_id: number;
+    id: number;
 };
 
 export type Protocol = {
