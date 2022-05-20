@@ -66,14 +66,14 @@
                     <txt grey>
                         {{ s.date }}
                     </txt>
-                    <div v-if="s.protocols.length" class="mt-4">
+                    <div v-if="s.protocols.length">
                         <!-- Per protocol section -->
                         <div
                             v-for="(p, pIndex) in s.protocols"
                             :key="`protocol-${p.name}-${pIndex}`"
                         >
-                            <divider class="mb-4" />
-                            <txt bold>Metric: {{ p.name }}</txt>
+                            <divider class="mt-6 mb-4" />
+                            <txt bold>Metric: {{ p.exercise }}</txt>
                             <txt class="mt-2"
                                 >Week {{ currentWeek }}: {{ p.protocol }}</txt
                             >
@@ -83,16 +83,17 @@
                                 v-for="(i, iIndex) in s.inputs[pIndex]"
                                 type="text"
                                 class="mt-2"
-                                :key="`input-${p.name}-${iIndex}`"
+                                :key="`input-${p.exercise}-${iIndex}`"
                                 :label="`Week ${currentWeek + iIndex + 1}:`"
                                 :aria-label="`${p.name}-${iIndex}`"
-                                :value="i"
-                                @output="(data) => (i = data)"
+                                :value="p.protocol"
+                                @output="
+                                    (data) =>
+                                        (progressProtocols[sIndex].inputs[
+                                            pIndex
+                                        ][iIndex] = data)
+                                "
                                 required
-                            />
-                            <divider
-                                v-if="pIndex !== s.protocols.length - 1"
-                                class="my-4"
                             />
                         </div>
                     </div>
@@ -117,10 +118,7 @@
         </div>
 
         <!-- Complete flow -->
-        <!-- <form
-            v-else-if="page === 2"
-            @submit.prevent="progressComplete(), ($parent.showProgress = false)"
-        >
+        <form v-else-if="page === 2" @submit.prevent="__complete">
             <txt bold>You're all set</txt>
             <txt grey>
                 Are you ready to progress the
@@ -139,7 +137,7 @@
                     >Progress</default-button
                 >
             </div>
-        </form> -->
+        </form>
     </div>
 </template>
 
@@ -160,6 +158,7 @@ type ProgressProtocol = {
     id: number;
     name: string;
     date: string;
+    notes: string;
     protocols: Protocol[];
     inputs: string[][];
 };
@@ -191,13 +190,16 @@ export default class ProgressModal extends Mixins(GeneralMixins) {
         const sessions = this.plan?.sessions?.filter((s) =>
             this.selectedIds.includes(s.id)
         );
+
         if (!sessions) return;
+
         this.progressProtocols = sessions.map(({ id, name, date, notes }) => {
             const protocols = this.pull_protocols(name, notes, date);
             return {
                 id,
                 name,
                 date,
+                notes,
                 protocols,
                 inputs: new Array(protocols.length)
                     .fill("")
@@ -208,94 +210,59 @@ export default class ProgressModal extends Mixins(GeneralMixins) {
         });
     }
 
-    /** Processes the required changes to the temporary sessions before posting it to the database. */
-    // progressProcess(sessionId, sessionNotes, loc) {
-    //     this.progressDataInputs.forEach((session) => {
-    //         let n = 0;
-    //         if (session.sessionId === sessionId) {
-    //             session.sessionExercises.forEach((exercise, exerciseIdx) => {
-    //                 const REGEX = new RegExp(
-    //                     `${exercise.exerciseName
-    //                         .replace("(", "\\(")
-    //                         .replace(")", "\\)")}\\s*:\\s*${
-    //                         exercise.exerciseProtocol
-    //                     }`,
-    //                     "g"
-    //                 );
-    //                 sessionNotes = sessionNotes.replace(REGEX, (match) => {
-    //                     return n === exerciseIdx
-    //                         ? `${exercise.exerciseName}: ${
-    //                               exercise.progression[loc - 1]
-    //                           }`
-    //                         : match;
-    //                 });
-    //                 n++;
-    //             });
-    //         }
-    //     });
-    //     return sessionNotes;
-    // }
+    /** Processes the required changes to sessions before posting it to the database. */
+    __process(notes: string, sIndex: number, iIndex: number) {
+        this.progressProtocols[sIndex].protocols.forEach(
+            ({ exercise, protocol }, pIndex) => {
+                const regex = new RegExp(`${exercise}:\\s*${protocol}`, "g");
+                notes = notes.replace(
+                    regex,
+                    `${exercise}: ${this.progressProtocols[sIndex].inputs[pIndex][iIndex]}`
+                );
+            }
+        );
+        return notes;
+    }
 
     /** Initiates the changes and POST it to the database. */
-    // progressComplete() {
-    //     this.$store.dispatch("setLoading", {
-    //         loading: true,
-    //     });
-    //     const PROGRESS_SESSIONS = [];
-    //     this.selectedIds.forEach((sessionId) => {
-    //         PROGRESS_SESSIONS.push(
-    //             this.plan.sessions.find((session) => session.id === sessionId)
-    //         );
-    //     });
-    //     const START_WEEK = this.currentWeek;
-    //     for (
-    //         let weekCount = this.currentWeek + 1;
-    //         weekCount <= this.progressInputs.target;
-    //         weekCount++
-    //     ) {
-    //         PROGRESS_SESSIONS.forEach(async (session) => {
-    //             try {
-    //                 await this.$store.dispatch("addSession", {
-    //                     client_id: parseInt(this.$route.params.client_id),
-    //                     data: {
-    //                         programme_id: parseInt(this.$route.params.id),
-    //                         name: session.name,
-    //                         date: this.addDays(
-    //                             session.date,
-    //                             this.progressInputs.daysBetween *
-    //                                 (weekCount - START_WEEK)
-    //                         ),
-    //                         notes: this.progressProcess(
-    //                             session.id,
-    //                             session.notes,
-    //                             weekCount - START_WEEK
-    //                         ),
-    //                         week_id: weekCount,
-    //                     },
-    //                 });
-    //             } catch (e) {
-    //                 this.$store.dispatch("resolveError", e);
-    //             }
-    //         });
-    //     }
-    //     this.$store.dispatch("closeModal");
-    //     this.$store.commit("SET_DATA", {
-    //         attr: "currentWeek",
-    //         data: this.progressInputs.target,
-    //     });
-    //     this.$store.commit("SET_DATA", {
-    //         attr: "selectedIds",
-    //         data: [],
-    //     });
-    //     this.progressInputs.target = this.plan.duration;
-    //     this.progressInputs.daysBetween = 7;
-    //     this.$ga.event("Session", "progress");
-    //     this.$store.dispatch("openResponsePopUp", {
-    //         title: "Sessions have been progressed",
-    //         description:
-    //             "Please go through them to make sure that you're happy with it",
-    //     });
-    //     this.$store.dispatch("setLoading", false);
-    // }
+    __complete() {
+        appState.setLoading(true);
+
+        let iIndex = 0;
+        for (
+            let week_id = this.currentWeek + 1;
+            week_id <= this.target;
+            week_id++
+        ) {
+            try {
+                this.progressProtocols.forEach(
+                    ({ id: programme_id, name, date, notes }, sIndex) => {
+                        planStore.addSession({
+                            programme_id,
+                            name,
+                            date: this.addDays(
+                                date,
+                                this.daysBetween * (iIndex + 1)
+                            ),
+                            week_id,
+                            notes: this.__process(notes, sIndex, iIndex),
+                        });
+                    }
+                );
+            } catch (e) {
+                utilsStore.resolveError(e as string);
+            }
+            iIndex += 1;
+        }
+        utilsStore.closeModal();
+        planStore.setCurrentWeek(this.target);
+        utilsStore.deselectAll();
+        this.$ga.event("Session", "progress");
+        utilsStore.responsePopUpRef?.open({
+            title: "Sessions have been progressed",
+            text: "Please go through them to make sure that you're happy with it",
+        });
+        appState.stopLoaders();
+    }
 }
 </script>

@@ -820,8 +820,10 @@ export default class Session extends Mixins(GeneralMixins) {
             appState.setDontLeave(true);
             await planStore.addSession({
                 programme_id: parseInt(this.$route.params.id),
+                name: "Untitled",
                 date: this.today(),
                 week_id: this.currentWeek,
+                notes: "",
             });
             this.$ga.event("Session", "new");
             utilsStore.responsePopUpRef?.open({

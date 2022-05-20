@@ -156,7 +156,7 @@ export default class MonthCalendar extends Vue {
             .map((_, i) => {
                 const date = `${this.currentYear}-${(monthEnd.getMonth() + 1)
                     .toString()
-                    .padStart(2, "0")}-${i + 1}`;
+                    .padStart(2, "0")}-${(i + 1).toString().padStart(2, "0")}`;
                 return {
                     date,
                     events: this.events.filter((e) => e.date === date),

@@ -84,15 +84,14 @@ class PlanModule extends VuexModule {
 
     @MutationAction
     async addSession(
-        session: Pick<Session, "programme_id" | "date" | "week_id">
+        session: Pick<
+            Session,
+            "programme_id" | "name" | "date" | "week_id" | "notes"
+        >
     ) {
         const response = await baseAPI.post(
             "https://api.traininblocks.com/v2/sessions",
-            {
-                ...session,
-                notes: "",
-                name: "Untitled",
-            }
+            session
         );
         const newSessionId = response.data[0]["LAST_INSERT_ID()"];
         const plan = this.plan;
