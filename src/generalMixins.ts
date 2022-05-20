@@ -64,7 +64,7 @@ export default class GeneralMixins extends Vue {
     }
 
     /** Extracts anything that is wrapped in square brackets */
-    pull_protocols(name: string, notes: string, date: string) {
+    pull_protocols(name: string, notes: string, date: string): Protocol[] {
         const protocolRegex = /\[\s*(.*?)\s*:\s*(.*?)\]/gi;
         const protocols: Protocol[] = [];
         let finder;
