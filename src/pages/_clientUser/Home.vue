@@ -202,6 +202,7 @@ export default class ClientHome extends Mixins(GeneralMixins) {
         plans.forEach((p) => {
             if (!!p.sessions) allSessions.push(...p.sessions);
         });
+        console.log(plans);
         return allSessions
             .filter((s) => this.today() === s.date)
             .sort(

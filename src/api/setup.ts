@@ -4,6 +4,7 @@ import {
     Client,
     Plan,
     Portfolio,
+    Session,
     Template,
 } from "../store/modules/types";
 
@@ -80,7 +81,8 @@ export const getClientUserData = async (
         (a: Booking, b: Booking) =>
             new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
     );
-    const plans = plansResponse.data[0];
+    const plans: Plan[] = plansResponse.data[0];
+    const allSessions: Session[] = plansResponse.data[1];
 
     return {
         name,
@@ -89,6 +91,12 @@ export const getClientUserData = async (
         portfolio,
         profile_image,
         bookings,
-        plans,
+        plans: plans.map((p) => {
+            const sessions = allSessions.filter((s) => s.programme_id === p.id);
+            return {
+                ...p,
+                sessions,
+            };
+        }),
     };
 };
