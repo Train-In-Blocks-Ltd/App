@@ -184,3 +184,15 @@ export type EventRow = {
     week_id: number;
     session_id: number;
 };
+
+export type Protocol = {
+    name: string;
+    date: string;
+    exercise: string;
+    protocol: string;
+};
+
+export type VisualiseData = {
+    x: string;
+    y?: number;
+};

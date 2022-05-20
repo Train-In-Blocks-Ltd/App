@@ -1,5 +1,7 @@
 import { Component, Vue } from "vue-property-decorator";
+import { Protocol } from "./store/modules/types";
 
+@Component
 export default class GeneralMixins extends Vue {
     /** Today's date in YYYY-MM-DD. */
     today() {
@@ -59,5 +61,26 @@ export default class GeneralMixins extends Vue {
         return html
             .replace('onclick="resize(this)"', "")
             .replace(/contenteditable="true"/gi, "");
+    }
+
+    /** Extracts anything that is wrapped in square brackets */
+    pull_protocols(name: string, notes: string, date: string) {
+        const protocolRegex = /\[\s*(.*?)\s*:\s*(.*?)\]/gi;
+        const protocols: Protocol[] = [];
+        let finder;
+        const noHTMLNotes = notes.replace(/<[^>]*>?/gim, "");
+        while ((finder = protocolRegex.exec(noHTMLNotes)) !== null) {
+            if (finder.index === protocolRegex.lastIndex)
+                protocolRegex.lastIndex++;
+
+            const data: Protocol = {
+                name,
+                date,
+                exercise: finder[1],
+                protocol: finder[2],
+            };
+            protocols.push(data);
+        }
+        return protocols;
     }
 }
