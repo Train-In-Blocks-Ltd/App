@@ -244,9 +244,9 @@ export default class StatisticsModal extends Mixins(GeneralMixins) {
                     ...s.filter((p) => p.exercise === this.selectedDataName)
                 );
             });
-            sessionExercisePackets.forEach(({ name, protocol }) => {
+            sessionExercisePackets.forEach(({ date, protocol }) => {
                 processedData.push({
-                    x: name,
+                    x: date,
                     y: this.__getData(protocol),
                 });
             });
