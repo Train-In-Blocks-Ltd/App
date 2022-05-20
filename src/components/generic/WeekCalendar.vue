@@ -107,7 +107,10 @@ type WeekRow = { date: string; dateSplit: number[]; events: EventRow[] };
 })
 export default class WeekCalendar extends Mixins(GeneralMixins) {
     @Prop(Array) readonly events!: EventRow[];
-    @Prop(Function) readonly onEventPress!: () => void;
+    @Prop(Function) readonly onEventPress!: (
+        id: number,
+        week_id?: number
+    ) => void;
 
     currentMonday: WeekRow | null = null;
     weekDiff: number = 0;

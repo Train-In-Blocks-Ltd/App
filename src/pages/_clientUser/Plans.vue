@@ -62,13 +62,13 @@
             </a>
             <week-calendar
                 v-if="!showMonthlyCal"
-                :events="sessionDates"
+                :events="events"
                 :is-trainer="false"
                 :on-event-press="goToEvent"
             />
             <month-calendar
                 v-else
-                :events="sessionDates"
+                :events="events"
                 :is-trainer="false"
                 :on-event-press="goToEvent"
             />
@@ -136,14 +136,7 @@
                 <default-button
                     v-if="!feedbackId"
                     :theme="session.checked === 1 ? 'green' : 'red'"
-                    :on-click="
-                        () =>
-                            handleToggleComplete(
-                                plan.id,
-                                session.id,
-                                session.checked
-                            )
-                    "
+                    :on-click="() => handleToggleComplete(session)"
                     :aria-label="
                         session.checked === 1
                             ? 'Completed'
@@ -184,27 +177,33 @@
     </wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Mixins } from "vue-property-decorator";
+import { NavigationGuardNext, Route } from "vue-router";
+import appState from "../../store/modules/appState";
+import clientUserStore from "../../store/modules/clientUser";
+import utilsStore from "../../store/modules/utils";
+import GeneralMixins from "../../generalMixins";
+import { EditorState, Session } from "../../store/modules/types";
 
 const WeekCalendar = () =>
     import(
-        /* webpackChunkName: "components.weekCalendar", webpackPreload: true  */ "@/components/generic/WeekCalendar"
+        /* webpackChunkName: "components.weekCalendar", webpackPreload: true  */ "../../components/generic/WeekCalendar.vue"
     );
 const MonthCalendar = () =>
     import(
-        /* webpackChunkName: "components.monthCalendar", webpackPreload: true */ "@/components/generic/MonthCalendar"
+        /* webpackChunkName: "components.monthCalendar", webpackPreload: true */ "../../components/generic/MonthCalendar.vue"
     );
 const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../components/generic/LabelWrapper.vue"
     );
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "../../components/generic/CardWrapper.vue"
     );
 
-export default {
+@Component({
     metaInfo() {
         return {
             title: "Plans",
@@ -216,159 +215,114 @@ export default {
         CardWrapper,
         LabelWrapper,
     },
-    async beforeRouteLeave(to, from, next) {
+})
+export default class ClientPlans extends Mixins(GeneralMixins) {
+    showing_current_session: number = 0;
+    forceStop: number = 0;
+    feedbackId: number | null = null;
+    tempEditorStore: string | null = null;
+    showMonthlyCal: boolean = false;
+
+    get dontLeave() {
+        return appState.dontLeave;
+    }
+    get loading() {
+        return appState.loading;
+    }
+    get plan() {
+        return clientUserStore.plans.find(
+            (p) => p.id === parseInt(this.$route.params.id)
+        );
+    }
+    set plan(value) {
+        if (value)
+            clientUserStore.setPlans(
+                clientUserStore.plans.map((p) =>
+                    p.id !== value.id ? p : value
+                )
+            );
+    }
+    get weekColor() {
+        const colors = this.plan?.block_color;
+        if (!colors) return new Array(this.plan?.duration).fill("#282828");
+        return JSON.parse(colors);
+    }
+    get events() {
+        return this.plan?.sessions
+            ?.sort(
+                (a, b) =>
+                    new Date(a.date).getTime() - new Date(b.date).getTime()
+            )
+            .map(({ name, date, week_id, id }) => {
+                return {
+                    id,
+                    name,
+                    date,
+                    week_id,
+                    color: this.weekColor[week_id - 1],
+                    textColor: this.accessible_colors(
+                        this.weekColor[week_id - 1]
+                    ),
+                };
+            });
+    }
+
+    async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await this.$store.dispatch("openConfirmPopUp", {
+                ? await utilsStore.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
                 : true
         ) {
-            this.$store.dispatch("setLoading", {
-                dontLeave: false,
-            });
+            appState.setDontLeave(false);
             next();
         }
-    },
-    data() {
-        return {
-            // SYSTEM
+    }
 
-            showing_current_session: 0,
+    /** Resolves the state of the feedback editor. */
+    resolveFeedbackEditor(state: EditorState, id: number) {
+        const session = this.plan?.sessions?.find((s) => s.id === id);
+        if (!session) return;
+        switch (state) {
+            case "edit":
+                appState.setDontLeave(true);
+                this.feedbackId = id;
+                this.forceStop += 1;
+                this.tempEditorStore = session.feedback;
+                break;
+            case "save":
+                this.feedbackId = null;
+                clientUserStore.updateSession(session);
+                break;
+            case "cancel":
+                appState.setDontLeave(false);
+                this.feedbackId = null;
+                session.feedback = this.tempEditorStore;
+                break;
+        }
+    }
 
-            // EDIT
+    /** Scrolls towards the target session. */
+    goToEvent(id: number) {
+        const sIndex = this.plan?.sessions?.findIndex((s) => s.id === id);
+        if (sIndex === undefined) return;
+        this.showing_current_session = sIndex;
+        setTimeout(() => {
+            document
+                .getElementById(`session-${id}`)
+                ?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+    }
 
-            forceStop: 0,
-            feedbackId: null,
-            tempEditorStore: null,
-
-            // CALENDAR
-
-            showMonthlyCal: false,
-            sessionDates: [],
-        };
-    },
-    computed: {
-        ...mapState(["clientUserLoaded", "loading", "dontLeave", "clientUser"]),
-        plan() {
-            return (
-                this.$store.state.clientUser.plans?.find(
-                    (plan) => plan.id === parseInt(this.$route.params.id)
-                ) ?? []
-            );
-        },
-    },
-    async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
+    /** Toggles the complete state of the session. */
+    handleToggleComplete(session: Session) {
+        clientUserStore.updateSession({
+            ...session,
+            checked: !!session.checked ? 0 : 1,
         });
-        await this.$parent.getClientSideData();
-        this.loadPlanData();
-        this.$store.dispatch("setLoading", false);
-    },
-    methods: {
-        /** Loads new data into the plan. */
-        loadPlanData() {
-            this.__getWeekColor();
-            this.__getCalendarSessions();
-        },
-
-        /** Gets the week colors. */
-        __getWeekColor() {
-            this.weekColor = this.plan.block_color
-                .replace("[", "")
-                .replace("]", "")
-                .split(",");
-        },
-
-        /** Updates calendar events. */
-        __getCalendarSessions() {
-            if (!this.plan.sessions) return [];
-
-            this.sessionDates = this.plan.sessions
-                .sort((a, b) => new Date(a.date) - new Date(b.date))
-                .map((session) => {
-                    return {
-                        title: session.name,
-                        date: session.date,
-                        color: this.weekColor[session.week_id - 1],
-                        textColor: this.accessible_colors(
-                            this.weekColor[session.week_id - 1]
-                        ),
-                        week_id: session.week_id,
-                        session_id: session.id,
-                    };
-                });
-        },
-
-        /**
-         * Resolves the state of the feedback editor.
-         */
-        resolveFeedbackEditor(state, id) {
-            let plan;
-            let session;
-            this.clientUser.plans.forEach((planItem) => {
-                if (planItem.sessions) {
-                    planItem.sessions.forEach((sessionItem) => {
-                        if (sessionItem.id === id) {
-                            plan = planItem;
-                            session = sessionItem;
-                        }
-                    });
-                }
-            });
-            switch (state) {
-                case "edit":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: true,
-                    });
-                    this.feedbackId = id;
-                    this.forceStop += 1;
-                    this.tempEditorStore = session.feedback;
-                    break;
-                case "save":
-                    this.feedbackId = null;
-                    this.$parent.updateClientSideSession(plan.id, session.id);
-                    break;
-                case "cancel":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: false,
-                    });
-                    this.feedbackId = null;
-                    session.feedback = this.tempEditorStore;
-                    break;
-            }
-        },
-
-        /**
-         * Scrolls towards the target session.
-         */
-        goToEvent(id) {
-            const SESSION_INDEX = this.sessionDates.findIndex(
-                (session) => session.session_id === id
-            );
-            this.showing_current_session = SESSION_INDEX;
-            setTimeout(() => {
-                document
-                    .getElementById(`session-${id}`)
-                    .scrollIntoView({ behavior: "smooth" });
-            }, 100);
-        },
-
-        /**
-         * Toggles the complete state of the session.
-         */
-        handleToggleComplete(planId, sessionId, currentChecked) {
-            this.$store.commit("updateClientUserPlanSingleSession", {
-                planId,
-                sessionId,
-                attr: "checked",
-                data: !currentChecked ? 1 : 0,
-            });
-            this.$parent.updateClientSideSession(planId, sessionId);
-            this.$store.dispatch("setLoading", false);
-        },
-    },
-};
+        appState.stopLoaders();
+    }
+}
 </script>

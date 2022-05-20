@@ -425,19 +425,6 @@ export default class App extends Vue {
         appState.stopLoaders();
     }
 
-    /** Gets all the data for setup on the client-side. */
-    async getClientSideData() {
-        if (!this.clientUserLoaded) {
-            try {
-                await this.$store.dispatch("getClientSideInfo");
-                await this.$store.dispatch("getClientSidePlans");
-                appState.setClientUserLoaded(true);
-            } catch (e) {
-                utilsStore.resolveError(e as string);
-            }
-        }
-    }
-
     /** Updates a client-side session. */
     async updateClientSideSession(planId: number, sessionId: number) {
         try {

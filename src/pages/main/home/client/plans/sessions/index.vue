@@ -397,6 +397,26 @@ const CardWrapper = () =>
     },
 })
 export default class Session extends Mixins(GeneralMixins) {
+    forceStop: number = 0;
+    tempEditorStore: string | null = "";
+    isEditingSession: boolean = false;
+    editSession: number | null = null;
+    expandedSessions: number[] = [];
+    multiselectOption: MultiselectOption[] = [
+        { name: "Complete", svg: "check-circle" },
+        { name: "Incomplete", svg: "x-circle" },
+        { name: "Progress", svg: "arrow-right" },
+        { name: "Duplicate", svg: "copy" },
+        { name: "Move", svg: "move" },
+        { name: "Shift", svg: "corner-down-right" },
+        { name: "Print", svg: "printer" },
+        { name: "Delete", svg: "trash" },
+        { name: "Deselect", svg: undefined },
+    ];
+    weekSessions: number[] = [];
+    showMonthlyCal: boolean = false;
+    allowMoreWeeks: boolean = false;
+
     get plan() {
         return planStore.plan;
     }
@@ -449,7 +469,6 @@ export default class Session extends Mixins(GeneralMixins) {
     get isDemo() {
         return appState.isDemo;
     }
-    /** Updates calendar events. */
     get events() {
         return planStore.plan?.sessions
             ?.sort(
@@ -469,38 +488,6 @@ export default class Session extends Mixins(GeneralMixins) {
                 };
             });
     }
-
-    forceStop: number = 0;
-    tempEditorStore: string | null = "";
-    isEditingSession: boolean = false;
-    editSession: number | null = null;
-
-    // SYSTEM
-
-    expandedSessions: number[] = [];
-    multiselectOption: MultiselectOption[] = [
-        { name: "Complete", svg: "check-circle" },
-        { name: "Incomplete", svg: "x-circle" },
-        { name: "Progress", svg: "arrow-right" },
-        { name: "Duplicate", svg: "copy" },
-        { name: "Move", svg: "move" },
-        { name: "Shift", svg: "corner-down-right" },
-        { name: "Print", svg: "printer" },
-        { name: "Delete", svg: "trash" },
-        { name: "Deselect", svg: undefined },
-    ];
-
-    // WEEK
-
-    weekSessions: number[] = [];
-
-    // CALENDAR
-
-    showMonthlyCal: boolean = false;
-
-    // MICROCYCLE
-
-    allowMoreWeeks: boolean = false;
 
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
@@ -729,9 +716,9 @@ export default class Session extends Mixins(GeneralMixins) {
     }
 
     /** Scrolls to session. */
-    goToEvent(id: number, week: number) {
+    goToEvent(id: number, week_id: number) {
         this.toggleExpandAll("Expand");
-        planStore.setCurrentWeek(week);
+        planStore.setCurrentWeek(week_id);
         setTimeout(() => {
             document
                 .getElementById(`session-${id}`)

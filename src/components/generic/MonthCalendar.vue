@@ -125,7 +125,10 @@ type Day = {
 })
 export default class MonthCalendar extends Vue {
     @Prop(Array) readonly events!: EventRow[];
-    @Prop(Function) readonly onEventPress!: () => void;
+    @Prop(Function) readonly onEventPress!: (
+        id: number,
+        week_id?: number
+    ) => void;
 
     currentMonth: string = "";
     currentYear: string = "";
