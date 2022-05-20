@@ -63,7 +63,7 @@ export const getTrainerUserData = async (
 };
 
 export const getClientUserData = async (
-    id: string
+    id: number
 ): Promise<ClientUserData> => {
     const response = await baseAPI.get(
         `https://api.traininblocks.com/v2/clientUser/${id}`

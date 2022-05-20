@@ -77,6 +77,8 @@ export type TIBUserClaims = UserClaims & {
     ga: boolean;
     theme: DarkmodeType;
     policy: any[];
+    user_type: "Admin" | "Client" | "Trainer";
+    client_id_db: number;
 };
 
 export type NavLinkType = {

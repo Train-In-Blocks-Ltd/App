@@ -49,6 +49,8 @@ import appState from "../../store/modules/appState";
 import accountStore from "../../store/modules/account";
 import utilsStore from "../../store/modules/utils";
 import bookingsStore from "../../store/modules/bookings";
+import clientUserStore from "../../store/modules/clientUser";
+import { Booking } from "../../store/modules/types";
 
 @Component
 export default class BookingForm extends Mixins(GeneralMixins) {
@@ -66,21 +68,24 @@ export default class BookingForm extends Mixins(GeneralMixins) {
 
     /** Creates a new booking. */
     async createBooking() {
+        if (!this.claims) return;
         try {
             appState.setDontLeave(true);
             appState.setDisableButton(true);
-            await bookingsStore.createBooking(
-                {
-                    client_id: this.isTrainer
-                        ? this.$route.params.client_id
-                        : this.claims?.client_id_db,
-                    datetime:
-                        this.bookingForm.date + " " + this.bookingForm.time,
-                    notes: this.bookingForm.notes ?? "",
-                    status: this.isTrainer ? "Scheduled" : "Pending",
-                },
-                this.isTrainer
-            );
+            const data: Pick<
+                Booking,
+                "client_id" | "datetime" | "notes" | "status"
+            > = {
+                client_id: this.isTrainer
+                    ? parseInt(this.$route.params.client_id)
+                    : this.claims?.client_id_db,
+                datetime: this.bookingForm.date + " " + this.bookingForm.time,
+                notes: this.bookingForm.notes ?? "",
+                status: this.isTrainer ? "Scheduled" : "Pending",
+            };
+            if (this.isTrainer) await bookingsStore.createTrainerBooking(data);
+            else await clientUserStore.createClientBooking(data);
+
             this.bookingForm = {
                 date: this.today(),
                 time: this.timeNow(),

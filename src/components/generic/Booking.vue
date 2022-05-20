@@ -85,6 +85,7 @@ import accountStore from "../../store/modules/account";
 import appState from "../../store/modules/appState";
 import utilsStore from "../../store/modules/utils";
 import bookingsStore from "../../store/modules/bookings";
+import clientUserStore from "../../store/modules/clientUser";
 
 const CardWrapper = () =>
     import(
@@ -120,6 +121,7 @@ export default class BookingRow extends Vue {
 
     /** Accepts a booking request made by the client-user. */
     async acceptBookingRequest() {
+        if (!this.claims) return;
         if (
             await utilsStore.confirmPopUpRef?.open({
                 title: "Are you sure you want to accept this booking?",
@@ -148,6 +150,7 @@ export default class BookingRow extends Vue {
 
     /** Cancels a booking. */
     async cancelBooking() {
+        if (!this.claims) return;
         if (
             await utilsStore.confirmPopUpRef?.open({
                 title: "Are you sure you want to cancel this booking?",
@@ -156,16 +159,16 @@ export default class BookingRow extends Vue {
         ) {
             try {
                 appState.setDontLeave(true);
-                await bookingsStore.deleteBooking(
-                    {
-                        id: this.booking.id,
-                        client_id: this.isTrainer
-                            ? parseInt(this.$route.params.client_id)
-                            : this.claims?.client_id_db,
-                        datetime: this.booking.datetime,
-                    },
-                    this.isTrainer
-                );
+                const data: Pick<Booking, "id" | "client_id" | "datetime"> = {
+                    id: this.booking.id,
+                    client_id: this.isTrainer
+                        ? parseInt(this.$route.params.client_id)
+                        : this.claims?.client_id_db,
+                    datetime: this.booking.datetime,
+                };
+                if (this.isTrainer)
+                    await bookingsStore.deleteTrainerBooking(data);
+                else await clientUserStore.deleteClientBooking(data);
                 utilsStore.responsePopUpRef?.open({
                     title: "Booking cancelled",
                     text: "Your trainer will be notified",

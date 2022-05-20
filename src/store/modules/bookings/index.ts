@@ -28,15 +28,12 @@ class BookingsModule extends VuexModule {
     }
 
     @MutationAction
-    async createBooking(
-        {
-            client_id,
-            datetime,
-            notes,
-            status,
-        }: Pick<Booking, "client_id" | "datetime" | "notes" | "status">,
-        isTrainer?: boolean
-    ) {
+    async createTrainerBooking({
+        client_id,
+        datetime,
+        notes,
+        status,
+    }: Pick<Booking, "client_id" | "datetime" | "notes" | "status">) {
         const response = await baseAPI.post(
             "https://api.traininblocks.com/v2/bookings",
             {
@@ -44,33 +41,18 @@ class BookingsModule extends VuexModule {
                 datetime,
                 notes,
                 status,
-                isTrainer,
+                isTrainer: true,
             }
         );
 
-        if (!isTrainer) {
-            const PT_EMAIL = await baseAPI.post("/.netlify/functions/okta", {
-                type: "GET",
-                url: `?filter=id+eq+"${portfolioStore.pt_id}"&limit=1`,
-            });
-            await baseAPI.post("/.netlify/functions/send-email", {
-                to: PT_EMAIL.data[0].credentials.emails[0].value,
-                ...emailBuilder("booking-requested", {
-                    clientName: clientUserStore.name,
-                    datetime: datetime,
-                    link: `https://app.traininblocks.com/client/${client_id}`,
-                }),
-            });
-        } else {
-            await baseAPI.post("/.netlify/functions/send-email", {
-                to: clientsStore.clients.find(
-                    (client) => client.client_id === client_id
-                )?.email,
-                ...emailBuilder("booking-created", {
-                    datetime: datetime,
-                }),
-            });
-        }
+        await baseAPI.post("/.netlify/functions/send-email", {
+            to: clientsStore.clients.find(
+                (client) => client.client_id === client_id
+            )?.email,
+            ...emailBuilder("booking-created", {
+                datetime: datetime,
+            }),
+        });
 
         const bookings: Booking[] = [
             ...this.bookings,
@@ -125,34 +107,13 @@ class BookingsModule extends VuexModule {
     }
 
     @MutationAction
-    async deleteBooking(
-        {
-            id,
-            client_id,
-            datetime,
-        }: Pick<Booking, "client_id" | "id" | "datetime">,
-        isTrainer?: boolean
-    ) {
+    async deleteTrainerBooking({
+        id,
+        client_id,
+        datetime,
+    }: Pick<Booking, "client_id" | "id" | "datetime">) {
         await baseAPI.delete(`https://api.traininblocks.com/v2/bookings/${id}`);
-        if (!isTrainer) {
-            const PT_EMAIL = await baseAPI.post("/.netlify/functions/okta", {
-                type: "GET",
-                url: `?filter=id+eq+"${portfolioStore.pt_id}"&limit=1`,
-            });
-            await baseAPI.post("/.netlify/functions/send-email", {
-                to: PT_EMAIL.data[0].credentials.emails[0].value,
-                ...emailBuilder("booking-request-cancelled", {
-                    clientName: clientUserStore.name,
-                    datetime: datetime,
-                    link: `https://app.traininblocks.com/client/${client_id}`,
-                }),
-            });
-        } else if (
-            new Date(
-                this.bookings.find((booking) => booking.id === id)?.datetime ??
-                    ""
-            ) > new Date()
-        ) {
+        if (new Date(datetime) > new Date()) {
             await baseAPI.post("/.netlify/functions/send-email", {
                 to: clientsStore.clients.find(
                     (client) => client.client_id === client_id
