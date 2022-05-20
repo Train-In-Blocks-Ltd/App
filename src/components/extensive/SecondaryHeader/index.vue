@@ -8,10 +8,11 @@
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        title: String,
-    },
-};
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+
+@Component
+export default class SecondaryHeader extends Vue {
+    @Prop(String) readonly title!: string;
+}
 </script>
