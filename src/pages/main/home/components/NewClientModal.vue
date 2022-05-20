@@ -10,9 +10,8 @@
             autocomplete="name"
             placeholder="Name*"
             aria-label="Name"
-            :value="newClient.name"
-            :on-input="checkForm()"
-            @output="(data) => (newClient.name = data)"
+            :value="name"
+            @output="(data) => (name = data)"
             focusFirst
             required
         />
@@ -21,9 +20,8 @@
             autocomplete="email"
             placeholder="Email*"
             aria-label="Email"
-            :value="newClient.email"
-            :on-input="checkForm()"
-            @output="(data) => (newClient.email = data)"
+            :value="email"
+            @output="(data) => (email = data)"
             required
         />
         <txt-input
@@ -31,14 +29,15 @@
             autocomplete="email"
             placeholder="Confirm email*"
             aria-label="Confirm email"
-            :value="newClient.confirm"
+            :value="confirm"
             :error="
-                newClient.email !== newClient.confirm
+                !validEmail && email !== ''
+                    ? 'Invalid email'
+                    : email !== confirm
                     ? 'Email does\'t match'
                     : ''
             "
-            :on-input="checkForm()"
-            @output="(data) => (newClient.confirm = data)"
+            @output="(data) => (confirm = data)"
             required
         />
         <txt-input
@@ -48,18 +47,13 @@
             placeholder="Mobile"
             aria-label="Mobile"
             pattern="\d+"
-            :value="newClient.number"
-            :on-input="checkForm()"
-            @output="(data) => (newClient.number = data)"
+            :value="number"
+            @output="(data) => (number = data)"
         />
         <default-button
-            :is-disabled="
-                disableCreateClientButton ||
-                newClient.email === '' ||
-                newClient.email !== newClient.confirm
-            "
             type="submit"
             aria-label="Save"
+            :is-disabled="!valid && !validEmail"
         >
             Save
         </default-button>
@@ -72,32 +66,33 @@ import accountStore from "../../../../store/modules/account";
 import appState from "../../../../store/modules/appState";
 import utilsStore from "../../../../store/modules/utils";
 import clientsStore from "../../../../store/modules/clients";
+import { EMAIL_REGEX } from "../../../../common/helpers";
 
 @Component
 export default class NewClientModal extends Vue {
-    newClient = {
-        name: "",
-        email: "",
-        confirm: "",
-        number: "",
-        notes: "",
-    };
-    disableCreateClientButton: boolean = true;
+    name: string = "";
+    email: string = "";
+    confirm: string = "";
+    number: string = "";
+    notes: string = "";
 
     get claims() {
         return accountStore.claims;
     }
-
-    checkForm() {
-        this.disableCreateClientButton = !(
-            this.newClient.name &&
-            this.newClient.email &&
-            this.newClient.confirm
+    get valid() {
+        return (
+            !!this.name &&
+            !!this.email &&
+            !!this.confirm &&
+            this.email === this.confirm
         );
+    }
+    get validEmail() {
+        return this.email.match(EMAIL_REGEX);
     }
 
     createClient() {
-        if (this.newClient.email === this.claims?.email) {
+        if (this.email === this.claims?.email) {
             utilsStore.responsePopUpRef?.open({
                 title: "You cannot create a client with your own email address!",
                 text: "Please use a different one.",
@@ -109,23 +104,19 @@ export default class NewClientModal extends Vue {
                 appState.setDontLeave(true);
                 clientsStore.createClient({
                     pt_id: this.claims?.sub ?? "",
-                    name: this.newClient.name,
-                    email: this.newClient.email,
-                    number: this.newClient.number,
+                    name: this.name,
+                    email: this.email,
+                    number: this.number,
                 });
                 utilsStore.responsePopUpRef?.open({
-                    title: `Added ${this.newClient.name}`,
+                    title: `Added ${this.name}`,
                     text: "Well done on getting a new client",
                 });
-                // @ts-expect-error
-                this.$parent.persistResponse = this.newClient.name;
-                this.newClient = {
-                    name: "",
-                    email: "",
-                    confirm: "",
-                    number: "",
-                    notes: "",
-                };
+                this.name = "";
+                this.email = "";
+                this.confirm = "";
+                this.number = "";
+                this.notes = "";
                 this.$ga.event("Client", "new");
                 appState.stopLoaders();
                 appState.stopLoaders();
