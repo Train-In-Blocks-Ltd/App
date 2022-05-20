@@ -1,6 +1,6 @@
 <template>
     <wrapper v-if="claims" id="account">
-        <txt type="title" is-main>Your Account</txt>
+        <txt type="title" main>Your Account</txt>
         <div v-if="claims" class="grid md:grid-cols-2 gap-16 my-8">
             <!-- Left-side -->
             <div>

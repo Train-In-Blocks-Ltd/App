@@ -1,6 +1,6 @@
 <template>
     <h1
-        v-if="type === 'title' && isMain"
+        v-if="type === 'title' && main"
         :class="{ 'text-gray-600 dark:text-gray-300': grey }"
         class="text-4xl font-bold"
     >
@@ -42,16 +42,22 @@
     </p>
 </template>
 
-<script>
-export default {
-    props: {
-        type: {
-            type: String,
-            default: "body",
-        },
-        isMain: Boolean,
-        grey: Boolean,
-        bold: Boolean,
-    },
-};
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+
+type TxtType =
+    | "title"
+    | "subtitle"
+    | "tiny"
+    | "large-body"
+    | "body"
+    | undefined;
+
+@Component
+export default class Txt extends Vue {
+    @Prop(String) readonly type!: TxtType;
+    @Prop(Boolean) readonly main!: boolean;
+    @Prop(Boolean) readonly grey!: boolean;
+    @Prop(Boolean) readonly bold!: boolean;
+}
 </script>

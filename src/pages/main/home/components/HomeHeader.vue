@@ -3,7 +3,7 @@
         <div class="skeleton-item-lg" />
     </div>
     <div v-else class="flex flex-col sm:flex-row justify-between mb-8">
-        <txt type="title" isMain>Clients</txt>
+        <txt type="title" main>Clients</txt>
         <div
             class="flex items-center justify-between sm:justify-start w-full sm:w-auto mt-4 sm:mt-0"
         >

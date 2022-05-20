@@ -6,7 +6,7 @@
             @response="resolveArchiveMultiselect"
         />
         <div class="flex justify-between mb-4">
-            <txt type="title" is-main>Archive</txt>
+            <txt type="title" main>Archive</txt>
             <a
                 v-if="
                     archivedClients.length !== 0 &&
