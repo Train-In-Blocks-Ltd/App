@@ -92,7 +92,12 @@ export const getClientUserData = async (
         profile_image,
         bookings,
         plans: plans.map((p) => {
-            const sessions = allSessions.filter((s) => s.programme_id === p.id);
+            const sessions = allSessions
+                .filter((s) => s.programme_id === p.id)
+                .sort(
+                    (a, b) =>
+                        new Date(a.date).getTime() - new Date(b.date).getTime()
+                );
             return {
                 ...p,
                 sessions,
