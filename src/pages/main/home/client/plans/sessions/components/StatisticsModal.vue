@@ -20,26 +20,12 @@
             <dropdown
                 v-if="showDataTypeSelector"
                 label="Data type"
-                class="mb-2"
+                class="mb-8"
                 :value="selectedDataType"
                 :items="dataTypeDropdownItems"
                 @output="
                     (data) => {
                         selectedDataType = data;
-                        handleSelectionChange();
-                    }
-                "
-            />
-
-            <!-- Chart type dropdown -->
-            <dropdown
-                label="Chart type"
-                class="mb-4"
-                :value="selectedChartType"
-                :items="chartTypeDropdownItems"
-                @output="
-                    (data) => {
-                        selectedChartType = data;
                         handleSelectionChange();
                     }
                 "
@@ -99,15 +85,6 @@
         <div>
             <canvas id="chart" />
         </div>
-
-        <!-- Placeholder -->
-        <!-- <div v-else>
-            <txt type="large-body" bold>No data to plot on the graph</txt>
-            <txt>
-                Make sure that you've used the correct format and have chosen a
-                selection above
-            </txt>
-        </div> -->
     </div>
 </template>
 
@@ -125,7 +102,6 @@ import { ChartItem } from "chart.js";
 import Chart from "chart.js/auto";
 
 type DataType = "Sets" | "Reps" | "Load" | "Volume";
-type ChartType = "line" | "scatter";
 
 @Component
 export default class StatisticsModal extends Mixins(GeneralMixins) {
@@ -140,24 +116,12 @@ export default class StatisticsModal extends Mixins(GeneralMixins) {
     ];
     selectedDataType: DataType = "Sets";
     showDataTypeSelector: boolean = true;
-    selectedChartType: ChartType = "line";
     resetGraph: number = 0;
     dataToVisualise: Required<VisualiseData>[] = [];
     planOverviewDates: string[] = [];
     dateDaysToVisualise: any[] = [];
     protocolErrors: Protocol[] = [];
     chart: any = null;
-
-    chartTypeDropdownItems: DropdownItem[] = [
-        {
-            label: "Line",
-            value: "line",
-        },
-        {
-            label: "Scatter",
-            value: "scatter",
-        },
-    ];
 
     get plan() {
         return planStore.plan;
@@ -232,6 +196,11 @@ export default class StatisticsModal extends Mixins(GeneralMixins) {
                 },
                 options: {
                     responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
                 },
             });
         this.__generateData();
