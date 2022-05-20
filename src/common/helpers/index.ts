@@ -44,3 +44,18 @@ export const getOtherMeasure = (protocol: string) => {
     if (!number) return;
     return parseFloat(number[0]);
 };
+
+export const MONTHS = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+];

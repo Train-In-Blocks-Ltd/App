@@ -8,7 +8,6 @@
                 :on-click="
                     () => {
                         monthDiff--;
-                        getMonth();
                     }
                 "
                 aria-label="Previous month"
@@ -20,7 +19,6 @@
                 @click="
                     () => {
                         monthDiff = 1;
-                        getMonth();
                     }
                 "
                 aria-label="Today"
@@ -33,7 +31,6 @@
                 :on-click="
                     () => {
                         monthDiff++;
-                        getMonth();
                     }
                 "
                 aria-label="Next month"
@@ -65,8 +62,7 @@
                     v-if="!!day"
                     :class="{
                         'bg-transparent shadow-none': !day,
-                        'bg-yellow-100 dark:bg-gray-400':
-                            today() === new Date(day.date),
+                        'bg-yellow-100 dark:bg-gray-400': today() === day.date,
                     }"
                     class="min-h-28 p-2 rounded-lg shadow-lg text-right"
                 >
@@ -108,8 +104,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
 import { EventRow } from "../../store/modules/types";
+import { MONTHS } from "../../common/helpers";
 
 const LabelWrapper = () =>
     import(
@@ -133,101 +130,40 @@ export default class MonthCalendar extends Vue {
     currentMonth: string = "";
     currentYear: string = "";
     monthDiff: number = 1;
-    month: (Day | null)[] = [];
 
-    @Watch("events")
-    onEventsChange() {
-        this.getMonth();
-    }
-
-    created() {
-        this.getMonth();
-    }
-
-    /** Converts index to month. */
-    getMonthNumber(month: string) {
-        const MONTHS = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-        ];
-        return MONTHS.indexOf(month) + 1;
-    }
-
-    /** Initiates the calendar and populates it. */
-    getMonth() {
-        const MONTHS = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-        ];
+    get month() {
         const today = new Date();
-        const lastDayOfMonth = new Date(
+        const startDay = new Date(
+            today.getFullYear(),
+            today.getMonth() - 1 + this.monthDiff,
+            1
+        ).getDay();
+        const monthEnd = new Date(
             today.getFullYear(),
             today.getMonth() + this.monthDiff,
             0
         );
-        this.currentMonth = MONTHS[lastDayOfMonth.getMonth()];
-        this.currentYear = lastDayOfMonth.getFullYear().toString();
-        const monthEnd = lastDayOfMonth.getDate();
-        for (let date = 1; date <= monthEnd; date++) {
-            const WEEKDAY = new Date(
-                `${this.currentYear}-${this.getMonthNumber(
-                    this.currentMonth
-                ).toLocaleString("en-US", {
-                    minimumIntegerDigits: 2,
-                })}-${date.toLocaleString("en-US", {
-                    minimumIntegerDigits: 2,
-                })}`
-            ).getDay();
-            if (date === 1 && WEEKDAY !== 1) {
-                let holder;
-                if (WEEKDAY === 0) {
-                    for (holder = 1; holder < 7; holder++) {
-                        this.month.push(null);
-                    }
-                } else {
-                    for (holder = 1; holder < WEEKDAY; holder++) {
-                        this.month.push(null);
-                    }
-                }
-            }
-            const events: EventRow[] = [];
-            this.events.forEach((event) => {
-                const DATE_SPLIT = event.date.split("-");
-                if (
-                    DATE_SPLIT[0] === this.currentYear &&
-                    parseInt(DATE_SPLIT[1]) - 1 === lastDayOfMonth.getMonth() &&
-                    parseInt(DATE_SPLIT[2]) === date
-                ) {
-                    events.push(event);
-                }
+        this.currentMonth = MONTHS[monthEnd.getMonth()];
+        this.currentYear = monthEnd.getFullYear().toString();
+        const holders = new Array(startDay - 1 >= 0 ? startDay - 1 : 6).fill(
+            null
+        );
+        const days: Day[] = (new Array(monthEnd.getDate()) as Day[])
+            .fill({
+                date: "",
+                events: [],
+            })
+            .map((_, i) => {
+                const date = `${this.currentYear}-${(monthEnd.getMonth() + 1)
+                    .toString()
+                    .padStart(2, "0")}-${i + 1}`;
+                return {
+                    date,
+                    events: this.events.filter((e) => e.date === date),
+                };
             });
-            this.month.push({
-                date: `${this.currentYear}-${String(
-                    this.getMonthNumber(this.currentMonth)
-                ).padStart(2, "0")}-${String(date).padStart(2, "0")}`,
-                events,
-            });
-        }
+        const month: Day[] = [...holders, ...days];
+        return month;
     }
 }
 </script>

@@ -91,6 +91,7 @@
 import { Component, Prop, Mixins } from "vue-property-decorator";
 import { EventRow } from "../../store/modules/types";
 import GeneralMixins from "../../generalMixins";
+import { MONTHS } from "../../common/helpers";
 
 const LabelWrapper = () =>
     import(
@@ -155,20 +156,7 @@ export default class WeekCalendar extends Mixins(GeneralMixins) {
     get title() {
         if (!this.currentMonday) return;
         const d = new Date(this.currentMonday.date);
-        const month = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-        ][d.getMonth()];
+        const month = MONTHS[d.getMonth()];
         const year = d.getFullYear();
         return `${month} ${year}`;
     }
