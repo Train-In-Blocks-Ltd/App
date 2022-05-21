@@ -1,20 +1,33 @@
-/**
- * @file Contains all the custom email templates.
- * @author Train In Blocks Ltd.
- */
+type EmailType =
+    | "activate-account"
+    | "password-changed"
+    | "password-reset"
+    | "weekly-breakdown"
+    | "client-account-reactivated"
+    | "client-account-deactivated"
+    | "client-feedback"
+    | "booking-created"
+    | "booking-requested"
+    | "booking-request-cancelled"
+    | "booking-rejected"
+    | "booking-accepted"
+    | "new-idea";
 
-/**
- * Builds an email HTML template to send to users.
- * @param {string} type - The email body text to use.
- * @param {object} data - Additional specific details required to fill the email.
- * @returns The built email.
- * @example <caption>An example of how to generate an HTML template for the client feedback email.</caption>
- * emailBuilder ('client-feedback', {
- *  cId: ...,
- *  pId: ...
- * })
- */
-module.exports = function emailBuilder(type, data) {
+type EmailData = {
+    datetime?: string;
+    cId?: number;
+    pId?: number;
+    text?: string;
+    link?: string;
+    body?: string;
+    clientName?: string;
+    email?: string;
+    idea?: string;
+    idea_text?: string;
+};
+
+/** Builds an email HTML template to send to users. */
+export default (type: EmailType, data?: EmailData) => {
     return {
         subject: titles[type],
         text: textEmail(type, data),
@@ -26,7 +39,7 @@ module.exports = function emailBuilder(type, data) {
 };
 
 /** A dictionary of all the email titles. */
-const titles = {
+const titles: Record<EmailType, any> = {
     "activate-account": "Activate your account",
     "password-changed": "Password changed",
     "password-reset": "Password reset",
@@ -43,12 +56,12 @@ const titles = {
     "new-idea": "Someone has just submitted a new idea",
 };
 
-const textEmail = (type, data) => {
+const textEmail = (type: EmailType, data?: EmailData) => {
     let processedText = bodyHtml(type, data)
-        .replace("<p>", "")
+        ?.replace("<p>", "")
         .replace("</p>", "\n")
         .replace("</a>", "\n");
-    if (processedText.includes("href")) {
+    if (processedText?.includes("href")) {
         const regex = /<a.*?href="(.*?)".*?>/gi;
         let link;
         let finder;
@@ -74,10 +87,7 @@ All the best,
 The Train In Blocks Team`;
 };
 
-/*
- * Date Functions
- */
-const nth = function (d) {
+const nth = function (d: number) {
     if (d > 3 && d < 21) {
         return "th";
     }
@@ -107,112 +117,112 @@ const month = [
     "December",
 ];
 
-/**
- * Contains all the email HTMLs.
- * @param {string} type - The email body text to use.
- * @param {object} data - Additional specific details required to fill the email.
- * @returns The filled HTML for the email.
- */
-const bodyHtml = (type, data) => {
+/** Contains all the email HTMLs. */
+const bodyHtml = (type: EmailType, data?: EmailData) => {
     switch (type) {
         case "activate-account":
             return `<p>Welcome to Train In Blocks. Your trainer has given you access to view your sessions, submit feedback, pay for services, and to make bookings.
         <br>
-        <a href="${data.link}" target="_blank" class="link-button">Activate Your Account</a>
+        <a href="${data?.link}" target="_blank" class="link-button">Activate Your Account</a>
       </p>`;
         case "password-changed":
             return '<p>Your password has been changed. If you did not change your password please contact us immediately at <a href="mailto:hello@traininblocks.com">hello@traininblocks.com</a>.</p>';
         case "password-reset":
             return `<p>We've received a request to reset your password. If you did not submit this request then please disregard this email. If you wish to reset your password, please click the link below.
         <br>
-        <a href="${data.link}" target="_blank" class="link-button">Reset Password</a>
+        <a href="${data?.link}" target="_blank" class="link-button">Reset Password</a>
       </p>`;
         case "weekly-breakdown":
-            return `<table>${data.body}</table>`;
+            return `<table>${data?.body}</table>`;
         case "client-account-reactivated":
             return `<p>Your trainer has re-activated your account.<br>You just need to click the link below to get started!
         <br>
-        <a href="${data.link}" target="_blank" class="link-button">Re-activate Your Account</a>
+        <a href="${data?.link}" target="_blank" class="link-button">Re-activate Your Account</a>
       </p>`;
         case "client-account-deactivated":
             return "<p>Your account and information was removed by your trainer. If this was a mistake, please contact your trainer and let them know.</p>";
         case "client-feedback":
             return `<p>Log in to find out what your client has said about the session.
         <br>
-        <a href="https://app.traininblocks.com/client/${data.cId}/plan/${data.pId}" target="_blank" class="link-button">See feedback</a>
+        <a href="https://app.traininblocks.com/client/${data?.cId}/plan/${data?.pId}" target="_blank" class="link-button">See feedback</a>
       </p>`;
         case "booking-created":
             return `<p>Your trainer has scheduled a booking on the ${new Date(
-                data.datetime
-            ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
-                month[new Date(data.datetime).getMonth()]
-            } at ${data.datetime.split(" ")[1].substring(0, 5)}.
+                data?.datetime ?? ""
+            ).getDay()}<sup>${nth(
+                new Date(data?.datetime ?? "").getDay()
+            )}</sup> of ${
+                month[new Date(data?.datetime ?? "").getMonth()]
+            } at ${data?.datetime ?? "".split(" ")[1].substring(0, 5)}.
         <br>
         <a href="https://app.traininblocks.com" target="_blank" class="link-button">View It Here</a>
       </p>`;
         case "booking-requested":
             return `<p>${
-                data.clientName
+                data?.clientName
             } has requested a booking on the ${new Date(
-                data.datetime
-            ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
-                month[new Date(data.datetime).getMonth()]
-            } at ${data.datetime.split(" ")[1].substring(0, 5)}.
+                data?.datetime ?? ""
+            ).getDay()}<sup>${nth(
+                new Date(data?.datetime ?? "").getDay()
+            )}</sup> of ${
+                month[new Date(data?.datetime ?? "").getMonth()]
+            } at ${data?.datetime ?? "".split(" ")[1].substring(0, 5)}.
         <br>
         <a href="${
-            data.link
+            data?.link
         }" target="_blank" class="link-button">Accept It Here</a>
       </p>`;
         case "booking-request-cancelled":
             return `<p>${
-                data.clientName
+                data?.clientName
             } has cancelled their request for a session on the ${new Date(
-                data.datetime
-            ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
-                month[new Date(data.datetime).getMonth()]
-            } at ${data.datetime.split(" ")[1].substring(0, 5)}.
+                data?.datetime ?? ""
+            ).getDay()}<sup>${nth(
+                new Date(data?.datetime ?? "").getDay()
+            )}</sup> of ${
+                month[new Date(data?.datetime ?? "").getMonth()]
+            } at ${data?.datetime ?? "".split(" ")[1].substring(0, 5)}.
         <br>
         <a href="${
-            data.link
+            data?.link
         }" target="_blank" class="link-button">Create A New One Now</a>
       </p>`;
         case "booking-rejected":
             return `<p>The booking for the ${new Date(
-                data.datetime
-            ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
-                month[new Date(data.datetime).getMonth()]
-            } at ${data.datetime
-                .split(" ")[1]
-                .substring(0, 5)} has been rejected by your trainer.
+                data?.datetime ?? ""
+            ).getDay()}<sup>${nth(
+                new Date(data?.datetime ?? "").getDay()
+            )}</sup> of ${
+                month[new Date(data?.datetime ?? "").getMonth()]
+            } at ${
+                data?.datetime ?? "".split(" ")[1].substring(0, 5)
+            } has been rejected by your trainer.
         <br>
         <a href="https://app.traininblocks.com" target="_blank" class="link-button">Request A New Booking Now</a>
       </p>`;
         case "booking-accepted":
             return `<p>The booking for the ${new Date(
-                data.datetime
-            ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
-                month[new Date(data.datetime).getMonth()]
-            } at ${data.datetime
-                .split(" ")[1]
-                .substring(0, 5)} has been accepted by your trainer.
+                data?.datetime ?? ""
+            ).getDay()}<sup>${nth(
+                new Date(data?.datetime ?? "").getDay()
+            )}</sup> of ${
+                month[new Date(data?.datetime ?? "").getMonth()]
+            } at ${
+                data?.datetime ?? "".split(" ")[1].substring(0, 5)
+            } has been accepted by your trainer.
         <br>
         <a href="https://app.traininblocks.com" target="_blank" class="link-button">View Your Booking Here</a>
       </p>`;
         case "new-idea":
-            return `<p>Good news, ${data.email} has submitted a new idea:
+            return `<p>Good news, ${data?.email} has submitted a new idea:
         <br>
-        ${data.idea_text}
+        ${data?.idea_text}
       </p>`;
     }
 };
 
-/**
- * The base email template.
- * @param {string} data.title - The email title.
- * @param {string} data.html - The email content in HTML.
- * @returns The built email.
- */
-function baseEmail(data) {
+/** The base email template.*/
+function baseEmail(data: { title: string; html: string }) {
     return `<!doctype html>
     <html xmlns='http://www.w3.org/1999/xhtml' xmlns:v='urn:schemas-microsoft-com:vml' xmlns:o='urn:schemas-microsoft-com:office:office'>
       <head>

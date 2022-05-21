@@ -7,6 +7,7 @@ import {
 } from "vuex-module-decorators";
 import { Coupon, DarkmodeType, TIBUserClaims } from "../types";
 import { baseAPI } from "../../../api";
+import emailBuilder from "../../../components/js/email";
 
 @Module({
     name: "account",
@@ -69,6 +70,30 @@ class AccountModule extends VuexModule {
                 },
             },
             url: `${this.claims?.sub}`,
+        });
+
+        return {};
+    }
+
+    @MutationAction
+    async changePassword({
+        oldPassword,
+        newPassword,
+    }: {
+        oldPassword: string;
+        newPassword: string;
+    }) {
+        await baseAPI.post("/.netlify/functions/okta", {
+            type: "POST",
+            body: {
+                oldPassword,
+                newPassword,
+            },
+            url: `${this.claims?.sub}/credentials/change_password`,
+        });
+        await baseAPI.post("/.netlify/functions/send-email", {
+            to: this.claims?.email,
+            ...emailBuilder("password-changed"),
         });
 
         return {};

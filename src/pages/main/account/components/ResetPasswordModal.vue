@@ -1,17 +1,12 @@
 <template>
-    <form @submit.prevent="changePassword()" class="mt-4">
+    <form @submit.prevent="changePassword" class="mt-4">
         <txt-input
             ref="pass"
-            :value="password.old"
+            :value="old"
             type="password"
             placeholder="Current password"
             aria-label="Current password"
-            @output="
-                (data) => {
-                    password.old = data;
-                    checkForm();
-                }
-            "
+            @output="(data) => (old = data)"
             required
             focus-first
         />
@@ -22,44 +17,26 @@
             <txt grey>Can't contain your username</txt>
         </div>
         <txt-input
-            :value="password.new"
+            :value="newP"
             type="password"
             placeholder="New password"
             aria-label="New password"
-            :class="{ check: password.check }"
-            @output="
-                (data) => {
-                    password.new = data;
-                    checkPassword();
-                    checkForm();
-                }
-            "
+            @output="(data) => (newP = data)"
             required
         />
         <txt-input
-            :value="password.match"
+            :value="confirm"
             type="password"
             placeholder="Confirm new password"
             aria-label="Confirm new password"
-            :class="{ check: password.new !== password.match }"
             class="my-4"
-            @output="
-                (data) => {
-                    password.match = data;
-                    checkPassword();
-                    checkForm();
-                }
-            "
-            :error="password.error"
+            @output="(data) => (confirm = data)"
+            :error="error"
             required
         />
         <default-button
             type="submit"
-            :disabled="
-                disableChangePasswordButton ||
-                password.check ||
-                password.new !== password.match
-            "
+            :is-disabled="!valid"
             class="mr-4"
             aria-label="Change your password"
         >
@@ -68,86 +45,56 @@
     </form>
 </template>
 
-<script>
-export default {
-    data() {
-        return {
-            password: {
-                old: null,
-                new: null,
-                match: null,
-                check: null,
-                error: null,
-            },
-            disableChangePasswordButton: true,
-        };
-    },
-    methods: {
-        checkForm() {
-            this.disableChangePasswordButton = !(
-                this.password.old &&
-                this.password.new &&
-                this.password.match &&
-                !this.password.check &&
-                !this.password.error
-            );
-        },
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appState from "../../../../store/modules/appState";
+import utilsStore from "../../../../store/modules/utils";
 
-        /**
-         * Validates the password.
-         */
-        checkPassword() {
-            const SELF = this;
-            function requirements() {
-                return (
-                    SELF.password.new.match(/[0-9]+/) !== null &&
-                    SELF.password.new.length >= 8 &&
-                    SELF.password.old.length >= 1
-                );
-            }
-            if (requirements() === false) {
-                this.password.check = true;
-                this.password.error = "Please check the requirements";
-            } else if (this.password.new !== this.password.match) {
-                this.password.check = true;
-                this.password.error = "New password does not match";
-            } else {
-                this.password.check = false;
-                this.password.error = "";
-            }
-        },
+@Component
+export default class ResetPasswordModal extends Vue {
+    old: string = "";
+    newP: string = "";
+    confirm: string = "";
+    error: string | null = "";
 
-        /**
-         * Changes the password.
-         */
-        async changePassword() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                this.password.error = "";
-                await this.$store.dispatch("changePassword", {
-                    old: this.password.old,
-                    new: this.password.new,
-                });
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Password changed",
-                    description: "Remember to not share it and keep it safe",
-                });
-                this.showPasswordReset = false;
-                this.password = {
-                    old: null,
-                    new: null,
-                    match: null,
-                    check: null,
-                    error: null,
-                };
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.password.error =
-                    "Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements";
-            }
-        },
-    },
-};
+    /** Validates the password. */
+    get valid() {
+        const valid =
+            !!this.newP.match(/[0-9]+/) &&
+            this.newP.length >= 8 &&
+            this.old.length >= 1;
+
+        if (!valid) {
+            this.error = "Please check the requirements";
+        } else if (this.newP !== this.confirm) {
+            this.error = "New password does not match";
+        } else {
+            this.error = "";
+        }
+
+        return (
+            valid && !!this.old && !!this.newP && !!this.confirm && !this.error
+        );
+    }
+
+    /** Changes the password. */
+    async changePassword() {
+        try {
+            appState.setDontLeave(true);
+            this.error = "";
+            utilsStore.responsePopUpRef?.open({
+                title: "Password changed",
+                text: "Remember to not share it and keep it safe",
+            });
+            this.old = "";
+            this.newP = "";
+            this.confirm = "";
+            appState.stopLoaders();
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+            this.error =
+                "Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements";
+        }
+    }
+}
 </script>
