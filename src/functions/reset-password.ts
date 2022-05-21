@@ -1,12 +1,15 @@
-const axios = require("axios");
-const smtpTransport = require("nodemailer-smtp-transport");
-const nodemailer = require("nodemailer");
-const emailBuilder = require("../src/components/js/email");
+import axios from "axios";
+import smtpTransport from "nodemailer-smtp-transport";
+import nodemailer from "nodemailer";
+import emailBuilder from "../components/js/email";
+import headers from "./helpers/headers";
+import { Handler } from "@netlify/functions";
+
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
         ? require("./helpers/prod.env")
         : require("./helpers/dev.env");
-const headers = require("./helpers/headers");
+
 const transporter = nodemailer.createTransport(
     smtpTransport({
         service: "gmail",
@@ -19,15 +22,13 @@ const transporter = nodemailer.createTransport(
     })
 );
 
-let response;
-
-exports.handler = async function handler(event, context, callback) {
+export const handler: Handler = async (event) => {
     if (event.httpMethod === "OPTIONS") {
-        return callback(null, {
+        return {
             statusCode: 200,
             headers,
             body: "",
-        });
+        };
     } else if (event.body) {
         const data = JSON.parse(event.body);
         if (data.email !== "demo@traininblocks.com") {
@@ -65,30 +66,30 @@ exports.handler = async function handler(event, context, callback) {
                     ...emailBuilder("password-reset", { link: LINK }),
                 };
                 await transporter.sendMail(mailOptions);
-                return callback(null, {
+                return {
                     statusCode: 200,
                     headers,
                     body: "Email sent successfully",
-                });
+                };
             } catch (e) {
-                return callback(null, {
+                return {
                     statusCode: 500,
                     headers,
-                    body: JSON.stringify(e, response),
-                });
+                    body: JSON.stringify(e),
+                };
             }
         } else {
-            return callback(null, {
+            return {
                 statusCode: 401,
                 headers,
                 body: "401 - Unauthorized",
-            });
+            };
         }
     } else {
-        return callback(null, {
+        return {
             statusCode: 401,
             headers,
             body: "401 - Unauthorized",
-        });
+        };
     }
 };

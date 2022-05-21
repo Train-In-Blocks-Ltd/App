@@ -1,7 +1,6 @@
 import Vue from "vue";
 import VueAnalytics from "vue-analytics";
 import axios from "axios";
-// @ts-expect-error
 import { loadProgressBar } from "axios-progress-bar";
 import "axios-progress-bar/dist/nprogress.css";
 import VueMeta from "vue-meta";
