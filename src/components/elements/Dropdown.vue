@@ -36,40 +36,43 @@
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        name: String,
-        inputId: String,
-        inputRef: String,
-        label: String,
-        info: String,
-        error: String,
-        value: String,
-        inputClass: String,
-        labelClass: String,
-        infoClass: String,
-        errorClass: String,
-        type: String,
-        rel: String,
-        inputmode: String,
-        autocomplete: String,
-        placeholder: String,
-        ariaLabel: String,
-        pattern: String,
-        onInput: Function,
-        required: Boolean,
-        focusFirst: Boolean,
-        items: Array,
-    },
+<script lang="ts">
+import { DropdownItem } from "@/src/store/modules/types";
+import { Component, Vue, Prop } from "vue-property-decorator";
+
+@Component
+export default class Dropdown extends Vue {
+    @Prop(String) readonly name!: string;
+    @Prop(String) readonly inputId!: string;
+    @Prop(String) readonly inputRef!: string;
+    @Prop(String) readonly label!: string;
+    @Prop(String) readonly info!: string;
+    @Prop(String) readonly error!: string;
+    @Prop(String) readonly value!: string;
+    @Prop(String) readonly inputClass!: string;
+    @Prop(String) readonly labelClass!: string;
+    @Prop(String) readonly infoClass!: string;
+    @Prop(String) readonly errorClass!: string;
+    @Prop(String) readonly type!: string;
+    @Prop(String) readonly rel!: string;
+    @Prop(String) readonly inputmode!: string;
+    @Prop(String) readonly autocomplete!: string;
+    @Prop(String) readonly placeholder!: string;
+    @Prop(String) readonly ariaLabel!: string;
+    @Prop(String) readonly pattern!: string;
+    @Prop(Function) readonly onInput!: () => void;
+    @Prop(Boolean) readonly required!: boolean;
+    @Prop(Boolean) readonly focusFirst!: boolean;
+    @Prop(Array) readonly items!: DropdownItem[];
+
     mounted() {
+        // @ts-expect-error
         if (this.focusFirst) this.$el.children[0].focus();
-    },
-    methods: {
-        handleChange(e) {
-            if (this.onInput) this.onInput();
-            this.$emit("output", e.target.value);
-        },
-    },
-};
+    }
+
+    handleChange(e: any) {
+        if (this.onInput) this.onInput();
+        this.$emit("output", e.target.value);
+    }
+}
 </script>
