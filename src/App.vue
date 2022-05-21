@@ -216,6 +216,10 @@ export default class App extends Vue {
     onRouteChange() {
         this.isAuthenticated();
     }
+    @Watch("authenticated")
+    onAuthenticated() {
+        if (this.authenticated) this.setup();
+    }
 
     async created() {
         appState.setLoading(true);
@@ -342,7 +346,9 @@ export default class App extends Vue {
     async setup() {
         this.loaded = false;
         // Set claims
-        const claims = (await this.$auth.getUser()) as TIBUserClaims;
+        const claims = (
+            this.authenticated ? await this.$auth.getUser() : {}
+        ) as TIBUserClaims;
         accountStore.setClaims(claims);
 
         // Sets demo flag
