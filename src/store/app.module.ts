@@ -28,7 +28,6 @@ class AppModule extends VuexModule {
         installed: false,
     };
     clientUserLoaded: boolean = false;
-    splashed: boolean = true;
 
     // Versioning
     policyVersion: string = "1.1";
@@ -46,12 +45,6 @@ class AppModule extends VuexModule {
     async setConnected(connected: boolean) {
         return {
             connected,
-        };
-    }
-    @MutationAction
-    async setSplashed(splashed: boolean) {
-        return {
-            splashed,
         };
     }
     @MutationAction

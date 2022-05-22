@@ -78,14 +78,13 @@ export default class PolicyModal extends Mixins(MainMixins) {
 
     /** Agree to EULA terms. */
     async agreeToTerms() {
-        if (!this.claims) return;
-        accountModule.setClaims({
-            ...this.claims,
-            policy: [this.name, this.today(), this.policyVersion],
-        });
         try {
+            if (!this.claims) return;
             appModule.setDontLeave(true);
-            await accountModule.updateClaims();
+            await accountModule.updateClaims({
+                ...this.claims,
+                policy: [this.name, this.today(), this.policyVersion],
+            });
             appModule.stopLoaders();
             utilsModule.closeModal();
         } catch (e) {

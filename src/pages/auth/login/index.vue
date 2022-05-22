@@ -46,6 +46,7 @@
         v-if="!authenticated"
         class="p-8 md:p-0 w-full max-w-xl pb-16 md:pr-24 m-auto"
     >
+        <splash v-if="splash" />
         <icon svg="full-logo" :size="150" />
         <a
             class="demo-details"
@@ -115,39 +116,6 @@ const CUSTOM_ENV =
         ? require("../../../../config/prod.env")
         : require("../../../../config/dev.env");
 
-const scopes = ["openid", "profile", "email"];
-const oktaSignIn = new OktaSignIn({
-    baseUrl: CUSTOM_ENV.OKTA.CLIENT_ID,
-    issuer: CUSTOM_ENV.OKTA.ISSUER + "/oauth2/default",
-    clientId: CUSTOM_ENV.OKTA.CLIENT_ID,
-    redirectUri:
-        window.location.host === "localhost:8080"
-            ? "http://" + window.location.host + "/implicit/callback"
-            : "https://" + window.location.host + "/implicit/callback",
-    i18n: {
-        en: {
-            "primaryauth.title": "",
-            "primaryauth.username.placeholder": "Email",
-            "primaryauth.username.tooltip": "Enter your email",
-            "primaryauth.password.placeholder": "Password",
-            "primaryauth.password.tooltip": "Enter your password",
-            "error.username.required": "Please enter your email",
-            "errors.E0000004":
-                "Something went wrong, please re-enter your password",
-        },
-    },
-    authParams: {
-        pkce: true,
-        display: "page",
-        issuer: CUSTOM_ENV.OKTA.ISSUER + "/oauth2/default",
-        scopes,
-        tokenManager: {
-            autoRenew: true,
-            expireEarlySeconds: 120,
-        },
-    },
-});
-
 @Component({
     metaInfo() {
         return {
@@ -163,6 +131,8 @@ const oktaSignIn = new OktaSignIn({
 export default class Login extends Vue {
     showDemo: boolean = false;
     open: boolean = false;
+    splash: boolean = false;
+    widget: OktaSignIn | null = null;
 
     get authenticated() {
         return appModule.authenticated;
@@ -175,15 +145,51 @@ export default class Login extends Vue {
     }
 
     async mounted() {
-        appModule.setSplashed(true);
         this.$nextTick(function () {
-            oktaSignIn
+            const self = this;
+            const scopes = ["openid", "profile", "email"];
+            this.widget = new OktaSignIn({
+                baseUrl: CUSTOM_ENV.OKTA.CLIENT_ID,
+                issuer: CUSTOM_ENV.OKTA.ISSUER + "/oauth2/default",
+                clientId: CUSTOM_ENV.OKTA.CLIENT_ID,
+                redirectUri:
+                    window.location.host === "localhost:8080"
+                        ? "http://" +
+                          window.location.host +
+                          "/implicit/callback"
+                        : "https://" +
+                          window.location.host +
+                          "/implicit/callback",
+                i18n: {
+                    en: {
+                        "primaryauth.title": "",
+                        "primaryauth.username.placeholder": "Email",
+                        "primaryauth.username.tooltip": "Enter your email",
+                        "primaryauth.password.placeholder": "Password",
+                        "primaryauth.password.tooltip": "Enter your password",
+                        "error.username.required": "Please enter your email",
+                        "errors.E0000004":
+                            "Something went wrong, please re-enter your password",
+                    },
+                },
+                authParams: {
+                    pkce: true,
+                    display: "page",
+                    issuer: CUSTOM_ENV.OKTA.ISSUER + "/oauth2/default",
+                    scopes,
+                    tokenManager: {
+                        autoRenew: true,
+                        expireEarlySeconds: 120,
+                    },
+                },
+            });
+            this.widget
                 .showSignInToGetTokens({
                     el: "#okta-signin-container",
                     scopes,
                 })
                 .then(async (tokens: any) => {
-                    appModule.setSplashed(false);
+                    self.splash = true;
                     await this.$auth.handleLoginRedirect(tokens);
                 })
                 .catch((e: any) => {

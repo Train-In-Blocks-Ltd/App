@@ -8,6 +8,7 @@ export type TIBUserClaims = UserClaims & {
     policy: any[];
     user_type: "Admin" | "Client" | "Trainer";
     client_id_db: number;
+    calendar: boolean;
 };
 
 export type CalendarGuide = {

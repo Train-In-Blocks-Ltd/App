@@ -157,7 +157,7 @@ export default class NavBar extends Vue {
                 text: "It's recommended to do so if you are using a public device.",
             })
         ) {
-            await this.$parent.$auth.signOut();
+            await this.$auth.signOut();
             appModule.setAuthenticated(await this.$auth.isAuthenticated());
             localStorage.clear();
             sessionStorage.clear();

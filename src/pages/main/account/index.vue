@@ -284,21 +284,28 @@ export default class Account extends Mixins(MainMixins) {
         if (!this.claims) return;
         localStorage.setItem("darkmode", theme);
         this.darkmode(theme);
-        accountModule.setClaims({
+        await accountModule.updateClaims({
             ...this.claims,
             theme,
         });
-        await accountModule.updateClaims();
     }
 
     /** Toggles enabled calendar. */
-    handleEnableCalendar() {
-        accountModule.updateClaims();
+    async handleEnableCalendar() {
+        if (!this.claims) return;
+        await accountModule.updateClaims({
+            ...this.claims,
+            calendar: true,
+        });
     }
 
     /** Toggles tracking. */
-    handleAllowCookies() {
-        accountModule.updateClaims();
+    async handleAllowCookies() {
+        if (!this.claims) return;
+        await accountModule.updateClaims({
+            ...this.claims,
+            ga: true,
+        });
     }
 
     /** Opens EULA modal respective to user type. */

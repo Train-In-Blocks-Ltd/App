@@ -5,7 +5,7 @@ import {
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import { Coupon, DarkmodeType, TIBUserClaims } from "../common/types";
+import { Coupon, TIBUserClaims } from "../common/types";
 import { baseAPI } from "../api";
 import emailBuilder from "../components/js/email";
 
@@ -33,9 +33,8 @@ class AccountModule extends VuexModule {
         return await { claims };
     }
     @MutationAction
-    async updateClaims() {
-        if (!this.claims) return;
-        const { ga, theme, policy, calendar } = this.claims;
+    async updateClaims(claims: TIBUserClaims) {
+        const { ga, theme, policy, calendar } = claims;
         await baseAPI.post("/.netlify/functions/okta", {
             type: "POST",
             body: {
@@ -49,7 +48,9 @@ class AccountModule extends VuexModule {
             url: `${this.claims?.sub}`,
         });
 
-        return {};
+        return {
+            claims,
+        };
     }
 
     @MutationAction
