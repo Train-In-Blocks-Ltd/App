@@ -1,3 +1,5 @@
+export * from "./email";
+
 export const REGEX_NUMBER = /[0-9.]+/gi;
 
 /** Extracts the sets. */

@@ -7,7 +7,7 @@ import {
 } from "vuex-module-decorators";
 import { Booking, Plan, Portfolio, Session } from "../common/types";
 import { baseAPI, ClientUserData } from "../api";
-import emailBuilder from "../components/js/email";
+import { emailBuilder } from "../common/helpers";
 import accountModule from "./account.module";
 
 @Module({

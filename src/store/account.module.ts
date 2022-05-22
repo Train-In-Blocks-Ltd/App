@@ -7,7 +7,7 @@ import {
 } from "vuex-module-decorators";
 import { Coupon, TIBUserClaims } from "../common/types";
 import { baseAPI } from "../api";
-import emailBuilder from "../components/js/email";
+import { emailBuilder } from "../common/helpers";
 
 @Module({
     name: "account",

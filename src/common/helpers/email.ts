@@ -27,7 +27,7 @@ type EmailData = {
 };
 
 /** Builds an email HTML template to send to users. */
-export default (type: EmailType, data?: EmailData) => {
+export const emailBuilder = (type: EmailType, data?: EmailData) => {
     return {
         subject: titles[type],
         text: textEmail(type, data),

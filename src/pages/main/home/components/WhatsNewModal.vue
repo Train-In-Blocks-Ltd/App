@@ -48,7 +48,7 @@ import appModule from "../../../../store/app.module";
 import accountModule from "../../../../store/account.module";
 import { Component, Vue } from "vue-property-decorator";
 import { WhatsNewItem } from "../../../../common/types";
-const emailBuilder = require("../../../../components/js/email");
+import { emailBuilder } from "../../../../common/helpers";
 
 const CardWrapper = () =>
     import(

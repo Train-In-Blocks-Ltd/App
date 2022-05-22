@@ -109,8 +109,8 @@ import clientsModule from "../../../../../store/clients.module";
 import accountModule from "../../../../../store/account.module";
 import utilsModule from "../../../../../store/utils.module";
 import { baseAPI } from "../../../../../api";
+import { emailBuilder } from "../../../../../common/helpers";
 
-const emailBuilder = require("../../../../../components/js/email");
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
         ? require("../../../../../../config/prod.env")

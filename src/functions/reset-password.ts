@@ -1,7 +1,7 @@
 import axios from "axios";
 import smtpTransport from "nodemailer-smtp-transport";
 import nodemailer from "nodemailer";
-import emailBuilder from "../components/js/email";
+import { emailBuilder } from "../common/helpers";
 import headers from "./helpers/headers";
 import { Handler } from "@netlify/functions";
 

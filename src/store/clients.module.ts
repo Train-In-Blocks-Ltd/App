@@ -1,5 +1,5 @@
 import { baseAPI } from "../api";
-const emailBuilder = require("../components/js/email");
+import { emailBuilder } from "../common/helpers";
 import {
     getModule,
     Module,
