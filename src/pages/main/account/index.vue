@@ -281,9 +281,13 @@ export default class Account extends Mixins(MainMixins) {
 
     /** Stores theme in local storage. */
     async handleThemeSelect(theme: DarkmodeType) {
+        if (!this.claims) return;
         localStorage.setItem("darkmode", theme);
-        accountModule.setClaimsTheme(theme);
         this.darkmode(theme);
+        accountModule.setClaims({
+            ...this.claims,
+            theme,
+        });
         await accountModule.updateClaims();
     }
 

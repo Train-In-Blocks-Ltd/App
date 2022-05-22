@@ -337,10 +337,17 @@ export default class App extends Mixins(MainMixins) {
         );
 
         if (claims) {
-            if (!claims.ga || !claims) accountModule.setClaimsAnalytics(true);
+            if (!claims.ga || !claims)
+                accountModule.setClaims({
+                    ...claims,
+                    ga: true,
+                });
 
             if (!claims.theme || !claims)
-                accountModule.setClaimsTheme("system");
+                accountModule.setClaims({
+                    ...claims,
+                    theme: "system",
+                });
 
             // Sets theme
             this.darkmode(claims.theme);

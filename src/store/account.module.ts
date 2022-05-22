@@ -33,30 +33,6 @@ class AccountModule extends VuexModule {
         return await { claims };
     }
     @MutationAction
-    async setClaimsAnalytics(ga: boolean) {
-        return {
-            claims: {
-                ga,
-            },
-        };
-    }
-    @MutationAction
-    async setClaimsTheme(theme: DarkmodeType) {
-        return {
-            claims: {
-                theme,
-            },
-        };
-    }
-    @MutationAction
-    async setClaimsPolicy(policy: TIBUserClaims["policy"]) {
-        return {
-            claims: {
-                policy,
-            },
-        };
-    }
-    @MutationAction
     async updateClaims() {
         if (!this.claims) return;
         const { ga, theme, policy, calendar } = this.claims;
