@@ -26,7 +26,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../../../store/modules/app.module";
-import clientStore from "../../../../../../store/modules/client";
+import clientModule from "../../../../../../store/modules/client.module.";
 import clientsStore from "../../../../../../store/modules/clients";
 import utilsStore from "../../../../../../store/modules/utils";
 
@@ -39,7 +39,7 @@ export default class NewPlanModal extends Vue {
         return appModule.dontLeave;
     }
     get clientDetails() {
-        return clientStore.clientDetails;
+        return clientModule.clientDetails;
     }
     get clients() {
         return clientsStore.clients;
@@ -49,7 +49,7 @@ export default class NewPlanModal extends Vue {
     async createPlan() {
         try {
             appModule.setDontLeave(true);
-            await clientStore.createPlan({
+            await clientModule.createPlan({
                 client_id: parseInt(this.$route.params.client_id),
                 name: this.name,
                 duration: parseInt(this.duration),

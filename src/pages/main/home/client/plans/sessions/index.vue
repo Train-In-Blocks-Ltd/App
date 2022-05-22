@@ -333,7 +333,7 @@ import appModule from "../../../../../../store/modules/app.module";
 import clientsStore from "../../../../../../store/modules/clients";
 import planStore from "../../../../../../store/modules/plan";
 import utilsStore from "../../../../../../store/modules/utils";
-import clientStore from "../../../../../../store/modules/client";
+import clientModule from "../../../../../../store/modules/client.module.";
 import { NavigationGuardNext, Route } from "vue-router";
 import {
     EditorState,
@@ -464,7 +464,7 @@ export default class Session extends Mixins(MainMixins) {
         return clientsStore.clients;
     }
     get clientDetails() {
-        return clientStore.clientDetails;
+        return clientModule.clientDetails;
     }
     get isDemo() {
         return appModule.isDemo;

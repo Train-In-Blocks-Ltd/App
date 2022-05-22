@@ -40,7 +40,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../../../../store/modules/app.module";
 import utilsStore from "../../../../../../../store/modules/utils";
-import clientStore from "../../../../../../../store/modules/client";
+import clientModule from "../../../../../../../store/modules/client.module.";
 
 @Component
 export default class PlanOptions extends Vue {
@@ -48,7 +48,7 @@ export default class PlanOptions extends Vue {
         return appModule.isDemo;
     }
     get clientDetails() {
-        return clientStore.clientDetails;
+        return clientModule.clientDetails;
     }
 
     handleOpenDuplicate() {
@@ -73,7 +73,7 @@ export default class PlanOptions extends Vue {
         ) {
             try {
                 appModule.setLoading(true);
-                clientStore.deletePlan(parseInt(this.$route.params.id));
+                clientModule.deletePlan(parseInt(this.$route.params.id));
                 this.$ga.event("Session", "delete");
                 utilsStore.responsePopUpRef?.open({
                     title: "Plan deleted",

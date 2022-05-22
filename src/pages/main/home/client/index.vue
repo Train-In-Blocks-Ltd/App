@@ -16,7 +16,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../store/modules/app.module";
-import clientStore from "../../../../store/modules/client";
+import clientModule from "../../../../store/modules/client.module.";
 
 const ClientHeader = () =>
     import(
@@ -43,13 +43,13 @@ export default class Client extends Vue {
         return appModule.loading;
     }
     get clientDetails() {
-        return clientStore.clientDetails;
+        return clientModule.clientDetails;
     }
 
     async created() {
         this.loaded = false;
-        clientStore.setCurrentClient(parseInt(this.$route.params.client_id));
-        await clientStore.getPlans(parseInt(this.$route.params.client_id));
+        clientModule.setCurrentClient(parseInt(this.$route.params.client_id));
+        await clientModule.getPlans(parseInt(this.$route.params.client_id));
         this.loaded = true;
     }
 }

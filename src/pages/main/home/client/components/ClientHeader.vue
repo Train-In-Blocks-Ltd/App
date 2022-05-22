@@ -104,7 +104,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../../store/modules/app.module";
-import clientStore from "../../../../../store/modules/client";
+import clientModule from "../../../../../store/modules/client.module.";
 import clientsStore from "../../../../../store/modules/clients";
 import accountModule from "../../../../../store/modules/account.module";
 import utilsStore from "../../../../../store/modules/utils";
@@ -123,10 +123,10 @@ export default class ClientHeader extends Vue {
     clientSuspend: string | null = null;
 
     get clientDetails() {
-        return clientStore.clientDetails;
+        return clientModule.clientDetails;
     }
     set clientDetails(value) {
-        clientStore.setClientDetails(value);
+        clientModule.setClientDetails(value);
     }
     get silentLoading() {
         return appModule.silentLoading;
@@ -154,7 +154,7 @@ export default class ClientHeader extends Vue {
         try {
             appModule.setSilentLoading(true);
             appModule.setDontLeave(true);
-            await clientStore.updateClient();
+            await clientModule.updateClient();
             appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);

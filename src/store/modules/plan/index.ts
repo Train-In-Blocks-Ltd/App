@@ -7,7 +7,7 @@ import {
 } from "vuex-module-decorators";
 import { Plan, Session } from "../types";
 import { baseAPI } from "../../../api";
-import clientStore from "../client";
+import clientModule from "../client.module.";
 import utilsStore from "../utils";
 import { addDays } from "../../../common/helpers";
 
@@ -29,7 +29,9 @@ class PlanModule extends VuexModule {
 
     @MutationAction
     async setCurrentPlan(id: number) {
-        const plan = clientStore.clientDetails?.plans?.find((p) => p.id === id);
+        const plan = clientModule.clientDetails?.plans?.find(
+            (p) => p.id === id
+        );
 
         return {
             plan,
@@ -67,7 +69,7 @@ class PlanModule extends VuexModule {
             }
         );
 
-        clientStore.addPlan({
+        clientModule.addPlan({
             ...this.plan,
             id: planResponse.data[0]["LAST_INSERT_ID()"],
         });

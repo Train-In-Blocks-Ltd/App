@@ -63,7 +63,7 @@ import { EditorState } from "@/src/store/modules/types";
 import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
 import appModule from "../../../../../store/modules/app.module";
-import clientStore from "../../../../../store/modules/client";
+import clientModule from "../../../../../store/modules/client.module.";
 import utilsStore from "../../../../../store/modules/utils";
 
 const Bookings = () =>
@@ -97,10 +97,10 @@ export default class Plan extends Vue {
         return appModule.loading;
     }
     get clientDetails() {
-        return clientStore.clientDetails;
+        return clientModule.clientDetails;
     }
     set clientDetails(value) {
-        clientStore.setClientDetails(value);
+        clientModule.setClientDetails(value);
     }
 
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
@@ -137,7 +137,7 @@ export default class Plan extends Vue {
                 try {
                     appModule.setDontLeave(true);
                     appModule.setSilentLoading(true);
-                    await clientStore.updateClient();
+                    await clientModule.updateClient();
                     appModule.stopLoaders();
                 } catch (e) {
                     utilsStore.resolveError(e as string);
@@ -147,7 +147,7 @@ export default class Plan extends Vue {
                 appModule.setDontLeave(false);
                 this.editingClientNotes = false;
                 if (!this.clientDetails) return;
-                clientStore.setClientDetails({
+                clientModule.setClientDetails({
                     ...this.clientDetails,
                     notes: this.tempEditorStore ?? "",
                 });
