@@ -64,15 +64,16 @@ const oktaAuth = new OktaAuth({
             : "https://" + window.location.host + "/implicit/callback",
     scopes: ["openid", "profile", "email"],
     pkce: true,
-    // autoRenew: false,
-    // async onSessionExpired() {
-    //     await Vue.prototype.$auth.logout({
-    //         postLogoutRedirectUri:
-    //             window.location.host === "localhost:8080"
-    //                 ? "http://" + window.location.host
-    //                 : "https://" + window.location.host,
-    //     });
-    // },
+    // @ts-expect-error
+    autoRenew: false,
+    async onSessionExpired() {
+        await Vue.prototype.$auth.logout({
+            postLogoutRedirectUri:
+                window.location.host === "localhost:8080"
+                    ? "http://" + window.location.host
+                    : "https://" + window.location.host,
+        });
+    },
 });
 Vue.use(OktaVue, { oktaAuth });
 
