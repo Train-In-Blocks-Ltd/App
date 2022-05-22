@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import bookingsStore from "../../../../../../store/modules/bookings";
+import bookingsModule from "../../../../../../store/modules/bookings.module";
 
 const Booking = () =>
     import(
@@ -31,7 +31,7 @@ const Booking = () =>
 })
 export default class AllBookingsModal extends Vue {
     get bookings() {
-        return bookingsStore.bookings.filter(
+        return bookingsModule.bookings.filter(
             (booking) =>
                 booking.client_id === parseInt(this.$route.params.client_id)
         );

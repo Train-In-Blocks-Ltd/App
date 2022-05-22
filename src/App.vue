@@ -134,7 +134,7 @@ import accountModule from "./store/modules/account.module";
 import utilsStore from "./store/modules/utils";
 import clientsStore from "./store/modules/clients";
 import templatesStore from "./store/modules/templates";
-import bookingsStore from "./store/modules/bookings";
+import bookingsModule from "./store/modules/bookings.module";
 import portfolioStore from "./store/modules/portfolio";
 import clientUserStore from "./store/modules/clientUser";
 import { getTrainerUserData } from "./api";
@@ -408,7 +408,7 @@ export default class App extends Vue {
                 } = await getTrainerUserData(claims.sub);
                 clientsStore.setClients(sortedClients);
                 clientsStore.setArchivedClients(sortedArchiveClients);
-                bookingsStore.setBookings(sortedBookings);
+                bookingsModule.setBookings(sortedBookings);
                 templatesStore.setTemplates(templates);
 
                 if (!!portfolio) portfolioStore.setPortfolio(portfolio);

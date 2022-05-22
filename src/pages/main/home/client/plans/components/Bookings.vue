@@ -65,7 +65,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../../../store/modules/app.module";
-import bookingsStore from "../../../../../../store/modules/bookings";
+import bookingsModule from "../../../../../../store/modules/bookings.module";
 import utilsStore from "../../../../../../store/modules/utils";
 import { Booking } from "../../../../../../store/modules/types";
 
@@ -87,7 +87,7 @@ const BookingForm = () =>
 export default class Bookings extends Vue {
     get bookings() {
         return (
-            bookingsStore.bookings
+            bookingsModule.bookings
                 .filter((booking) => new Date(booking.datetime) > new Date())
                 .filter(
                     (booking) =>

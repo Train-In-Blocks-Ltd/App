@@ -83,7 +83,7 @@
 
 <script lang="ts">
 import appModule from "../../store/modules/app.module";
-import bookingsStore from "../../store/modules/bookings";
+import bookingsModule from "../../store/modules/bookings.module";
 import { Booking, Client } from "../../store/modules/types";
 import { Component, Prop, Mixins } from "vue-property-decorator";
 import MainMixins from "../../main.mixins";
@@ -114,7 +114,7 @@ export default class ClientLink extends Mixins(MainMixins) {
         return appModule.isDemo;
     }
     get bookings() {
-        return bookingsStore.bookings;
+        return bookingsModule.bookings;
     }
 
     created() {

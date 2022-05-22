@@ -48,7 +48,7 @@ import MainMixins from "../../main.mixins";
 import appModule from "../../store/modules/app.module";
 import accountModule from "../../store/modules/account.module";
 import utilsStore from "../../store/modules/utils";
-import bookingsStore from "../../store/modules/bookings";
+import bookingsModule from "../../store/modules/bookings.module";
 import clientUserStore from "../../store/modules/clientUser";
 import { Booking } from "../../store/modules/types";
 
@@ -83,7 +83,7 @@ export default class BookingForm extends Mixins(MainMixins) {
                 notes: this.bookingForm.notes ?? "",
                 status: this.isTrainer ? "Scheduled" : "Pending",
             };
-            if (this.isTrainer) await bookingsStore.createTrainerBooking(data);
+            if (this.isTrainer) await bookingsModule.createTrainerBooking(data);
             else await clientUserStore.createClientBooking(data);
 
             this.bookingForm = {

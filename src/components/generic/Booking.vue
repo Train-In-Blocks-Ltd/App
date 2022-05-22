@@ -87,7 +87,7 @@ import { Component, Prop, Mixins } from "vue-property-decorator";
 import accountModule from "../../store/modules/account.module";
 import appModule from "../../store/modules/app.module";
 import utilsStore from "../../store/modules/utils";
-import bookingsStore from "../../store/modules/bookings";
+import bookingsModule from "../../store/modules/bookings.module";
 import clientUserStore from "../../store/modules/clientUser";
 import MainMixins from "../../main.mixins";
 
@@ -134,7 +134,7 @@ export default class Booking extends Mixins(MainMixins) {
         ) {
             try {
                 appModule.setDontLeave(true);
-                await bookingsStore.updateBooking({
+                await bookingsModule.updateBooking({
                     id: this.booking.id,
                     client_id: this.isTrainer
                         ? parseInt(this.$route.params.client_id)
@@ -172,7 +172,7 @@ export default class Booking extends Mixins(MainMixins) {
                         datetime: this.booking.datetime,
                     };
                 if (this.isTrainer)
-                    await bookingsStore.deleteTrainerBooking(data);
+                    await bookingsModule.deleteTrainerBooking(data);
                 else await clientUserStore.deleteClientBooking(data);
                 utilsStore.responsePopUpRef?.open({
                     title: "Booking cancelled",
