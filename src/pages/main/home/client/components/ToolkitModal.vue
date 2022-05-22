@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Calculator, DropdownItem } from "../../../../../store/modules/types";
+import { Calculator, DropdownItem } from "../../../../../store/types";
 
 @Component
 export default class ToolkitModal extends Vue {

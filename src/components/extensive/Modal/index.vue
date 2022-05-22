@@ -58,9 +58,9 @@
 </template>
 
 <script lang="ts">
-import appModule from "../../../store/modules/app.module";
+import appModule from "../../../store/app.module";
 import { Component, Vue, Watch } from "vue-property-decorator";
-import utilsModule from "../../../store/modules/utils.module";
+import utilsModule from "../../../store/utils.module";
 
 const CardWrapper = () =>
     import(

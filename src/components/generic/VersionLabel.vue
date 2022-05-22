@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import appModule from "../../store/modules/app.module";
+import appModule from "../../store/app.module";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component

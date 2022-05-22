@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appModule from "../../../store/modules/app.module";
+import appModule from "../../../store/app.module";
 
 const HomeHeader = () =>
     import(

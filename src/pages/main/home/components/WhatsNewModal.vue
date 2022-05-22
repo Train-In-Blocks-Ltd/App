@@ -44,10 +44,10 @@
 
 <script lang="ts">
 import { baseAPI } from "../../../../api";
-import appModule from "../../../../store/modules/app.module";
-import accountModule from "../../../../store/modules/account.module";
+import appModule from "../../../../store/app.module";
+import accountModule from "../../../../store/account.module";
 import { Component, Vue } from "vue-property-decorator";
-import { WhatsNewItem } from "@/src/store/modules/types";
+import { WhatsNewItem } from "@/src/store/types";
 const emailBuilder = require("../../../../components/js/email");
 
 const CardWrapper = () =>

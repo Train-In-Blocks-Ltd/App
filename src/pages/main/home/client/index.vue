@@ -15,8 +15,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appModule from "../../../../store/modules/app.module";
-import clientModule from "../../../../store/modules/client.module.";
+import appModule from "../../../../store/app.module";
+import clientModule from "../../../../store/client.module.";
 
 const ClientHeader = () =>
     import(

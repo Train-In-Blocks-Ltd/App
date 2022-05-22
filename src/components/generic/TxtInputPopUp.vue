@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { TxtInputPopUpParams } from "@/src/store/modules/types";
+import { TxtInputPopUpParams } from "@/src/store/types";
 import { Component, Vue, Watch } from "vue-property-decorator";
 
 const Backdrop = () =>

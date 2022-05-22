@@ -1,4 +1,4 @@
-import store from "..";
+import store from ".";
 import {
     getModule,
     Module,
@@ -6,10 +6,10 @@ import {
     VuexModule,
 } from "vuex-module-decorators";
 import { Plan, Session } from "./types";
-import { baseAPI } from "../../api";
+import { baseAPI } from "../api";
 import clientModule from "./client.module.";
 import utilsModule from "./utils.module";
-import { addDays } from "../../common/helpers";
+import { addDays } from "../common/helpers";
 
 @Module({
     name: "plan",

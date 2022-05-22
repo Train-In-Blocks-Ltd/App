@@ -329,16 +329,13 @@
 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
-import appModule from "../../../../../../store/modules/app.module";
-import clientsModule from "../../../../../../store/modules/clients.module";
-import planModule from "../../../../../../store/modules/plan.module";
-import utilsModule from "../../../../../../store/modules/utils.module";
-import clientModule from "../../../../../../store/modules/client.module.";
+import appModule from "../../../../../../store/app.module";
+import clientsModule from "../../../../../../store/clients.module";
+import planModule from "../../../../../../store/plan.module";
+import utilsModule from "../../../../../../store/utils.module";
+import clientModule from "../../../../../../store/client.module.";
 import { NavigationGuardNext, Route } from "vue-router";
-import {
-    EditorState,
-    MultiselectOption,
-} from "../../../../../../store/modules/types";
+import { EditorState, MultiselectOption } from "../../../../../../store/types";
 import MainMixins from "../../../../../../main.mixins";
 
 const Checkbox = () =>

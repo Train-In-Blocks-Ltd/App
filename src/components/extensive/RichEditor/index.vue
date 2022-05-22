@@ -170,7 +170,7 @@ import Link from "@tiptap/extension-link";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import LazyImage from "../../js/LazyImage";
-import utilsModule from "../../../store/modules/utils.module";
+import utilsModule from "../../../store/utils.module";
 import { baseAPI } from "../../../api";
 import MainMixins from "../../../main.mixins";
 

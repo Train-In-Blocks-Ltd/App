@@ -20,8 +20,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appModule from "../../store/modules/app.module";
-import accountModule from "../../store/modules/account.module";
+import appModule from "../../store/app.module";
+import accountModule from "../../store/account.module";
 
 @Component
 export default class TopBanner extends Vue {

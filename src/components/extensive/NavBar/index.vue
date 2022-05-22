@@ -49,10 +49,10 @@
 </template>
 
 <script lang="ts">
-import appModule from "../../../store/modules/app.module";
-import accountModule from "../../../store/modules/account.module";
-import utilsModule from "../../../store/modules/utils.module";
-import { NavLinkType } from "../../../store/modules/types";
+import appModule from "../../../store/app.module";
+import accountModule from "../../../store/account.module";
+import utilsModule from "../../../store/utils.module";
+import { NavLinkType } from "../../../store/types";
 import { Component, Vue } from "vue-property-decorator";
 
 const NavLink = () =>

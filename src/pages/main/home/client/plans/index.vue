@@ -59,12 +59,12 @@
 </template>
 
 <script lang="ts">
-import { EditorState } from "@/src/store/modules/types";
+import { EditorState } from "@/src/store/types";
 import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
-import appModule from "../../../../../store/modules/app.module";
-import clientModule from "../../../../../store/modules/client.module.";
-import utilsModule from "../../../../../store/modules/utils.module";
+import appModule from "../../../../../store/app.module";
+import clientModule from "../../../../../store/client.module.";
+import utilsModule from "../../../../../store/utils.module";
 
 const Bookings = () =>
     import(

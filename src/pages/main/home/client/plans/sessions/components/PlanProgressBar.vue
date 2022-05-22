@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import { Session } from "../../../../../../../store/modules/types";
+import { Session } from "../../../../../../../store/types";
 
 @Component
 export default class PlanProgressBar extends Vue {

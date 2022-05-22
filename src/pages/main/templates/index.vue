@@ -112,12 +112,12 @@
 </template>
 
 <script lang="ts">
-import appModule from "../../../store/modules/app.module";
-import templatesModule from "../../../store/modules/templates.module";
-import utilsModule from "../../../store/modules/utils.module";
+import appModule from "../../../store/app.module";
+import templatesModule from "../../../store/templates.module";
+import utilsModule from "../../../store/utils.module";
 import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
-import { EditorState } from "@/src/store/modules/types";
+import { EditorState } from "@/src/store/types";
 
 const Checkbox = () =>
     import(

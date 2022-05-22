@@ -65,10 +65,10 @@
 </template>
 
 <script lang="ts">
-import appModule from "../../../store/modules/app.module";
-import utilsModule from "../../../store/modules/utils.module";
-import clientsModule from "../../../store/modules/clients.module";
-import { MultiselectOption } from "../../../store/modules/types";
+import appModule from "../../../store/app.module";
+import utilsModule from "../../../store/utils.module";
+import clientsModule from "../../../store/clients.module";
+import { MultiselectOption } from "../../../store/types";
 import { Component, Vue } from "vue-property-decorator";
 
 const ClientLink = () =>

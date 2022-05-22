@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { ConfirmPopUpParams } from "../../../store/modules/types";
+import { ConfirmPopUpParams } from "../../../store/types";
 import { Component, Vue } from "vue-property-decorator";
 
 const Backdrop = () =>

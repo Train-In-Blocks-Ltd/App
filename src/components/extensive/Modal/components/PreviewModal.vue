@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import utilsModule from "../../../../store/modules/utils.module";
+import utilsModule from "../../../../store/utils.module";
 
 @Component
 export default class PreviewModal extends Vue {

@@ -82,9 +82,9 @@
 </template>
 
 <script lang="ts">
-import appModule from "../../store/modules/app.module";
-import bookingsModule from "../../store/modules/bookings.module";
-import { Booking, Client } from "../../store/modules/types";
+import appModule from "../../store/app.module";
+import bookingsModule from "../../store/bookings.module";
+import { Booking, Client } from "../../store/types";
 import { Component, Prop, Mixins } from "vue-property-decorator";
 import MainMixins from "../../main.mixins";
 

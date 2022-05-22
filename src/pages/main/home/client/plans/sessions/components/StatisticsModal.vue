@@ -94,8 +94,8 @@ import {
     DropdownItem,
     Protocol,
     VisualiseData,
-} from "../../../../../../../store/modules/types";
-import planModule from "../../../../../../../store/modules/plan.module";
+} from "../../../../../../../store/types";
+import planModule from "../../../../../../../store/plan.module";
 import MainMixins from "../../../../../../../main.mixins";
 import { getLoad, getReps, getSets } from "../../../../../../../common/helpers";
 import { ChartItem } from "chart.js";

@@ -28,10 +28,10 @@
 </template>
 
 <script lang="ts">
-import appModule from "../../../../store/modules/app.module";
-import clientsModule from "../../../../store/modules/clients.module";
+import appModule from "../../../../store/app.module";
+import clientsModule from "../../../../store/clients.module";
 import { Component, Vue } from "vue-property-decorator";
-import utils from "../../../../store/modules/utils.module";
+import utils from "../../../../store/utils.module";
 
 const ClientLink = () =>
     import(

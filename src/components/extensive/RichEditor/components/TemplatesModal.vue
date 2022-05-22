@@ -58,8 +58,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import templatesModule from "../../../../store/modules/templates.module";
-import utilsModule from "../../../../store/modules/utils.module";
+import templatesModule from "../../../../store/templates.module";
+import utilsModule from "../../../../store/utils.module";
 
 const CardWrapper = () =>
     import(

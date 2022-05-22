@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import bookingsModule from "../../../../../../store/modules/bookings.module";
+import bookingsModule from "../../../../../../store/bookings.module";
 
 const Booking = () =>
     import(

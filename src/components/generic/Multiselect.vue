@@ -49,9 +49,9 @@
 </template>
 
 <script lang="ts">
-import { MultiselectOption } from "@/src/store/modules/types";
+import { MultiselectOption } from "@/src/store/types";
 import { Component, Vue, Prop } from "vue-property-decorator";
-import utilsModule from "../../store/modules/utils.module";
+import utilsModule from "../../store/utils.module";
 
 @Component
 export default class Multiselect extends Vue {

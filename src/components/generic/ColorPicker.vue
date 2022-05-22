@@ -27,8 +27,8 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import planModule from "../../store/modules/plan.module";
-import utilsModule from "../../store/modules/utils.module";
+import planModule from "../../store/plan.module";
+import utilsModule from "../../store/utils.module";
 
 const Backdrop = () =>
     import(

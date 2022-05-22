@@ -180,11 +180,11 @@
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
-import appModule from "../../store/modules/app.module";
-import clientUserModule from "../../store/modules/clientUser.module";
-import utilsModule from "../../store/modules/utils.module";
+import appModule from "../../store/app.module";
+import clientUserModule from "../../store/clientUser.module";
+import utilsModule from "../../store/utils.module";
 import MainMixins from "../../main.mixins";
-import { EditorState, Session } from "../../store/modules/types";
+import { EditorState, Session } from "../../store/types";
 
 const WeekCalendar = () =>
     import(

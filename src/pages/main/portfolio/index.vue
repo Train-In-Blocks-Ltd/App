@@ -57,12 +57,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appModule from "../../../store/modules/app.module";
-import accountModule from "../../../store/modules/account.module";
-import portfolioModule from "../../../store/modules/portfolio.module";
-import utilsModule from "../../../store/modules/utils.module";
+import appModule from "../../../store/app.module";
+import accountModule from "../../../store/account.module";
+import portfolioModule from "../../../store/portfolio.module";
+import utilsModule from "../../../store/utils.module";
 import { NavigationGuardNext, Route } from "vue-router";
-import { EditorState } from "@/src/store/modules/types";
+import { EditorState } from "@/src/store/types";
 
 const LabelWrapper = () =>
     import(

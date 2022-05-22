@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { ResponsePopUpParams } from "../../../store/modules/types";
+import { ResponsePopUpParams } from "../../../store/types";
 import { Component, Vue } from "vue-property-decorator";
 
 const Backdrop = () =>

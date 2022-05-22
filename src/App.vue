@@ -129,14 +129,14 @@ body {
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from "vue-property-decorator";
 import { baseAPI, getClientUserData } from "./api";
-import appModule from "./store/modules/app.module";
-import accountModule from "./store/modules/account.module";
-import utilsModule from "./store/modules/utils.module";
-import clientsModule from "./store/modules/clients.module";
-import templatesModule from "./store/modules/templates.module";
-import bookingsModule from "./store/modules/bookings.module";
-import portfolioModule from "./store/modules/portfolio.module";
-import clientUserModule from "./store/modules/clientUser.module";
+import appModule from "./store/app.module";
+import accountModule from "./store/account.module";
+import utilsModule from "./store/utils.module";
+import clientsModule from "./store/clients.module";
+import templatesModule from "./store/templates.module";
+import bookingsModule from "./store/bookings.module";
+import portfolioModule from "./store/portfolio.module";
+import clientUserModule from "./store/clientUser.module";
 import { getTrainerUserData } from "./api";
 import {
     ConfirmPopUpRef,
@@ -145,7 +145,7 @@ import {
     TIBUserClaims,
     TxtInputPopUpRef,
     UploadPopUpRef,
-} from "./store/modules/types";
+} from "./store/types";
 
 //* Needed to import like this to use refs
 import ConfirmPopUp from "./components/extensive/ConfirmPopUp/index.vue";

@@ -5,7 +5,7 @@ import {
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import store from "..";
+import store from ".";
 import appModule from "./app.module";
 import {
     ConfirmPopUpRef,

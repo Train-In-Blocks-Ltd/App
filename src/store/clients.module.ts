@@ -1,12 +1,12 @@
-import { baseAPI } from "../../api";
-const emailBuilder = require("../../components/js/email");
+import { baseAPI } from "../api";
+const emailBuilder = require("../components/js/email");
 import {
     getModule,
     Module,
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import store from "..";
+import store from ".";
 import { Client, Plan, Session } from "./types";
 import utilsModule from "./utils.module";
 

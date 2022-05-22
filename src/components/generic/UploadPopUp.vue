@@ -18,11 +18,11 @@
 </template>
 
 <script lang="ts">
-import { UploadPopUpParams } from "../../store/modules/types";
+import { UploadPopUpParams } from "../../store/types";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import Compressor from "compressorjs";
 import { baseAPI } from "../../api";
-import utilsModule from "../../store/modules/utils.module";
+import utilsModule from "../../store/utils.module";
 
 const Backdrop = () =>
     import(

@@ -5,7 +5,7 @@ import {
     VuexModule,
 } from "vuex-module-decorators";
 import { PWADisplayMode, PWASettings } from "./types";
-import store from "..";
+import store from ".";
 
 @Module({
     name: "appModule",

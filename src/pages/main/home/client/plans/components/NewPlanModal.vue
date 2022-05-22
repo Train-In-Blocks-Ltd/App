@@ -25,10 +25,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appModule from "../../../../../../store/modules/app.module";
-import clientModule from "../../../../../../store/modules/client.module.";
-import clientsModule from "../../../../../../store/modules/clients.module";
-import utilsModule from "../../../../../../store/modules/utils.module";
+import appModule from "../../../../../../store/app.module";
+import clientModule from "../../../../../../store/client.module.";
+import clientsModule from "../../../../../../store/clients.module";
+import utilsModule from "../../../../../../store/utils.module";
 
 @Component
 export default class NewPlanModal extends Vue {

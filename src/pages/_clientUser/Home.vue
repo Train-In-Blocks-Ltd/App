@@ -134,10 +134,10 @@
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
-import { EditorState, Plan, Session } from "../../store/modules/types";
-import appModule from "../../store/modules/app.module";
-import clientUserModule from "../../store/modules/clientUser.module";
-import utilsModule from "../../store/modules/utils.module";
+import { EditorState, Plan, Session } from "../../store/types";
+import appModule from "../../store/app.module";
+import clientUserModule from "../../store/clientUser.module";
+import utilsModule from "../../store/utils.module";
 import MainMixins from "../../main.mixins";
 
 const PlanCard = () =>

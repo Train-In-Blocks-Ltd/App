@@ -144,9 +144,9 @@
 </template>
 
 <script lang="ts">
-import appModule from "../../../store/modules/app.module";
-import accountModule from "../../../store/modules/account.module";
-import utilsModule from "../../../store/modules/utils.module";
+import appModule from "../../../store/app.module";
+import accountModule from "../../../store/account.module";
+import utilsModule from "../../../store/utils.module";
 import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
 import {
@@ -156,7 +156,7 @@ import {
     DropdownItem,
     PolicyLink,
     TIBUserClaims,
-} from "../../../store/modules/types";
+} from "../../../store/types";
 import { baseAPI } from "../../../api";
 
 const VersionLabel = () =>

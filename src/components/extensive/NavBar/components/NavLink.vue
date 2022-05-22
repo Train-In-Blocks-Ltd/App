@@ -37,8 +37,8 @@
 </template>
 
 <script lang="ts">
-import appModule from "../../../../store/modules/app.module";
-import accountModule from "../../../../store/modules/account.module";
+import appModule from "../../../../store/app.module";
+import accountModule from "../../../../store/account.module";
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 @Component

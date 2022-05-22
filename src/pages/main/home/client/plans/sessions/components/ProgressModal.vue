@@ -143,10 +143,10 @@
 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
-import appModule from "../../../../../../../store/modules/app.module";
-import utilsModule from "../../../../../../../store/modules/utils.module";
-import planModule from "../../../../../../../store/modules/plan.module";
-import { Protocol } from "../../../../../../../store/modules/types";
+import appModule from "../../../../../../../store/app.module";
+import utilsModule from "../../../../../../../store/utils.module";
+import planModule from "../../../../../../../store/plan.module";
+import { Protocol } from "../../../../../../../store/types";
 import MainMixins from "../../../../../../../main.mixins";
 
 const CardWrapper = () =>

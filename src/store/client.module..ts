@@ -1,4 +1,4 @@
-import store from "..";
+import store from ".";
 import {
     getModule,
     Module,
@@ -8,7 +8,7 @@ import {
 import { Client, Plan, Session } from "./types";
 import clientsModule from "./clients.module";
 import utilsModule from "./utils.module";
-import { baseAPI } from "../../api";
+import { baseAPI } from "../api";
 
 @Module({
     name: "client",

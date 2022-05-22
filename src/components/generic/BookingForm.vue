@@ -45,12 +45,12 @@
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import MainMixins from "../../main.mixins";
-import appModule from "../../store/modules/app.module";
-import accountModule from "../../store/modules/account.module";
-import utilsModule from "../../store/modules/utils.module";
-import bookingsModule from "../../store/modules/bookings.module";
-import clientUserModule from "../../store/modules/clientUser.module";
-import { Booking } from "../../store/modules/types";
+import appModule from "../../store/app.module";
+import accountModule from "../../store/account.module";
+import utilsModule from "../../store/utils.module";
+import bookingsModule from "../../store/bookings.module";
+import clientUserModule from "../../store/clientUser.module";
+import { Booking } from "../../store/types";
 
 @Component
 export default class BookingForm extends Mixins(MainMixins) {

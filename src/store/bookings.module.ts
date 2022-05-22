@@ -1,4 +1,4 @@
-import store from "..";
+import store from ".";
 import {
     getModule,
     Module,
@@ -6,11 +6,11 @@ import {
     VuexModule,
 } from "vuex-module-decorators";
 import { Booking } from "./types";
-import { baseAPI } from "../../api";
+import { baseAPI } from "../api";
 import portfolioModule from "./portfolio.module";
 import clientUserModule from "./clientUser.module";
 import clientsModule from "./clients.module";
-import emailBuilder from "../../components/js/email";
+import emailBuilder from "../components/js/email";
 
 @Module({
     name: "bookings",

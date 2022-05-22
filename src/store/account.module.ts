@@ -1,4 +1,4 @@
-import store from "..";
+import store from ".";
 import {
     getModule,
     Module,
@@ -6,8 +6,8 @@ import {
     VuexModule,
 } from "vuex-module-decorators";
 import { Coupon, DarkmodeType, TIBUserClaims } from "./types";
-import { baseAPI } from "../../api";
-import emailBuilder from "../../components/js/email";
+import { baseAPI } from "../api";
+import emailBuilder from "../components/js/email";
 
 @Module({
     name: "account",

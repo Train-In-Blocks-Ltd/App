@@ -64,10 +64,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appModule from "../../../../../../store/modules/app.module";
-import bookingsModule from "../../../../../../store/modules/bookings.module";
-import utilsModule from "../../../../../../store/modules/utils.module";
-import { Booking } from "../../../../../../store/modules/types";
+import appModule from "../../../../../../store/app.module";
+import bookingsModule from "../../../../../../store/bookings.module";
+import utilsModule from "../../../../../../store/utils.module";
+import { Booking } from "../../../../../../store/types";
 
 const Booking = () =>
     import(

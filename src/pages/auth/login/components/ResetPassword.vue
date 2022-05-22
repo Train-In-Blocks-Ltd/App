@@ -17,8 +17,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appModule from "../../../../store/modules/app.module";
-import utilsModule from "../../../../store/modules/utils.module";
+import appModule from "../../../../store/app.module";
+import utilsModule from "../../../../store/utils.module";
 import { baseAPI } from "../../../../api";
 
 @Component

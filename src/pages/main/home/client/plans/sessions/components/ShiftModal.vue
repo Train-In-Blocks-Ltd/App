@@ -21,9 +21,9 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import utilsModule from "../../../../../../../store/modules/utils.module";
-import appModule from "../../../../../../../store/modules/app.module";
-import planModule from "../../../../../../../store/modules/plan.module";
+import utilsModule from "../../../../../../../store/utils.module";
+import appModule from "../../../../../../../store/app.module";
+import planModule from "../../../../../../../store/plan.module";
 
 @Component
 export default class ShiftModal extends Vue {

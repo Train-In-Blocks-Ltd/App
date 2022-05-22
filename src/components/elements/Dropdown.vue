@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { DropdownItem } from "@/src/store/modules/types";
+import { DropdownItem } from "@/src/store/types";
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 @Component

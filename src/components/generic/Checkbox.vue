@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import utilsModule from "../../store/modules/utils.module";
+import utilsModule from "../../store/utils.module";
 
 @Component
 export default class Checkbox extends Vue {

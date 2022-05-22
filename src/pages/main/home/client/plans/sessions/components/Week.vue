@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import planModule from "../../../../../../../store/modules/plan.module";
+import planModule from "../../../../../../../store/plan.module";
 
 @Component
 export default class Week extends Vue {
