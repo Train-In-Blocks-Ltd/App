@@ -135,16 +135,13 @@ class PlanModule extends VuexModule {
 
     @MutationAction
     async updateSession(session: Session) {
+        const plan = this.plan;
+        if (!plan) return;
         await baseAPI.put("https://api.traininblocks.com/v2/sessions", session);
 
-        if (!this.plan?.sessions) return;
-
-        const plan: Plan = {
-            ...this.plan,
-            sessions: this.plan.sessions.map((s) =>
-                s.id === session.id ? session : s
-            ),
-        };
+        plan.sessions = plan.sessions?.map((s) =>
+            s.id === session.id ? session : s
+        );
 
         return {
             plan,
