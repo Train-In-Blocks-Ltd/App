@@ -1,5 +1,5 @@
 import { Component, Vue } from "vue-property-decorator";
-import { Booking, Protocol } from "./common/types";
+import { Booking, DarkmodeType, Protocol } from "./common/types";
 
 @Component
 export default class MainMixins extends Vue {
@@ -111,5 +111,24 @@ export default class MainMixins extends Vue {
     /** Checks if the booking is in the past. */
     isInThePast(booking: Booking) {
         return new Date(booking.datetime) < new Date();
+    }
+
+    /** Gives darkmode theme to the app. */
+    darkmode(mode?: DarkmodeType) {
+        const MATCHED_MEDIA =
+            window.matchMedia("(prefers-color-scheme)") || false;
+        if (mode === "dark") document.documentElement.classList.add("dark");
+        else if (mode === "system" && !!MATCHED_MEDIA) {
+            this.darkmode(
+                window.matchMedia("(prefers-color-scheme: dark)").matches
+                    ? "dark"
+                    : "light"
+            );
+            window
+                .matchMedia("(prefers-color-scheme: dark)")
+                .addListener((e) => {
+                    this.darkmode(e.matches ? "dark" : "light");
+                });
+        } else document.documentElement.classList.remove("dark");
     }
 }

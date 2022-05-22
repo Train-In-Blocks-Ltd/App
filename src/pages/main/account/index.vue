@@ -147,7 +147,7 @@
 import appModule from "../../../store/app.module";
 import accountModule from "../../../store/account.module";
 import utilsModule from "../../../store/utils.module";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
 import {
     CalendarGuide,
@@ -158,6 +158,7 @@ import {
     TIBUserClaims,
 } from "../../../common/types";
 import { baseAPI } from "../../../api";
+import MainMixins from "../../../main.mixins";
 
 const VersionLabel = () =>
     import(
@@ -174,7 +175,7 @@ const VersionLabel = () =>
         VersionLabel,
     },
 })
-export default class Account extends Vue {
+export default class Account extends Mixins(MainMixins) {
     dropdownItems: DropdownItem[] = [
         {
             label: "System Default",
@@ -238,8 +239,8 @@ export default class Account extends Vue {
         return appModule.isTrainer;
     }
     get darkmodeTheme() {
-        const theme = localStorage.getItem("darkmode");
-        if (theme) return theme;
+        const theme = localStorage.getItem("darkmode") ?? this.claims?.theme;
+        if (!!theme) return theme;
         return "system";
     }
     get coupon() {
@@ -279,10 +280,11 @@ export default class Account extends Vue {
     }
 
     /** Stores theme in local storage. */
-    handleThemeSelect(theme: DarkmodeType) {
+    async handleThemeSelect(theme: DarkmodeType) {
         localStorage.setItem("darkmode", theme);
-        // @ts-expect-error
-        this.$parent.darkmode(theme);
+        accountModule.setClaimsTheme(theme);
+        this.darkmode(theme);
+        await accountModule.updateClaims();
     }
 
     /** Toggles enabled calendar. */

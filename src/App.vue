@@ -127,7 +127,7 @@ body {
 </template>
 
 <script lang="ts">
-import { Component, Ref, Vue, Watch } from "vue-property-decorator";
+import { Component, Mixins, Ref, Watch } from "vue-property-decorator";
 import { baseAPI, getClientUserData } from "./api";
 import appModule from "./store/app.module";
 import accountModule from "./store/account.module";
@@ -152,6 +152,7 @@ import ConfirmPopUp from "./components/extensive/ConfirmPopUp/index.vue";
 import ResponsePopUp from "./components/extensive/ResponsePopUp/index.vue";
 import UploadPopUp from "./components/generic/UploadPopUp.vue";
 import TxtInputPopUp from "./components/generic/TxtInputPopUp.vue";
+import MainMixins from "./main.mixins";
 
 const NavBar = () =>
     import(
@@ -183,7 +184,7 @@ const TopBanner = () =>
         TopBanner,
     },
 })
-export default class App extends Vue {
+export default class App extends Mixins(MainMixins) {
     get authenticated() {
         return appModule.authenticated;
     }
@@ -318,25 +319,6 @@ export default class App extends Vue {
 
     /* --------------------------------- Methods -------------------------------- */
 
-    /** Gives darkmode theme to the app. */
-    darkmode(mode?: DarkmodeType) {
-        const MATCHED_MEDIA =
-            window.matchMedia("(prefers-color-scheme)") || false;
-        if (mode === "dark") document.documentElement.classList.add("dark");
-        else if (mode === "system" && !!MATCHED_MEDIA) {
-            this.darkmode(
-                window.matchMedia("(prefers-color-scheme: dark)").matches
-                    ? "dark"
-                    : "light"
-            );
-            window
-                .matchMedia("(prefers-color-scheme: dark)")
-                .addListener((e) => {
-                    this.darkmode(e.matches ? "dark" : "light");
-                });
-        } else document.documentElement.classList.remove("dark");
-    }
-
     /** Initiates all the crucial setup for the app. */
     async setup() {
         this.loaded = false;
@@ -359,6 +341,9 @@ export default class App extends Vue {
 
             if (!claims.theme || !claims)
                 accountModule.setClaimsTheme("system");
+
+            // Sets theme
+            this.darkmode(claims.theme);
 
             // Set analytics and theme
             claims.ga !== false ? this.$ga.enable() : this.$ga.disable();

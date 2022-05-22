@@ -12,7 +12,7 @@ import store from ".";
     store,
     dynamic: true,
 })
-class AppStateModule extends VuexModule {
+class AppModule extends VuexModule {
     authenticated: boolean = false;
     connected: boolean = true;
     isTrainer: boolean = false;
@@ -117,4 +117,4 @@ class AppStateModule extends VuexModule {
     }
 }
 
-export default getModule(AppStateModule);
+export default getModule(AppModule);

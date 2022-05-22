@@ -23,12 +23,7 @@
             <router-link
                 title="Home"
                 class="w-24"
-                :to="
-                    claims.user_type === 'Trainer' ||
-                    claims.user_type === 'Admin'
-                        ? '/'
-                        : '/clientUser'
-                "
+                :to="isTrainer ? '/' : '/clientUser'"
             >
                 <icon svg="logo-icon" :size="36" />
             </router-link>
@@ -142,6 +137,9 @@ export default class NavBar extends Vue {
     }
     get loading() {
         return appModule.loading;
+    }
+    get isTrainer() {
+        return appModule.isTrainer;
     }
 
     hardRefresh() {

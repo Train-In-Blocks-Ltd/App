@@ -58,7 +58,8 @@ class AccountModule extends VuexModule {
     }
     @MutationAction
     async updateClaims() {
-        const { ga, theme, policy, calendar } = this.claims!;
+        if (!this.claims) return;
+        const { ga, theme, policy, calendar } = this.claims;
         await baseAPI.post("/.netlify/functions/okta", {
             type: "POST",
             body: {
