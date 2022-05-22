@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import planStore from "../../../../../../../store/modules/plan";
+import planModule from "../../../../../../../store/modules/plan.module";
 
 @Component
 export default class Week extends Vue {
@@ -34,12 +34,12 @@ export default class Week extends Vue {
     @Prop(Array) readonly weekColor!: string[];
 
     get currentWeek() {
-        return planStore.currentWeek;
+        return planModule.currentWeek;
     }
 
     /** Changes the week. */
     handleChangeWeek() {
-        planStore.setCurrentWeek(this.weekNumber);
+        planModule.setCurrentWeek(this.weekNumber);
     }
 }
 </script>

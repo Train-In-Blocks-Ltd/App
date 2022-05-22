@@ -331,7 +331,7 @@
 import { Component, Mixins } from "vue-property-decorator";
 import appModule from "../../../../../../store/modules/app.module";
 import clientsModule from "../../../../../../store/modules/clients.module";
-import planStore from "../../../../../../store/modules/plan";
+import planModule from "../../../../../../store/modules/plan.module";
 import utilsStore from "../../../../../../store/modules/utils";
 import clientModule from "../../../../../../store/modules/client.module.";
 import { NavigationGuardNext, Route } from "vue-router";
@@ -418,28 +418,29 @@ export default class Session extends Mixins(MainMixins) {
     allowMoreWeeks: boolean = false;
 
     get plan() {
-        return planStore.plan;
+        return planModule.plan;
     }
     set plan(value) {
-        planStore.setPlan(value);
+        planModule.setPlan(value);
     }
     get hasSessions() {
-        return planStore.plan?.sessions && planStore.plan.sessions.length > 0;
+        return planModule.plan?.sessions && planModule.plan.sessions.length > 0;
     }
     get weekIsEmpty() {
-        if (!planStore.plan?.sessions) return [];
+        if (!planModule.plan?.sessions) return [];
         return (
-            planStore.plan?.sessions.filter(
+            planModule.plan?.sessions.filter(
                 (session) => session.week_id === this.currentWeek
             ).length === 0
         );
     }
     get currentWeek() {
-        return planStore.currentWeek;
+        return planModule.currentWeek;
     }
     get weekColor() {
-        const colors = planStore.plan?.block_color;
-        if (!colors) return new Array(planStore.plan?.duration).fill("#282828");
+        const colors = planModule.plan?.block_color;
+        if (!colors)
+            return new Array(planModule.plan?.duration).fill("#282828");
         try {
             const arr = JSON.parse(colors);
             return arr;
@@ -470,7 +471,7 @@ export default class Session extends Mixins(MainMixins) {
         return appModule.isDemo;
     }
     get events() {
-        return planStore.plan?.sessions
+        return planModule.plan?.sessions
             ?.sort(
                 (a, b) =>
                     new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -504,7 +505,7 @@ export default class Session extends Mixins(MainMixins) {
     }
 
     created() {
-        planStore.setCurrentPlan(parseInt(this.$route.params.id));
+        planModule.setCurrentPlan(parseInt(this.$route.params.id));
     }
 
     handleOpenInfo() {
@@ -575,7 +576,7 @@ export default class Session extends Mixins(MainMixins) {
                 break;
             case "cancel":
                 appModule.setDontLeave(false);
-                planStore.setPlanNotes(this.tempEditorStore ?? "");
+                planModule.setPlanNotes(this.tempEditorStore ?? "");
                 break;
         }
     }
@@ -668,7 +669,7 @@ export default class Session extends Mixins(MainMixins) {
                 text: "You can update this later if anything changes.",
             })
         ) {
-            planStore.toggleSessionChecked(checked);
+            planModule.toggleSessionChecked(checked);
             utilsStore.responsePopUpRef?.open({
                 title:
                     this.selectedIds.length > 1
@@ -690,7 +691,7 @@ export default class Session extends Mixins(MainMixins) {
                 text: "We will remove these sessions from our database and it won't be recoverable.",
             })
         ) {
-            await planStore.deleteSessions();
+            await planModule.deleteSessions();
             utilsStore.deselectAll();
             this.$ga.event("Session", "delete");
             utilsStore.responsePopUpRef?.open({
@@ -718,7 +719,7 @@ export default class Session extends Mixins(MainMixins) {
     /** Scrolls to session. */
     goToEvent(id: number, week_id: number) {
         this.toggleExpandAll("Expand");
-        planStore.setCurrentWeek(week_id);
+        planModule.setCurrentWeek(week_id);
         setTimeout(() => {
             document
                 .getElementById(`session-${id}`)
@@ -769,7 +770,7 @@ export default class Session extends Mixins(MainMixins) {
     async updatePlan() {
         try {
             appModule.setLoading(true);
-            await planStore.updatePlan();
+            await planModule.updatePlan();
             this.$ga.event("Plan", "update");
             appModule.stopLoaders();
         } catch (e) {
@@ -781,7 +782,7 @@ export default class Session extends Mixins(MainMixins) {
     async updateDuration() {
         try {
             appModule.setLoading(true);
-            await planStore.updateDuration();
+            await planModule.updateDuration();
             this.$ga.event("Plan", "update");
             appModule.stopLoaders();
         } catch (e) {
@@ -793,7 +794,7 @@ export default class Session extends Mixins(MainMixins) {
     async updateSingleSession(id: number) {
         try {
             appModule.setDontLeave(true);
-            await planStore.updateSession(id);
+            await planModule.updateSession(id);
             this.$ga.event("Session", "update");
             appModule.stopLoaders();
         } catch (e) {
@@ -805,7 +806,7 @@ export default class Session extends Mixins(MainMixins) {
     async createSingleSession() {
         try {
             appModule.setDontLeave(true);
-            await planStore.addSession({
+            await planModule.addSession({
                 programme_id: parseInt(this.$route.params.id),
                 name: "Untitled",
                 date: this.today(),

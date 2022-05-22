@@ -1,15 +1,15 @@
-import store from "../..";
+import store from "..";
 import {
     getModule,
     Module,
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import { Plan, Session } from "../types";
-import { baseAPI } from "../../../api";
-import clientModule from "../client.module.";
-import utilsStore from "../utils";
-import { addDays } from "../../../common/helpers";
+import { Plan, Session } from "./types";
+import { baseAPI } from "../../api";
+import clientModule from "./client.module.";
+import utilsStore from "./utils";
+import { addDays } from "../../common/helpers";
 
 @Module({
     name: "plan",

@@ -25,7 +25,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import utilsStore from "../../../../../../../store/modules/utils";
 import appModule from "../../../../../../../store/modules/app.module";
-import planStore from "../../../../../../../store/modules/plan";
+import planModule from "../../../../../../../store/modules/plan.module";
 
 @Component
 export default class MoveModal extends Vue {
@@ -35,13 +35,13 @@ export default class MoveModal extends Vue {
         return utilsStore.selectedIds;
     }
     get plan() {
-        return planStore.plan;
+        return planModule.plan;
     }
 
     /** Moves the selected sessions to specified week. */
     async moveToWeek() {
         appModule.setDontLeave(true);
-        await planStore.moveSessions(this.moveTarget);
+        await planModule.moveSessions(this.moveTarget);
         utilsStore.closeModal();
         utilsStore.responsePopUpRef?.open({
             title:

@@ -22,7 +22,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import utilsStore from "../../../../../../../store/modules/utils";
 import appModule from "../../../../../../../store/modules/app.module";
-import planStore from "../../../../../../../store/modules/plan";
+import planModule from "../../../../../../../store/modules/plan.module";
 import clientsModule from "../../../../../../../store/modules/clients.module";
 
 @Component
@@ -38,7 +38,7 @@ export default class DuplicatePlanModal extends Vue {
         });
     }
     get plan() {
-        return planStore.plan;
+        return planModule.plan;
     }
 
     /** Duplicates the plan to select client. */

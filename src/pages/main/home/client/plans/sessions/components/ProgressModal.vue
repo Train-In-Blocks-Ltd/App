@@ -145,7 +145,7 @@
 import { Component, Mixins } from "vue-property-decorator";
 import appModule from "../../../../../../../store/modules/app.module";
 import utilsStore from "../../../../../../../store/modules/utils";
-import planStore from "../../../../../../../store/modules/plan";
+import planModule from "../../../../../../../store/modules/plan.module";
 import { Protocol } from "../../../../../../../store/modules/types";
 import MainMixins from "../../../../../../../main.mixins";
 
@@ -176,13 +176,13 @@ export default class ProgressModal extends Mixins(MainMixins) {
     progressProtocols: ProgressProtocol[] = [];
 
     get plan() {
-        return planStore.plan;
+        return planModule.plan;
     }
     get selectedIds() {
         return utilsStore.selectedIds;
     }
     get currentWeek() {
-        return planStore.currentWeek;
+        return planModule.currentWeek;
     }
 
     /** Pulls all the protocols in the selected session. */
@@ -237,7 +237,7 @@ export default class ProgressModal extends Mixins(MainMixins) {
             try {
                 this.progressProtocols.forEach(
                     ({ id: programme_id, name, date, notes }, sIndex) => {
-                        planStore.addSession({
+                        planModule.addSession({
                             programme_id,
                             name,
                             date: this.addDays(
@@ -255,7 +255,7 @@ export default class ProgressModal extends Mixins(MainMixins) {
             iIndex += 1;
         }
         utilsStore.closeModal();
-        planStore.setCurrentWeek(this.target);
+        planModule.setCurrentWeek(this.target);
         utilsStore.deselectAll();
         this.$ga.event("Session", "progress");
         utilsStore.responsePopUpRef?.open({

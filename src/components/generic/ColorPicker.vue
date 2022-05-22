@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import planStore from "../../store/modules/plan";
+import planModule from "../../store/modules/plan.module";
 import utilsStore from "../../store/modules/utils";
 
 const Backdrop = () =>
@@ -45,7 +45,7 @@ export default class ColorPicker extends Vue {
 
     get backgroundColor() {
         if (!this.weekColor) return "#FFFFFF";
-        return this.weekColor[planStore.currentWeek - 1];
+        return this.weekColor[planModule.currentWeek - 1];
     }
 
     editingWeekColor: boolean = false;
@@ -59,7 +59,7 @@ export default class ColorPicker extends Vue {
 
     async updateWeekColor(color: string) {
         try {
-            await planStore.updateWeekColor(color);
+            await planModule.updateWeekColor(color);
         } catch (e) {
             utilsStore.resolveError(e as string);
         }

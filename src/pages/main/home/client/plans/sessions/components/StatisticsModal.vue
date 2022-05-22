@@ -95,7 +95,7 @@ import {
     Protocol,
     VisualiseData,
 } from "../../../../../../../store/modules/types";
-import planStore from "../../../../../../../store/modules/plan";
+import planModule from "../../../../../../../store/modules/plan.module";
 import MainMixins from "../../../../../../../main.mixins";
 import { getLoad, getReps, getSets } from "../../../../../../../common/helpers";
 import { ChartItem } from "chart.js";
@@ -124,7 +124,7 @@ export default class StatisticsModal extends Mixins(MainMixins) {
     chart: any = null;
 
     get plan() {
-        return planStore.plan;
+        return planModule.plan;
     }
     get dataTypeDropdownItems() {
         const extraItems =

@@ -23,7 +23,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import utilsStore from "../../../../../../../store/modules/utils";
 import appModule from "../../../../../../../store/modules/app.module";
-import planStore from "../../../../../../../store/modules/plan";
+import planModule from "../../../../../../../store/modules/plan.module";
 
 @Component
 export default class ShiftModal extends Vue {
@@ -33,13 +33,13 @@ export default class ShiftModal extends Vue {
         return utilsStore.selectedIds;
     }
     get plan() {
-        return planStore.plan;
+        return planModule.plan;
     }
 
     /** Shifts the selected sessions by specified days. */
     async shiftAcross() {
         appModule.setDontLeave(true);
-        await planStore.shiftSessions(this.shiftDays);
+        await planModule.shiftSessions(this.shiftDays);
         utilsStore.closeModal();
         utilsStore.responsePopUpRef?.open({
             title:
