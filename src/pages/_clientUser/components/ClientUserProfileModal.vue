@@ -70,7 +70,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../store/modules/app.module";
-import accountStore from "../../../store/modules/account";
+import accountModule from "../../../store/modules/account.module";
 import clientUserStore from "../../../store/modules/clientUser";
 import utilsStore from "../../../store/modules/utils";
 import { baseAPI } from "../../../api";
@@ -95,7 +95,7 @@ export default class ClientUserProfileModal extends Vue {
         return appModule.silentLoading;
     }
     get claims() {
-        return accountStore.claims;
+        return accountModule.claims;
     }
     get profile_image() {
         return clientUserStore.profile_image;

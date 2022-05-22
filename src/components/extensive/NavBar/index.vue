@@ -50,7 +50,7 @@
 
 <script lang="ts">
 import appModule from "../../../store/modules/app.module";
-import accountStore from "../../../store/modules/account";
+import accountModule from "../../../store/modules/account.module";
 import utilsStore from "../../../store/modules/utils";
 import { NavLinkType } from "../../../store/modules/types";
 import { Component, Vue } from "vue-property-decorator";
@@ -135,7 +135,7 @@ export default class NavBar extends Vue {
     ];
 
     get claims() {
-        return accountStore.claims;
+        return accountModule.claims;
     }
     get authenticated() {
         return appModule.authenticated;

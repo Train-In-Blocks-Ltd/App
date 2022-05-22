@@ -130,7 +130,7 @@ body {
 import { Component, Ref, Vue, Watch } from "vue-property-decorator";
 import { baseAPI, getClientUserData } from "./api";
 import appModule from "./store/modules/app.module";
-import accountStore from "./store/modules/account";
+import accountModule from "./store/modules/account.module";
 import utilsStore from "./store/modules/utils";
 import clientsStore from "./store/modules/clients";
 import templatesStore from "./store/modules/templates";
@@ -194,7 +194,7 @@ export default class App extends Vue {
         return appModule.loading;
     }
     get claims() {
-        return accountStore.claims;
+        return accountModule.claims;
     }
     get connected() {
         return appModule.connected;
@@ -344,7 +344,7 @@ export default class App extends Vue {
         const claims = (
             this.authenticated ? await this.$auth.getUser() : {}
         ) as TIBUserClaims;
-        accountStore.setClaims(claims);
+        accountModule.setClaims(claims);
 
         // Sets demo flag
         appModule.setIsDemo(claims.email === "demo@traininblocks.com");
@@ -355,9 +355,10 @@ export default class App extends Vue {
         );
 
         if (claims) {
-            if (!claims.ga || !claims) accountStore.setClaimsAnalytics(true);
+            if (!claims.ga || !claims) accountModule.setClaimsAnalytics(true);
 
-            if (!claims.theme || !claims) accountStore.setClaimsTheme("system");
+            if (!claims.theme || !claims)
+                accountModule.setClaimsTheme("system");
 
             // Set analytics and theme
             claims.ga !== false ? this.$ga.enable() : this.$ga.disable();

@@ -21,7 +21,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../store/modules/app.module";
-import accountStore from "../../store/modules/account";
+import accountModule from "../../store/modules/account.module";
 
 @Component
 export default class TopBanner extends Vue {
@@ -29,7 +29,7 @@ export default class TopBanner extends Vue {
         return appModule.authenticated;
     }
     get claims() {
-        return accountStore.claims;
+        return accountModule.claims;
     }
     get connected() {
         return appModule.connected;

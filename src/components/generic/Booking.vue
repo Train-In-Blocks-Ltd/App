@@ -84,7 +84,7 @@ import {
     BookingStatus,
 } from "../../store/modules/types";
 import { Component, Prop, Mixins } from "vue-property-decorator";
-import accountStore from "../../store/modules/account";
+import accountModule from "../../store/modules/account.module";
 import appModule from "../../store/modules/app.module";
 import utilsStore from "../../store/modules/utils";
 import bookingsStore from "../../store/modules/bookings";
@@ -106,7 +106,7 @@ export default class Booking extends Mixins(MainMixins) {
     @Prop(Boolean) readonly isTrainer!: boolean;
 
     get claims() {
-        return accountStore.claims;
+        return accountModule.claims;
     }
 
     /** Determines the colour of the text for booking statuses. */

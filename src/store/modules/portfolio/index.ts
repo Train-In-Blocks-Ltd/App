@@ -7,7 +7,7 @@ import {
 } from "vuex-module-decorators";
 import { Portfolio } from "../types";
 import { baseAPI } from "../../../api";
-import accountStore from "../account";
+import accountModule from "../account.module";
 
 @Module({
     name: "portfolio",
@@ -55,7 +55,7 @@ class PortfolioModule extends VuexModule implements Portfolio {
 
     @MutationAction
     async createPortfolio() {
-        const pt_id = accountStore.claims?.sub;
+        const pt_id = accountModule.claims?.sub;
         await baseAPI.post("https://api.traininblocks.com/v2/portfolio", {
             pt_id,
             trainer_name: "",
@@ -74,7 +74,7 @@ class PortfolioModule extends VuexModule implements Portfolio {
     async updatePortfolio() {
         const { pt_id, business_name, trainer_name, notes } = this;
         await baseAPI.put(
-            `https://api.traininblocks.com/v2/portfolio/${accountStore.claims?.sub}`,
+            `https://api.traininblocks.com/v2/portfolio/${accountModule.claims?.sub}`,
             {
                 pt_id,
                 business_name,

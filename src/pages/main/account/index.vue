@@ -145,7 +145,7 @@
 
 <script lang="ts">
 import appModule from "../../../store/modules/app.module";
-import accountStore from "../../../store/modules/account";
+import accountModule from "../../../store/modules/account.module";
 import utilsStore from "../../../store/modules/utils";
 import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
@@ -223,10 +223,10 @@ export default class Account extends Vue {
         return appModule.dontLeave;
     }
     get claims() {
-        return accountStore.claims;
+        return accountModule.claims;
     }
     set claims(value: TIBUserClaims | null) {
-        accountStore.setClaims(value);
+        accountModule.setClaims(value);
     }
     get versionName() {
         return appModule.versionName;
@@ -243,7 +243,7 @@ export default class Account extends Vue {
         return "system";
     }
     get coupon() {
-        return accountStore.coupon;
+        return accountModule.coupon;
     }
 
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
@@ -287,12 +287,12 @@ export default class Account extends Vue {
 
     /** Toggles enabled calendar. */
     handleEnableCalendar() {
-        accountStore.updateClaims();
+        accountModule.updateClaims();
     }
 
     /** Toggles tracking. */
     handleAllowCookies() {
-        accountStore.updateClaims();
+        accountModule.updateClaims();
     }
 
     /** Opens EULA modal respective to user type. */
@@ -358,7 +358,7 @@ export default class Account extends Vue {
                     this.claims?.email?.toUpperCase().replace(/[\W_]+/g, "")
             );
             if (foundCoupon && foundCoupon.active) {
-                accountStore.setCoupon({
+                accountModule.setCoupon({
                     checked: true,
                     code:
                         this.claims?.email
@@ -382,7 +382,7 @@ export default class Account extends Vue {
             await baseAPI.post("/.netlify/functions/create-coupon", {
                 email: this.claims?.email,
             });
-            accountStore.setCoupon({
+            accountModule.setCoupon({
                 checked: this.coupon.checked,
                 code:
                     this.claims?.email?.toUpperCase().replace(/[\W_]+/g, "") ??
@@ -404,13 +404,13 @@ export default class Account extends Vue {
         navigator.clipboard.writeText(link ?? "").then(
             () => {
                 const { checked, generated } = self.coupon;
-                accountStore.setCoupon({
+                accountModule.setCoupon({
                     checked,
                     generated,
                     code: "Copied!",
                 });
                 setTimeout(() => {
-                    accountStore.setCoupon({
+                    accountModule.setCoupon({
                         checked,
                         generated,
                         code:
@@ -422,7 +422,7 @@ export default class Account extends Vue {
             },
             (e) => {
                 const { checked, generated } = self.coupon;
-                accountStore.setCoupon({
+                accountModule.setCoupon({
                     checked,
                     generated,
                     code: "Could not copy text: " + e,

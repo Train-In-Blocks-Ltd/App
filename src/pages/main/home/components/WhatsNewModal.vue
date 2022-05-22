@@ -45,7 +45,7 @@
 <script lang="ts">
 import { baseAPI } from "../../../../api";
 import appModule from "../../../../store/modules/app.module";
-import accountStore from "../../../../store/modules/account";
+import accountModule from "../../../../store/modules/account.module";
 import { Component, Vue } from "vue-property-decorator";
 import { WhatsNewItem } from "@/src/store/modules/types";
 const emailBuilder = require("../../../../components/js/email");
@@ -116,7 +116,7 @@ export default class WhatsNewModal extends Vue {
         return appModule.versionBuild;
     }
     get claims() {
-        return accountStore.claims;
+        return accountModule.claims;
     }
 
     /** Updates the version stored in local storage. */

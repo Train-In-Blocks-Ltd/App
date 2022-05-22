@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import accountStore from "../../../../store/modules/account";
+import accountModule from "../../../../store/modules/account.module";
 import appModule from "../../../../store/modules/app.module";
 import utilsStore from "../../../../store/modules/utils";
 import clientsStore from "../../../../store/modules/clients";
@@ -77,7 +77,7 @@ export default class NewClientModal extends Vue {
     notes: string = "";
 
     get claims() {
-        return accountStore.claims;
+        return accountModule.claims;
     }
     get valid() {
         return (

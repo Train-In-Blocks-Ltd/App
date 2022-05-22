@@ -46,7 +46,7 @@
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import MainMixins from "../../main.mixins";
 import appModule from "../../store/modules/app.module";
-import accountStore from "../../store/modules/account";
+import accountModule from "../../store/modules/account.module";
 import utilsStore from "../../store/modules/utils";
 import bookingsStore from "../../store/modules/bookings";
 import clientUserStore from "../../store/modules/clientUser";
@@ -63,7 +63,7 @@ export default class BookingForm extends Mixins(MainMixins) {
     };
 
     get claims() {
-        return accountStore.claims;
+        return accountModule.claims;
     }
 
     /** Creates a new booking. */

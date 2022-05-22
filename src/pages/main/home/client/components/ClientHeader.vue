@@ -106,7 +106,7 @@ import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../../store/modules/app.module";
 import clientStore from "../../../../../store/modules/client";
 import clientsStore from "../../../../../store/modules/clients";
-import accountStore from "../../../../../store/modules/account";
+import accountModule from "../../../../../store/modules/account.module";
 import utilsStore from "../../../../../store/modules/utils";
 import { baseAPI } from "../../../../../api";
 
@@ -135,7 +135,7 @@ export default class ClientHeader extends Vue {
         return appModule.isDemo;
     }
     get claims() {
-        return accountStore.claims;
+        return accountModule.claims;
     }
 
     mounted() {

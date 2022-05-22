@@ -7,7 +7,7 @@ import {
 } from "vuex-module-decorators";
 import { Template } from "../types";
 import { baseAPI } from "../../../api";
-import accountStore from "../account";
+import accountModule from "../account.module";
 
 @Module({
     name: "templates",
@@ -30,7 +30,7 @@ class TemplatesModule extends VuexModule {
             const response = await baseAPI.post(
                 "https://api.traininblocks.com/v2/templates",
                 {
-                    pt_id: accountStore.claims?.sub,
+                    pt_id: accountModule.claims?.sub,
                     name: "Untitled",
                     template: "",
                 }
@@ -39,7 +39,7 @@ class TemplatesModule extends VuexModule {
                 ...this.templates,
                 {
                     id: response.data[0]["LAST_INSERT_ID()"],
-                    pt_id: accountStore.claims?.sub ?? "",
+                    pt_id: accountModule.claims?.sub ?? "",
                     name: "Untitled",
                     template: "",
                 },

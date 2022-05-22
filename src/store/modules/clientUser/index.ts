@@ -8,7 +8,7 @@ import {
 import { Booking, Plan, Portfolio, Session } from "../types";
 import { baseAPI, ClientUserData } from "../../../api";
 import emailBuilder from "../../../components/js/email";
-import accountStore from "../account";
+import accountModule from "../account.module";
 
 @Module({
     name: "clientUser",
@@ -87,7 +87,7 @@ class ClientUserModule extends VuexModule {
                 await baseAPI.post("/.netlify/functions/send-email", {
                     to: PT_EMAIL.data[0].credentials.emails[0].value,
                     ...emailBuilder("client-feedback", {
-                        cId: accountStore.claims?.client_id_db,
+                        cId: accountModule.claims?.client_id_db,
                         pId: programme_id,
                     }),
                 });
@@ -115,7 +115,7 @@ class ClientUserModule extends VuexModule {
         await baseAPI.put(
             "https://api.traininblocks.com/v2/clientUser/clients",
             {
-                client_id: accountStore.claims?.client_id_db,
+                client_id: accountModule.claims?.client_id_db,
                 name,
                 number,
                 profile_image,
