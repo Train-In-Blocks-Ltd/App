@@ -337,6 +337,7 @@ export default class App extends Mixins(MainMixins) {
         );
 
         if (claims) {
+            console.log(claims.theme);
             if (!claims.ga || !claims)
                 accountModule.setClaims({
                     ...claims,
