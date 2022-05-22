@@ -213,8 +213,8 @@ export default class App extends Vue {
         if (this.connected) this.setup();
     }
     @Watch("$route")
-    onRouteChange() {
-        this.isAuthenticated();
+    async onRouteChange() {
+        appState.setAuthenticated(await this.$auth.isAuthenticated());
     }
     @Watch("authenticated")
     onAuthenticated() {
@@ -223,7 +223,7 @@ export default class App extends Vue {
 
     async created() {
         appState.setLoading(true);
-        this.isAuthenticated();
+        appState.setAuthenticated(await this.$auth.isAuthenticated());
         await this.setup();
     }
 
@@ -335,11 +335,6 @@ export default class App extends Vue {
                     this.darkmode(e.matches ? "dark" : "light");
                 });
         } else document.documentElement.classList.remove("dark");
-    }
-
-    /** Checks if the user is authenticated and sets the Vuex state accordingly. */
-    async isAuthenticated() {
-        appState.setAuthenticated(await this.$auth.isAuthenticated());
     }
 
     /** Initiates all the crucial setup for the app. */

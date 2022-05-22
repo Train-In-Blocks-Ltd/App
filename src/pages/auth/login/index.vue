@@ -91,20 +91,23 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import OktaSignIn from "@okta/okta-signin-widget";
+import { Component, Vue } from "vue-property-decorator";
+import appState from "../../../store/modules/appState";
+import utilsStore from "../../../store/modules/utils";
 
 const Splash = () =>
     import(
-        /* webpackChunkName: "components.splash", webpackPreload: true  */ "@/components/generic/Splash"
+        /* webpackChunkName: "components.splash", webpackPreload: true  */ "../../../components/generic/Splash.vue"
     );
 const ResetPassword = () =>
     import(
-        /* webpackChunkName: "components.resetPassword", webpackPreload: true  */ "./components/ResetPassword"
+        /* webpackChunkName: "components.resetPassword", webpackPreload: true  */ "./components/ResetPassword.vue"
     );
 const VersionLabel = () =>
     import(
-        /* webpackChunkName: "components.versionLabel", webpackPreload: true  */ "@/components/generic/VersionLabel"
+        /* webpackChunkName: "components.versionLabel", webpackPreload: true  */ "../../../components/generic/VersionLabel.vue"
     );
 
 const CUSTOM_ENV =
@@ -112,78 +115,88 @@ const CUSTOM_ENV =
         ? require("../../../../config/prod.env")
         : require("../../../../config/dev.env");
 
-export default {
+const scopes = ["openid", "profile", "email"];
+const oktaSignIn = new OktaSignIn({
+    baseUrl: CUSTOM_ENV.OKTA.CLIENT_ID,
+    issuer: CUSTOM_ENV.OKTA.ISSUER + "/oauth2/default",
+    clientId: CUSTOM_ENV.OKTA.CLIENT_ID,
+    redirectUri:
+        window.location.host === "localhost:8080"
+            ? "http://" + window.location.host + "/implicit/callback"
+            : "https://" + window.location.host + "/implicit/callback",
+    i18n: {
+        en: {
+            "primaryauth.title": "",
+            "primaryauth.username.placeholder": "Email",
+            "primaryauth.username.tooltip": "Enter your email",
+            "primaryauth.password.placeholder": "Password",
+            "primaryauth.password.tooltip": "Enter your password",
+            "error.username.required": "Please enter your email",
+            "errors.E0000004":
+                "Something went wrong, please re-enter your password",
+        },
+    },
+    authParams: {
+        pkce: true,
+        display: "page",
+        issuer: CUSTOM_ENV.OKTA.ISSUER + "/oauth2/default",
+        scopes,
+        tokenManager: {
+            autoRenew: true,
+            expireEarlySeconds: 120,
+        },
+    },
+});
+
+@Component({
+    metaInfo() {
+        return {
+            title: "Login",
+        };
+    },
     components: {
         Splash,
         ResetPassword,
         VersionLabel,
     },
-    data() {
-        return {
-            showDemo: false,
-            splashed: false,
-            open: false,
-            id: null,
-        };
-    },
-    computed: mapState(["authenticated", "versionName", "versionBuild"]),
+})
+export default class Login extends Vue {
+    showDemo: boolean = false;
+    splashed: boolean = false;
+    open: boolean = false;
+
+    get authenticated() {
+        return appState.authenticated;
+    }
+    get versionName() {
+        return appState.versionName;
+    }
+    get versionBuild() {
+        return appState.versionBuild;
+    }
+
     async mounted() {
-        const scopes = ["openid", "profile", "email"];
-        let OktaSignIn;
+        let OktaSignIn: any;
         await import(
+            // @ts-expect-error
             /* webpackChunkName: "okta.signin", webpackPreload: true  */ "@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js"
         ).then((module) => {
             OktaSignIn = module.default;
         });
         this.splashed = true;
         this.$nextTick(function () {
-            this.widget = new OktaSignIn({
-                baseUrl: CUSTOM_ENV.OKTA.CLIENT_ID,
-                issuer: CUSTOM_ENV.OKTA.ISSUER + "/oauth2/default",
-                clientId: CUSTOM_ENV.OKTA.CLIENT_ID,
-                redirectUri:
-                    window.location.host === "localhost:8080"
-                        ? "http://" +
-                          window.location.host +
-                          "/implicit/callback"
-                        : "https://" +
-                          window.location.host +
-                          "/implicit/callback",
-                i18n: {
-                    en: {
-                        "primaryauth.title": "",
-                        "primaryauth.username.placeholder": "Email",
-                        "primaryauth.username.tooltip": "Enter your email",
-                        "primaryauth.password.placeholder": "Password",
-                        "primaryauth.password.tooltip": "Enter your password",
-                        "error.username.required": "Please enter your email",
-                        "errors.E0000004":
-                            "That didn't work. Was your password correct?",
-                    },
-                },
-                authParams: {
-                    pkce: true,
-                    display: "page",
-                    issuer: CUSTOM_ENV.OKTA.ISSUER + "/oauth2/default",
-                    scopes,
-                    tokenManager: {
-                        autoRenew: true,
-                        expireEarlySeconds: 120,
-                    },
-                },
-            });
             const self = this;
-            this.widget
+            oktaSignIn
                 .showSignInToGetTokens({
                     el: "#okta-signin-container",
                     scopes,
                 })
-                .then(async (tokens) => {
+                .then(async (tokens: any) => {
                     self.splashed = false;
                     await this.$auth.handleLoginRedirect(tokens);
                 })
-                .catch((err) => {
-                    throw err;
+                .catch((e: any) => {
+                    utilsStore.resolveError(e as string);
                 });
         });
         if (await this.$auth.isAuthenticated()) {
@@ -198,12 +211,11 @@ export default {
                     name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
             }
         }
-    },
+    }
+
     async beforeDestroy() {
-        await this.$parent.isAuthenticated();
-        if (this.$ga && !this.authenticated) {
-            this.$ga.event("Auth", "login");
-        }
-    },
-};
+        appState.setAuthenticated(await this.$auth.isAuthenticated());
+        if (this.$ga && !this.authenticated) this.$ga.event("Auth", "login");
+    }
+}
 </script>

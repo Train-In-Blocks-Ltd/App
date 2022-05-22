@@ -157,8 +157,7 @@ export default class NavBar extends Vue {
             })
         ) {
             await this.$parent.$auth.signOut();
-            // @ts-expect-error
-            await this.$parent.isAuthenticated();
+            appState.setAuthenticated(await this.$auth.isAuthenticated());
             localStorage.clear();
             sessionStorage.clear();
             localStorage.setItem(
