@@ -8,7 +8,7 @@ import {
 import { Booking } from "./types";
 import { baseAPI } from "../../api";
 import portfolioStore from "./portfolio";
-import clientUserStore from "./clientUser";
+import clientUserModule from "./clientUser.module";
 import clientsModule from "./clients.module";
 import emailBuilder from "../../components/js/email";
 

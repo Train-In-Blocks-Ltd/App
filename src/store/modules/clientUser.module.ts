@@ -1,14 +1,14 @@
-import store from "../..";
+import store from "..";
 import {
     getModule,
     Module,
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import { Booking, Plan, Portfolio, Session } from "../types";
-import { baseAPI, ClientUserData } from "../../../api";
-import emailBuilder from "../../../components/js/email";
-import accountModule from "../account.module";
+import { Booking, Plan, Portfolio, Session } from "./types";
+import { baseAPI, ClientUserData } from "../../api";
+import emailBuilder from "../../components/js/email";
+import accountModule from "./account.module";
 
 @Module({
     name: "clientUser",

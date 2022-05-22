@@ -136,7 +136,7 @@ import clientsModule from "./store/modules/clients.module";
 import templatesStore from "./store/modules/templates";
 import bookingsModule from "./store/modules/bookings.module";
 import portfolioStore from "./store/modules/portfolio";
-import clientUserStore from "./store/modules/clientUser";
+import clientUserModule from "./store/modules/clientUser.module";
 import { getTrainerUserData } from "./api";
 import {
     ConfirmPopUpRef,
@@ -417,7 +417,7 @@ export default class App extends Vue {
                 const clientUserData = await getClientUserData(
                     claims.client_id_db
                 );
-                clientUserStore.setClientUser(clientUserData);
+                clientUserModule.setClientUser(clientUserData);
             }
         } catch (e) {
             utilsStore.resolveError(e as string);

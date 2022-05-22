@@ -181,7 +181,7 @@
 import { Component, Mixins } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
 import appModule from "../../store/modules/app.module";
-import clientUserStore from "../../store/modules/clientUser";
+import clientUserModule from "../../store/modules/clientUser.module";
 import utilsStore from "../../store/modules/utils";
 import MainMixins from "../../main.mixins";
 import { EditorState, Session } from "../../store/modules/types";
@@ -230,14 +230,14 @@ export default class ClientPlans extends Mixins(MainMixins) {
         return appModule.loading;
     }
     get plan() {
-        return clientUserStore.plans.find(
+        return clientUserModule.plans.find(
             (p) => p.id === parseInt(this.$route.params.id)
         );
     }
     set plan(value) {
         if (value)
-            clientUserStore.setPlans(
-                clientUserStore.plans.map((p) =>
+            clientUserModule.setPlans(
+                clientUserModule.plans.map((p) =>
                     p.id !== value.id ? p : value
                 )
             );
@@ -294,7 +294,7 @@ export default class ClientPlans extends Mixins(MainMixins) {
                 break;
             case "save":
                 this.feedbackId = null;
-                clientUserStore.updateSession(session);
+                clientUserModule.updateSession(session);
                 break;
             case "cancel":
                 appModule.setDontLeave(false);
@@ -318,7 +318,7 @@ export default class ClientPlans extends Mixins(MainMixins) {
 
     /** Toggles the complete state of the session. */
     handleToggleComplete(session: Session) {
-        clientUserStore.updateSession({
+        clientUserModule.updateSession({
             ...session,
             checked: !!session.checked ? 0 : 1,
         });

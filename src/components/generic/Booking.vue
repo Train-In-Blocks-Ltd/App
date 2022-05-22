@@ -88,7 +88,7 @@ import accountModule from "../../store/modules/account.module";
 import appModule from "../../store/modules/app.module";
 import utilsStore from "../../store/modules/utils";
 import bookingsModule from "../../store/modules/bookings.module";
-import clientUserStore from "../../store/modules/clientUser";
+import clientUserModule from "../../store/modules/clientUser.module";
 import MainMixins from "../../main.mixins";
 
 const CardWrapper = () =>
@@ -173,7 +173,7 @@ export default class Booking extends Mixins(MainMixins) {
                     };
                 if (this.isTrainer)
                     await bookingsModule.deleteTrainerBooking(data);
-                else await clientUserStore.deleteClientBooking(data);
+                else await clientUserModule.deleteClientBooking(data);
                 utilsStore.responsePopUpRef?.open({
                     title: "Booking cancelled",
                     text: "Your trainer will be notified",

@@ -49,7 +49,7 @@ import appModule from "../../store/modules/app.module";
 import accountModule from "../../store/modules/account.module";
 import utilsStore from "../../store/modules/utils";
 import bookingsModule from "../../store/modules/bookings.module";
-import clientUserStore from "../../store/modules/clientUser";
+import clientUserModule from "../../store/modules/clientUser.module";
 import { Booking } from "../../store/modules/types";
 
 @Component
@@ -84,7 +84,7 @@ export default class BookingForm extends Mixins(MainMixins) {
                 status: this.isTrainer ? "Scheduled" : "Pending",
             };
             if (this.isTrainer) await bookingsModule.createTrainerBooking(data);
-            else await clientUserStore.createClientBooking(data);
+            else await clientUserModule.createClientBooking(data);
 
             this.bookingForm = {
                 date: this.today(),

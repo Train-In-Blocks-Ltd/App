@@ -71,7 +71,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../store/modules/app.module";
 import accountModule from "../../../store/modules/account.module";
-import clientUserStore from "../../../store/modules/clientUser";
+import clientUserModule from "../../../store/modules/clientUser.module";
 import utilsStore from "../../../store/modules/utils";
 import { baseAPI } from "../../../api";
 
@@ -98,25 +98,25 @@ export default class ClientUserProfileModal extends Vue {
         return accountModule.claims;
     }
     get profile_image() {
-        return clientUserStore.profile_image;
+        return clientUserModule.profile_image;
     }
     set profile_image(value) {
-        clientUserStore.setProfileImage(value);
+        clientUserModule.setProfileImage(value);
     }
     get name() {
-        return clientUserStore.name;
+        return clientUserModule.name;
     }
     set name(value) {
-        clientUserStore.setName(value);
+        clientUserModule.setName(value);
     }
     get number() {
-        return clientUserStore.number;
+        return clientUserModule.number;
     }
     set number(value) {
-        clientUserStore.setNumber(value);
+        clientUserModule.setNumber(value);
     }
     get bookings() {
-        return clientUserStore.bookings;
+        return clientUserModule.bookings;
     }
     get upcoming() {
         return this.bookings.filter((b) => new Date(b.datetime) > new Date());
@@ -136,7 +136,7 @@ export default class ClientUserProfileModal extends Vue {
                         });
                     }
                     this.profile_image = response.data.url;
-                    clientUserStore.updateClientUser();
+                    clientUserModule.updateClientUser();
                 },
             });
             appModule.stopLoaders();
@@ -150,7 +150,7 @@ export default class ClientUserProfileModal extends Vue {
         try {
             appModule.setSilentLoading(true);
             appModule.setDontLeave(true);
-            clientUserStore.updateClientUser();
+            clientUserModule.updateClientUser();
             appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
