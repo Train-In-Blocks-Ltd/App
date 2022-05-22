@@ -7,7 +7,7 @@ import {
 } from "vuex-module-decorators";
 import { Booking } from "./types";
 import { baseAPI } from "../../api";
-import portfolioStore from "./portfolio.module";
+import portfolioModule from "./portfolio.module";
 import clientUserModule from "./clientUser.module";
 import clientsModule from "./clients.module";
 import emailBuilder from "../../components/js/email";

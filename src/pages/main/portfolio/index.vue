@@ -59,7 +59,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../store/modules/app.module";
 import accountModule from "../../../store/modules/account.module";
-import portfolioStore from "../../../store/modules/portfolio.module";
+import portfolioModule from "../../../store/modules/portfolio.module";
 import utilsStore from "../../../store/modules/utils";
 import { NavigationGuardNext, Route } from "vue-router";
 import { EditorState } from "@/src/store/modules/types";
@@ -96,30 +96,30 @@ export default class Portfolio extends Vue {
         return appModule.silentLoading;
     }
     get pt_id() {
-        return portfolioStore.pt_id;
+        return portfolioModule.pt_id;
     }
 
     // Form data
 
     get business_name() {
-        return portfolioStore.business_name;
+        return portfolioModule.business_name;
     }
     set business_name(value) {
-        portfolioStore.setBusinessName(value);
+        portfolioModule.setBusinessName(value);
     }
 
     get trainer_name() {
-        return portfolioStore.trainer_name;
+        return portfolioModule.trainer_name;
     }
     set trainer_name(value) {
-        portfolioStore.setTrainerName(value);
+        portfolioModule.setTrainerName(value);
     }
 
     get notes() {
-        return portfolioStore.notes;
+        return portfolioModule.notes;
     }
     set notes(value) {
-        portfolioStore.setNotes(value);
+        portfolioModule.setNotes(value);
     }
 
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
@@ -152,7 +152,7 @@ export default class Portfolio extends Vue {
                 appModule.setDontLeave(false);
                 this.editingPortfolio = false;
                 const { pt_id, business_name, trainer_name } = this;
-                portfolioStore.setPortfolio({
+                portfolioModule.setPortfolio({
                     pt_id,
                     business_name,
                     trainer_name,
@@ -168,7 +168,7 @@ export default class Portfolio extends Vue {
             appModule.setSilentLoading(true);
             appModule.setDontLeave(true);
 
-            await portfolioStore.updatePortfolio();
+            await portfolioModule.updatePortfolio();
             this.$ga.event("Portfolio", "update");
             utilsStore.responsePopUpRef?.open({
                 title: "Portfolio updated",

@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import templatesStore from "../../../../store/modules/templates";
+import templatesModule from "../../../../store/modules/templates.module";
 import utilsStore from "../../../../store/modules/utils";
 
 const CardWrapper = () =>
@@ -89,7 +89,7 @@ export default class TemplatesModal extends Vue {
     ];
 
     get templates() {
-        return templatesStore.templates;
+        return templatesModule.templates;
     }
     get editor() {
         return utilsStore.editor;

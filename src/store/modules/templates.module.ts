@@ -1,13 +1,13 @@
-import store from "../..";
+import store from "..";
 import {
     getModule,
     Module,
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import { Template } from "../types";
-import { baseAPI } from "../../../api";
-import accountModule from "../account.module";
+import { Template } from "./types";
+import { baseAPI } from "../../api";
+import accountModule from "./account.module";
 
 @Module({
     name: "templates",

@@ -133,9 +133,9 @@ import appModule from "./store/modules/app.module";
 import accountModule from "./store/modules/account.module";
 import utilsStore from "./store/modules/utils";
 import clientsModule from "./store/modules/clients.module";
-import templatesStore from "./store/modules/templates";
+import templatesModule from "./store/modules/templates.module";
 import bookingsModule from "./store/modules/bookings.module";
-import portfolioStore from "./store/modules/portfolio.module";
+import portfolioModule from "./store/modules/portfolio.module";
 import clientUserModule from "./store/modules/clientUser.module";
 import { getTrainerUserData } from "./api";
 import {
@@ -409,9 +409,9 @@ export default class App extends Vue {
                 clientsModule.setClients(sortedClients);
                 clientsModule.setArchivedClients(sortedArchiveClients);
                 bookingsModule.setBookings(sortedBookings);
-                templatesStore.setTemplates(templates);
+                templatesModule.setTemplates(templates);
 
-                if (!!portfolio) portfolioStore.setPortfolio(portfolio);
+                if (!!portfolio) portfolioModule.setPortfolio(portfolio);
             }
             if (["Client", "Admin"].includes(claims.user_type)) {
                 const clientUserData = await getClientUserData(

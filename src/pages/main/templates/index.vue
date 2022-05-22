@@ -113,7 +113,7 @@
 
 <script lang="ts">
 import appModule from "../../../store/modules/app.module";
-import templatesStore from "../../../store/modules/templates";
+import templatesModule from "../../../store/modules/templates.module";
 import utilsStore from "../../../store/modules/utils";
 import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
@@ -170,10 +170,10 @@ export default class Templates extends Vue {
         return appModule.isDemo;
     }
     get templates() {
-        return templatesStore.templates;
+        return templatesModule.templates;
     }
     set templates(value) {
-        templatesStore.setTemplates(value);
+        templatesModule.setTemplates(value);
     }
     get selectedIds() {
         return utilsStore.selectedIds;
@@ -272,7 +272,7 @@ export default class Templates extends Vue {
     async createTemplate() {
         try {
             appModule.setDontLeave(true);
-            await templatesStore.addTemplate();
+            await templatesModule.addTemplate();
             this.checkForNew();
             utilsStore.responsePopUpRef?.open({
                 title: "New template created",
@@ -289,7 +289,7 @@ export default class Templates extends Vue {
     async updateTemplate(templateId: number) {
         try {
             appModule.setDontLeave(true);
-            await templatesStore.updateTemplate(templateId);
+            await templatesModule.updateTemplate(templateId);
             utilsStore.responsePopUpRef?.open({
                 title: "Updated template",
                 text: "Your changes have been saved",
@@ -312,7 +312,7 @@ export default class Templates extends Vue {
             ) {
                 try {
                     appModule.setDontLeave(true);
-                    await templatesStore.deleteTemplates(this.selectedIds);
+                    await templatesModule.deleteTemplates(this.selectedIds);
                     utilsStore.deselectAll();
                     appModule.stopLoaders();
                     utilsStore.responsePopUpRef?.open({

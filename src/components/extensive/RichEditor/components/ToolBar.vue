@@ -154,7 +154,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import templatesStore from "../../../../store/modules/templates";
+import templatesModule from "../../../../store/modules/templates.module";
 import utilsStore from "../../../../store/modules/utils";
 import { ChainedCommands } from "@tiptap/core";
 
@@ -166,7 +166,7 @@ export default class ToolBar extends Vue {
         return utilsStore.editor;
     }
     get templates() {
-        return templatesStore.templates;
+        return templatesModule.templates;
     }
     get newImgs() {
         return utilsStore.newImgs;
