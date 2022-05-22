@@ -1,7 +1,7 @@
 <template>
     <div v-if="show">
         <div
-            class="fixed top-0 left-0 z-60 bg-white dark:bg-gray-800 shadow-lg rounded-lg ml-8 mt-8 p-4 max-w-xl"
+            class="fixed top-0 left-0 z-60 bg-white dark:bg-gray-800 shadow-lg rounded-lg mx-2 sm:ml-8 mt-8 p-4 max-w-xl"
         >
             <txt bold>{{ title }}</txt>
             <txt>{{ text }}</txt>
@@ -10,7 +10,7 @@
                 type="file"
                 accept=".png, .jpeg, .jpg, .webp, .gif"
                 @change="_confirm"
-                class="mt-4"
+                class="mt-4 w-full"
             />
         </div>
         <backdrop :on-click="_cancel" />
