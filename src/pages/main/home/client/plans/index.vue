@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { EditorState } from "src/common/types";
+import { EditorState } from "../../../../../common/types";
 import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
 import appModule from "../../../../../store/app.module";

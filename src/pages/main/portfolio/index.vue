@@ -62,7 +62,7 @@ import accountModule from "../../../store/account.module";
 import portfolioModule from "../../../store/portfolio.module";
 import utilsModule from "../../../store/utils.module";
 import { NavigationGuardNext, Route } from "vue-router";
-import { EditorState } from "src/common/types";
+import { EditorState } from "../../../common/types";
 
 const LabelWrapper = () =>
     import(
