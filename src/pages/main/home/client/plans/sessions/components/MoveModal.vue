@@ -24,7 +24,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import utilsStore from "../../../../../../../store/modules/utils";
-import appState from "../../../../../../../store/modules/appState";
+import appModule from "../../../../../../../store/modules/app.module";
 import planStore from "../../../../../../../store/modules/plan";
 
 @Component
@@ -40,7 +40,7 @@ export default class MoveModal extends Vue {
 
     /** Moves the selected sessions to specified week. */
     async moveToWeek() {
-        appState.setDontLeave(true);
+        appModule.setDontLeave(true);
         await planStore.moveSessions(this.moveTarget);
         utilsStore.closeModal();
         utilsStore.responsePopUpRef?.open({
@@ -53,7 +53,7 @@ export default class MoveModal extends Vue {
         this.moveTarget = 1;
         utilsStore.deselectAll();
         this.$ga.event("Session", "move");
-        appState.stopLoaders();
+        appModule.stopLoaders();
     }
 }
 </script>

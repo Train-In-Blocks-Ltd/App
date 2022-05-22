@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appState from "../../../../store/modules/appState";
+import appModule from "../../../../store/modules/app.module";
 import utilsStore from "../../../../store/modules/utils";
 
 @Component
@@ -80,7 +80,7 @@ export default class ResetPasswordModal extends Vue {
     /** Changes the password. */
     async changePassword() {
         try {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             this.error = "";
             utilsStore.responsePopUpRef?.open({
                 title: "Password changed",
@@ -89,7 +89,7 @@ export default class ResetPasswordModal extends Vue {
             this.old = "";
             this.newP = "";
             this.confirm = "";
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
             this.error =

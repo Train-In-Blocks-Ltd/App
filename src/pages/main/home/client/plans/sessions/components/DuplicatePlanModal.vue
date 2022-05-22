@@ -21,7 +21,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import utilsStore from "../../../../../../../store/modules/utils";
-import appState from "../../../../../../../store/modules/appState";
+import appModule from "../../../../../../../store/modules/app.module";
 import planStore from "../../../../../../../store/modules/plan";
 import clientsStore from "../../../../../../../store/modules/clients";
 
@@ -45,7 +45,7 @@ export default class DuplicatePlanModal extends Vue {
     async duplicatePlan() {
         try {
             if (!this.plan || !this.client_id) return;
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             const { plan, client_id } = this;
             await clientsStore.duplicatePlan({ plan, client_id });
             this.$ga.event("Plan", "duplicate");
@@ -54,7 +54,7 @@ export default class DuplicatePlanModal extends Vue {
                 text: "Access it on your client's profile",
             });
             utilsStore.closeModal();
-            appState.stopLoaders();
+            appModule.stopLoaders();
             this.$router.push({ path: `/client/${this.client_id}/` });
         } catch (e) {
             utilsStore.resolveError(e as string);

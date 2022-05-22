@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appState from "../../../../store/modules/appState";
+import appModule from "../../../../store/modules/app.module";
 import clientStore from "../../../../store/modules/client";
 
 const ClientHeader = () =>
@@ -40,7 +40,7 @@ export default class Client extends Vue {
     loaded: boolean = false;
 
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
     get clientDetails() {
         return clientStore.clientDetails;

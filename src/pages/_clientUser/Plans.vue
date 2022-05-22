@@ -180,7 +180,7 @@
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
-import appState from "../../store/modules/appState";
+import appModule from "../../store/modules/app.module";
 import clientUserStore from "../../store/modules/clientUser";
 import utilsStore from "../../store/modules/utils";
 import MainMixins from "../../main.mixins";
@@ -224,10 +224,10 @@ export default class ClientPlans extends Mixins(MainMixins) {
     showMonthlyCal: boolean = false;
 
     get dontLeave() {
-        return appState.dontLeave;
+        return appModule.dontLeave;
     }
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
     get plan() {
         return clientUserStore.plans.find(
@@ -276,7 +276,7 @@ export default class ClientPlans extends Mixins(MainMixins) {
                   })
                 : true
         ) {
-            appState.setDontLeave(false);
+            appModule.setDontLeave(false);
             next();
         }
     }
@@ -287,7 +287,7 @@ export default class ClientPlans extends Mixins(MainMixins) {
         if (!session) return;
         switch (state) {
             case "edit":
-                appState.setDontLeave(true);
+                appModule.setDontLeave(true);
                 this.feedbackId = id;
                 this.forceStop += 1;
                 this.tempEditorStore = session.feedback;
@@ -297,7 +297,7 @@ export default class ClientPlans extends Mixins(MainMixins) {
                 clientUserStore.updateSession(session);
                 break;
             case "cancel":
-                appState.setDontLeave(false);
+                appModule.setDontLeave(false);
                 this.feedbackId = null;
                 session.feedback = this.tempEditorStore;
                 break;
@@ -322,7 +322,7 @@ export default class ClientPlans extends Mixins(MainMixins) {
             ...session,
             checked: !!session.checked ? 0 : 1,
         });
-        appState.stopLoaders();
+        appModule.stopLoaders();
     }
 }
 </script>

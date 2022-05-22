@@ -112,7 +112,7 @@
 </template>
 
 <script lang="ts">
-import appState from "../../../store/modules/appState";
+import appModule from "../../../store/modules/app.module";
 import templatesStore from "../../../store/modules/templates";
 import utilsStore from "../../../store/modules/utils";
 import { Component, Vue } from "vue-property-decorator";
@@ -161,13 +161,13 @@ export default class Templates extends Vue {
     expandedTemplates: number[] = [];
 
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
     get dontLeave() {
-        return appState.dontLeave;
+        return appModule.dontLeave;
     }
     get isDemo() {
-        return appState.isDemo;
+        return appModule.isDemo;
     }
     get templates() {
         return templatesStore.templates;
@@ -188,7 +188,7 @@ export default class Templates extends Vue {
                   })
                 : true
         ) {
-            appState.setDontLeave(false);
+            appModule.setDontLeave(false);
             next();
         }
     }
@@ -212,7 +212,7 @@ export default class Templates extends Vue {
         );
         switch (state) {
             case "edit":
-                appState.setDontLeave(true);
+                appModule.setDontLeave(true);
                 this.isEditingTemplate = true;
                 this.editTemplate = id;
                 this.forceStop += 1;
@@ -224,7 +224,7 @@ export default class Templates extends Vue {
                 this.updateTemplate(id);
                 break;
             case "cancel":
-                appState.setDontLeave(false);
+                appModule.setDontLeave(false);
                 this.isEditingTemplate = false;
                 this.editTemplate = null;
                 if (!foundTemplate) return;
@@ -271,7 +271,7 @@ export default class Templates extends Vue {
     /** Creates a new template. */
     async createTemplate() {
         try {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             await templatesStore.addTemplate();
             this.checkForNew();
             utilsStore.responsePopUpRef?.open({
@@ -279,7 +279,7 @@ export default class Templates extends Vue {
                 text: "Edit and use it in a client's plan",
             });
             this.$ga.event("Template", "new");
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }
@@ -288,14 +288,14 @@ export default class Templates extends Vue {
     /** Updates a template. */
     async updateTemplate(templateId: number) {
         try {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             await templatesStore.updateTemplate(templateId);
             utilsStore.responsePopUpRef?.open({
                 title: "Updated template",
                 text: "Your changes have been saved",
             });
             this.$ga.event("Template", "update");
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }
@@ -311,10 +311,10 @@ export default class Templates extends Vue {
                 })
             ) {
                 try {
-                    appState.setDontLeave(true);
+                    appModule.setDontLeave(true);
                     await templatesStore.deleteTemplates(this.selectedIds);
                     utilsStore.deselectAll();
-                    appState.stopLoaders();
+                    appModule.stopLoaders();
                     utilsStore.responsePopUpRef?.open({
                         title:
                             this.selectedIds.length > 1

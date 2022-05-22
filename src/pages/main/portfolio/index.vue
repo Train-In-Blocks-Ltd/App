@@ -57,7 +57,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appState from "../../../store/modules/appState";
+import appModule from "../../../store/modules/app.module";
 import accountStore from "../../../store/modules/account";
 import portfolioStore from "../../../store/modules/portfolio";
 import utilsStore from "../../../store/modules/utils";
@@ -87,13 +87,13 @@ export default class Portfolio extends Vue {
         return accountStore.claims;
     }
     get dontLeave() {
-        return appState.dontLeave;
+        return appModule.dontLeave;
     }
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
     get silentLoading() {
-        return appState.silentLoading;
+        return appModule.silentLoading;
     }
     get pt_id() {
         return portfolioStore.pt_id;
@@ -131,7 +131,7 @@ export default class Portfolio extends Vue {
                   })
                 : true
         ) {
-            appState.setDontLeave(false);
+            appModule.setDontLeave(false);
             next();
         }
     }
@@ -140,7 +140,7 @@ export default class Portfolio extends Vue {
     resolve_portfolio_editor(state: EditorState) {
         switch (state) {
             case "edit":
-                appState.setDontLeave(true);
+                appModule.setDontLeave(true);
                 this.editingPortfolio = true;
                 this.tempEditorStore = this.notes;
                 break;
@@ -149,7 +149,7 @@ export default class Portfolio extends Vue {
                 this.updatePortfolio();
                 break;
             case "cancel":
-                appState.setDontLeave(false);
+                appModule.setDontLeave(false);
                 this.editingPortfolio = false;
                 const { pt_id, business_name, trainer_name } = this;
                 portfolioStore.setPortfolio({
@@ -165,8 +165,8 @@ export default class Portfolio extends Vue {
     /** Updates the portfolio. */
     async updatePortfolio() {
         try {
-            appState.setSilentLoading(true);
-            appState.setDontLeave(true);
+            appModule.setSilentLoading(true);
+            appModule.setDontLeave(true);
 
             await portfolioStore.updatePortfolio();
             this.$ga.event("Portfolio", "update");
@@ -174,7 +174,7 @@ export default class Portfolio extends Vue {
                 title: "Portfolio updated",
                 text: "Your clients can access this information",
             });
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }

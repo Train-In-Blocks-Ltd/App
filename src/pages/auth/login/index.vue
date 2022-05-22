@@ -94,7 +94,7 @@
 <script lang="ts">
 import OktaSignIn from "@okta/okta-signin-widget";
 import { Component, Vue } from "vue-property-decorator";
-import appState from "../../../store/modules/appState";
+import appModule from "../../../store/modules/app.module";
 import utilsStore from "../../../store/modules/utils";
 
 const Splash = () =>
@@ -166,13 +166,13 @@ export default class Login extends Vue {
     open: boolean = false;
 
     get authenticated() {
-        return appState.authenticated;
+        return appModule.authenticated;
     }
     get versionName() {
-        return appState.versionName;
+        return appModule.versionName;
     }
     get versionBuild() {
-        return appState.versionBuild;
+        return appModule.versionBuild;
     }
 
     async mounted() {
@@ -214,7 +214,7 @@ export default class Login extends Vue {
     }
 
     async beforeDestroy() {
-        appState.setAuthenticated(await this.$auth.isAuthenticated());
+        appModule.setAuthenticated(await this.$auth.isAuthenticated());
         if (this.$ga && !this.authenticated) this.$ga.event("Auth", "login");
     }
 }

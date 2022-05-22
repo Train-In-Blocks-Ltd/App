@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import { baseAPI } from "../../../../api";
-import appState from "../../../../store/modules/appState";
+import appModule from "../../../../store/modules/app.module";
 import accountStore from "../../../../store/modules/account";
 import { Component, Vue } from "vue-property-decorator";
 import { WhatsNewItem } from "@/src/store/modules/types";
@@ -110,10 +110,10 @@ export default class WhatsNewModal extends Vue {
     };
 
     get versionName() {
-        return appState.versionName;
+        return appModule.versionName;
     }
     get versionBuild() {
-        return appState.versionBuild;
+        return appModule.versionBuild;
     }
     get claims() {
         return accountStore.claims;
@@ -122,7 +122,7 @@ export default class WhatsNewModal extends Vue {
     /** Updates the version stored in local storage. */
     updateVersion() {
         localStorage.setItem("versionBuild", this.versionBuild);
-        appState.setNewBuild(false);
+        appModule.setNewBuild(false);
     }
 
     /** Sends us an email when a user submits a new idea. */

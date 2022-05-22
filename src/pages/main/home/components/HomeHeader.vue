@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import appState from "../../../../store/modules/appState";
+import appModule from "../../../../store/modules/app.module";
 import utilsStore from "../../../../store/modules/utils";
 import { Component, Vue } from "vue-property-decorator";
 
@@ -65,10 +65,10 @@ import { Component, Vue } from "vue-property-decorator";
 })
 export default class HomeHeader extends Vue {
     get pwa() {
-        return appState.pwa;
+        return appModule.pwa;
     }
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
 
     handleSearch(value: string) {

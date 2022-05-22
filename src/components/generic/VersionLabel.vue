@@ -8,16 +8,16 @@
 </template>
 
 <script lang="ts">
-import appState from "../../store/modules/appState";
+import appModule from "../../store/modules/app.module";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class VersionLabel extends Vue {
     get versionName() {
-        return appState.versionName;
+        return appModule.versionName;
     }
     get versionBuild() {
-        return appState.versionBuild;
+        return appModule.versionBuild;
     }
 }
 </script>

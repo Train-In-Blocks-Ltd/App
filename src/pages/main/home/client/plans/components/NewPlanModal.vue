@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appState from "../../../../../../store/modules/appState";
+import appModule from "../../../../../../store/modules/app.module";
 import clientStore from "../../../../../../store/modules/client";
 import clientsStore from "../../../../../../store/modules/clients";
 import utilsStore from "../../../../../../store/modules/utils";
@@ -36,7 +36,7 @@ export default class NewPlanModal extends Vue {
     duration: string = "";
 
     get dontLeave() {
-        return appState.dontLeave;
+        return appModule.dontLeave;
     }
     get clientDetails() {
         return clientStore.clientDetails;
@@ -48,7 +48,7 @@ export default class NewPlanModal extends Vue {
     /** Creates a new plan. */
     async createPlan() {
         try {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             await clientStore.createPlan({
                 client_id: parseInt(this.$route.params.client_id),
                 name: this.name,
@@ -62,7 +62,7 @@ export default class NewPlanModal extends Vue {
             this.name = "";
             this.duration = "";
             utilsStore.closeModal();
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }

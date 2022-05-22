@@ -63,7 +63,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import accountStore from "../../../../store/modules/account";
-import appState from "../../../../store/modules/appState";
+import appModule from "../../../../store/modules/app.module";
 import utilsStore from "../../../../store/modules/utils";
 import clientsStore from "../../../../store/modules/clients";
 import { EMAIL_REGEX } from "../../../../common/helpers";
@@ -101,7 +101,7 @@ export default class NewClientModal extends Vue {
             });
         } else {
             try {
-                appState.setDontLeave(true);
+                appModule.setDontLeave(true);
                 clientsStore.createClient({
                     pt_id: this.claims?.sub ?? "",
                     name: this.name,
@@ -118,8 +118,8 @@ export default class NewClientModal extends Vue {
                 this.number = "";
                 this.notes = "";
                 this.$ga.event("Client", "new");
-                appState.stopLoaders();
-                appState.stopLoaders();
+                appModule.stopLoaders();
+                appModule.stopLoaders();
             } catch (e) {
                 utilsStore.resolveError(e as string);
             }

@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import appState from "../../../../store/modules/appState";
+import appModule from "../../../../store/modules/app.module";
 import accountStore from "../../../../store/modules/account";
 import { Component, Vue, Prop } from "vue-property-decorator";
 
@@ -54,7 +54,7 @@ export default class NavLink extends Vue {
         return accountStore.claims;
     }
     get isDemo() {
-        return appState.isDemo;
+        return appModule.isDemo;
     }
 }
 </script>

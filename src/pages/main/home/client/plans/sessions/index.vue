@@ -329,7 +329,7 @@
 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
-import appState from "../../../../../../store/modules/appState";
+import appModule from "../../../../../../store/modules/app.module";
 import clientsStore from "../../../../../../store/modules/clients";
 import planStore from "../../../../../../store/modules/plan";
 import utilsStore from "../../../../../../store/modules/utils";
@@ -452,13 +452,13 @@ export default class Session extends Mixins(MainMixins) {
         return utilsStore.selectedIds;
     }
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
     get silentLoading() {
-        return appState.silentLoading;
+        return appModule.silentLoading;
     }
     get dontLeave() {
-        return appState.dontLeave;
+        return appModule.dontLeave;
     }
     get clients() {
         return clientsStore.clients;
@@ -467,7 +467,7 @@ export default class Session extends Mixins(MainMixins) {
         return clientStore.clientDetails;
     }
     get isDemo() {
-        return appState.isDemo;
+        return appModule.isDemo;
     }
     get events() {
         return planStore.plan?.sessions
@@ -498,7 +498,7 @@ export default class Session extends Mixins(MainMixins) {
                   })
                 : true
         ) {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             next();
         }
     }
@@ -567,14 +567,14 @@ export default class Session extends Mixins(MainMixins) {
     handlePlanNotesChange(state: EditorState) {
         switch (state) {
             case "edit":
-                appState.setDontLeave(true);
+                appModule.setDontLeave(true);
                 this.tempEditorStore = this.plan?.notes ?? "";
                 break;
             case "save":
                 this.updatePlan();
                 break;
             case "cancel":
-                appState.setDontLeave(false);
+                appModule.setDontLeave(false);
                 planStore.setPlanNotes(this.tempEditorStore ?? "");
                 break;
         }
@@ -586,7 +586,7 @@ export default class Session extends Mixins(MainMixins) {
         if (!session) return;
         switch (state) {
             case "edit":
-                appState.setDontLeave(true);
+                appModule.setDontLeave(true);
                 this.isEditingSession = true;
                 this.editSession = id;
                 this.forceStop += 1;
@@ -594,7 +594,7 @@ export default class Session extends Mixins(MainMixins) {
                 this.goToEvent(session.id, session.week_id);
                 break;
             case "save":
-                appState.setDontLeave(true);
+                appModule.setDontLeave(true);
                 this.isEditingSession = false;
                 this.editSession = null;
                 this.updateSingleSession(id);
@@ -602,10 +602,10 @@ export default class Session extends Mixins(MainMixins) {
                     title: "Session updated",
                     text: "Your changes have been saved",
                 });
-                appState.stopLoaders();
+                appModule.stopLoaders();
                 break;
             case "cancel":
-                appState.setDontLeave(false);
+                appModule.setDontLeave(false);
                 this.isEditingSession = false;
                 this.editSession = null;
                 session.notes = this.tempEditorStore ?? "";
@@ -615,8 +615,8 @@ export default class Session extends Mixins(MainMixins) {
 
     /** Duplicates the selected sessions. */
     async duplicate() {
-        appState.setDontLeave(true);
-        appState.setLoading(true);
+        appModule.setDontLeave(true);
+        appModule.setLoading(true);
         const sessions = this.plan?.sessions;
         if (!sessions) return;
         const toDuplicate = this.plan?.sessions?.filter((s) =>
@@ -628,7 +628,7 @@ export default class Session extends Mixins(MainMixins) {
             } duplicated`,
             text: "Get programming!",
         });
-        appState.stopLoaders();
+        appModule.stopLoaders();
     }
 
     /** Opens a new tab with the print preview of all the selected sessions. */
@@ -659,7 +659,7 @@ export default class Session extends Mixins(MainMixins) {
 
     /** Toggles the complete/incomplete state of the selected sessions. */
     async updateCheckedState(checked: 1 | 0) {
-        appState.setDontLeave(true);
+        appModule.setDontLeave(true);
         if (
             await utilsStore.confirmPopUpRef?.open({
                 title: `Are you sure that you want to ${
@@ -678,12 +678,12 @@ export default class Session extends Mixins(MainMixins) {
             });
             utilsStore.deselectAll();
         }
-        appState.stopLoaders();
+        appModule.stopLoaders();
     }
 
     /** Deletes all the selected sessions. */
     async deleteSessions() {
-        appState.setDontLeave(true);
+        appModule.setDontLeave(true);
         if (
             await utilsStore.confirmPopUpRef?.open({
                 title: "Are you sure that you want to delete all the selected sessions?",
@@ -700,7 +700,7 @@ export default class Session extends Mixins(MainMixins) {
                         : "Session deleted",
                 text: "Your changes have been saved",
             });
-            appState.stopLoaders();
+            appModule.stopLoaders();
         }
     }
 
@@ -768,10 +768,10 @@ export default class Session extends Mixins(MainMixins) {
     /** Updates the details of the plan. */
     async updatePlan() {
         try {
-            appState.setLoading(true);
+            appModule.setLoading(true);
             await planStore.updatePlan();
             this.$ga.event("Plan", "update");
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }
@@ -780,10 +780,10 @@ export default class Session extends Mixins(MainMixins) {
     /** Updates the duration of the plan. */
     async updateDuration() {
         try {
-            appState.setLoading(true);
+            appModule.setLoading(true);
             await planStore.updateDuration();
             this.$ga.event("Plan", "update");
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }
@@ -792,10 +792,10 @@ export default class Session extends Mixins(MainMixins) {
     /** Updates a single session. */
     async updateSingleSession(id: number) {
         try {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             await planStore.updateSession(id);
             this.$ga.event("Session", "update");
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }
@@ -804,7 +804,7 @@ export default class Session extends Mixins(MainMixins) {
     /** Creates a new session with our without existing data. */
     async createSingleSession() {
         try {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             await planStore.addSession({
                 programme_id: parseInt(this.$route.params.id),
                 name: "Untitled",
@@ -817,7 +817,7 @@ export default class Session extends Mixins(MainMixins) {
                 title: "New session added",
                 text: "Get programming!",
             });
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }

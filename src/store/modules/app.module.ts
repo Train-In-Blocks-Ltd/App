@@ -4,11 +4,11 @@ import {
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import { PWADisplayMode, PWASettings } from "../types";
-import store from "../..";
+import { PWADisplayMode, PWASettings } from "./types";
+import store from "..";
 
 @Module({
-    name: "appState",
+    name: "appModule",
     store,
     dynamic: true,
 })

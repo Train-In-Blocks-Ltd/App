@@ -45,7 +45,7 @@
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import MainMixins from "../../main.mixins";
-import appState from "../../store/modules/appState";
+import appModule from "../../store/modules/app.module";
 import accountStore from "../../store/modules/account";
 import utilsStore from "../../store/modules/utils";
 import bookingsStore from "../../store/modules/bookings";
@@ -70,8 +70,8 @@ export default class BookingForm extends Mixins(MainMixins) {
     async createBooking() {
         if (!this.claims) return;
         try {
-            appState.setDontLeave(true);
-            appState.setDisableButton(true);
+            appModule.setDontLeave(true);
+            appModule.setDisableButton(true);
             const data: Pick<
                 Booking,
                 "client_id" | "datetime" | "notes" | "status"
@@ -97,7 +97,7 @@ export default class BookingForm extends Mixins(MainMixins) {
                     ? "Your client will be notified of any upcoming bookings that were created."
                     : "Your trainer will be notified of your request.",
             });
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }

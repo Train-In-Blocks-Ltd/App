@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import appState from "../../../store/modules/appState";
+import appModule from "../../../store/modules/app.module";
 import accountStore from "../../../store/modules/account";
 import utilsStore from "../../../store/modules/utils";
 import { NavLinkType } from "../../../store/modules/types";
@@ -138,10 +138,10 @@ export default class NavBar extends Vue {
         return accountStore.claims;
     }
     get authenticated() {
-        return appState.authenticated;
+        return appModule.authenticated;
     }
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
 
     hardRefresh() {
@@ -157,7 +157,7 @@ export default class NavBar extends Vue {
             })
         ) {
             await this.$parent.$auth.signOut();
-            appState.setAuthenticated(await this.$auth.isAuthenticated());
+            appModule.setAuthenticated(await this.$auth.isAuthenticated());
             localStorage.clear();
             sessionStorage.clear();
             localStorage.setItem(

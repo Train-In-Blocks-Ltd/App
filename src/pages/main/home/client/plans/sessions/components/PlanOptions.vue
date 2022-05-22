@@ -38,14 +38,14 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appState from "../../../../../../../store/modules/appState";
+import appModule from "../../../../../../../store/modules/app.module";
 import utilsStore from "../../../../../../../store/modules/utils";
 import clientStore from "../../../../../../../store/modules/client";
 
 @Component
 export default class PlanOptions extends Vue {
     get isDemo() {
-        return appState.isDemo;
+        return appModule.isDemo;
     }
     get clientDetails() {
         return clientStore.clientDetails;
@@ -72,14 +72,14 @@ export default class PlanOptions extends Vue {
             })
         ) {
             try {
-                appState.setLoading(true);
+                appModule.setLoading(true);
                 clientStore.deletePlan(parseInt(this.$route.params.id));
                 this.$ga.event("Session", "delete");
                 utilsStore.responsePopUpRef?.open({
                     title: "Plan deleted",
                     text: "Your changes have been saved",
                 });
-                appState.stopLoaders();
+                appModule.stopLoaders();
                 this.$router.push({
                     path: `/client/${this.clientDetails?.client_id}/`,
                 });

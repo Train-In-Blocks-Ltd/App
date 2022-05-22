@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import appState from "../../../../store/modules/appState";
+import appModule from "../../../../store/modules/app.module";
 import accountStore from "../../../../store/modules/account";
 import utilsStore from "../../../../store/modules/utils";
 import { Component, Mixins } from "vue-property-decorator";
@@ -67,7 +67,7 @@ export default class PolicyModal extends Mixins(MainMixins) {
         return accountStore.claims;
     }
     get policyVersion() {
-        return appState.policyVersion;
+        return appModule.policyVersion;
     }
 
     created() {
@@ -84,9 +84,9 @@ export default class PolicyModal extends Mixins(MainMixins) {
             this.policyVersion,
         ]);
         try {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             await accountStore.updateClaims();
-            appState.stopLoaders();
+            appModule.stopLoaders();
             utilsStore.closeModal();
         } catch (e) {
             utilsStore.resolveError(e as string);

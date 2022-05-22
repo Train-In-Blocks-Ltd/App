@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import appState from "../../../../store/modules/appState";
+import appModule from "../../../../store/modules/app.module";
 import clientsModule from "../../../../store/modules/clients";
 import { Component, Vue } from "vue-property-decorator";
 import utils from "../../../../store/modules/utils";
@@ -45,7 +45,7 @@ const ClientLink = () =>
 })
 export default class ClientList extends Vue {
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
     get search() {
         return utils.search;

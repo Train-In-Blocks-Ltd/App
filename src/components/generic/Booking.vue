@@ -85,7 +85,7 @@ import {
 } from "../../store/modules/types";
 import { Component, Prop, Mixins } from "vue-property-decorator";
 import accountStore from "../../store/modules/account";
-import appState from "../../store/modules/appState";
+import appModule from "../../store/modules/app.module";
 import utilsStore from "../../store/modules/utils";
 import bookingsStore from "../../store/modules/bookings";
 import clientUserStore from "../../store/modules/clientUser";
@@ -133,7 +133,7 @@ export default class Booking extends Mixins(MainMixins) {
             })
         ) {
             try {
-                appState.setDontLeave(true);
+                appModule.setDontLeave(true);
                 await bookingsStore.updateBooking({
                     id: this.booking.id,
                     client_id: this.isTrainer
@@ -145,7 +145,7 @@ export default class Booking extends Mixins(MainMixins) {
                     title: "Booking request accepted",
                     text: "Your client will be notified of any upcoming bookings that were accepted.",
                 });
-                appState.stopLoaders();
+                appModule.stopLoaders();
             } catch (e) {
                 utilsStore.resolveError(e as string);
             }
@@ -162,7 +162,7 @@ export default class Booking extends Mixins(MainMixins) {
             })
         ) {
             try {
-                appState.setDontLeave(true);
+                appModule.setDontLeave(true);
                 const data: Pick<BookingType, "id" | "client_id" | "datetime"> =
                     {
                         id: this.booking.id,
@@ -178,7 +178,7 @@ export default class Booking extends Mixins(MainMixins) {
                     title: "Booking cancelled",
                     text: "Your trainer will be notified",
                 });
-                appState.stopLoaders();
+                appModule.stopLoaders();
             } catch (e) {
                 utilsStore.resolveError(e as string);
             }

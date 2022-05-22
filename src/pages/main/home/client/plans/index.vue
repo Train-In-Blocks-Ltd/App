@@ -62,7 +62,7 @@
 import { EditorState } from "@/src/store/modules/types";
 import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
-import appState from "../../../../../store/modules/appState";
+import appModule from "../../../../../store/modules/app.module";
 import clientStore from "../../../../../store/modules/client";
 import utilsStore from "../../../../../store/modules/utils";
 
@@ -91,10 +91,10 @@ export default class Plan extends Vue {
     editingClientNotes: boolean = false;
 
     get dontLeave() {
-        return appState.dontLeave;
+        return appModule.dontLeave;
     }
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
     get clientDetails() {
         return clientStore.clientDetails;
@@ -112,7 +112,7 @@ export default class Plan extends Vue {
                   })
                 : true
         ) {
-            appState.setDontLeave(false);
+            appModule.setDontLeave(false);
             next();
         }
     }
@@ -128,23 +128,23 @@ export default class Plan extends Vue {
     async resolve_client_info_editor(state: EditorState) {
         switch (state) {
             case "edit":
-                appState.setDontLeave(true);
+                appModule.setDontLeave(true);
                 this.editingClientNotes = true;
                 this.tempEditorStore = this.clientDetails?.notes ?? "";
                 break;
             case "save":
                 this.editingClientNotes = false;
                 try {
-                    appState.setDontLeave(true);
-                    appState.setSilentLoading(true);
+                    appModule.setDontLeave(true);
+                    appModule.setSilentLoading(true);
                     await clientStore.updateClient();
-                    appState.stopLoaders();
+                    appModule.stopLoaders();
                 } catch (e) {
                     utilsStore.resolveError(e as string);
                 }
                 break;
             case "cancel":
-                appState.setDontLeave(false);
+                appModule.setDontLeave(false);
                 this.editingClientNotes = false;
                 if (!this.clientDetails) return;
                 clientStore.setClientDetails({

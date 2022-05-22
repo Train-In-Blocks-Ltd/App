@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import appState from "../../../store/modules/appState";
+import appModule from "../../../store/modules/app.module";
 import utilsStore from "../../../store/modules/utils";
 import clientsStore from "../../../store/modules/clients";
 import { MultiselectOption } from "../../../store/modules/types";
@@ -100,7 +100,7 @@ export default class Archive extends Vue {
     ];
 
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
     get archivedClients() {
         return clientsStore.archivedClients;
@@ -131,7 +131,7 @@ export default class Archive extends Vue {
     /** Deletes the selected clients. */
     async deleteClients() {
         try {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             if (this.selectedIds.length !== 0) {
                 if (
                     await utilsStore.confirmPopUpRef?.open({
@@ -150,7 +150,7 @@ export default class Archive extends Vue {
                     utilsStore.deselectAll();
                 }
             }
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }
@@ -159,7 +159,7 @@ export default class Archive extends Vue {
     /** Unarchives the selected clients. */
     async unarchiveClients() {
         try {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             if (this.selectedIds.length !== 0) {
                 if (
                     await utilsStore.confirmPopUpRef?.open({
@@ -178,7 +178,7 @@ export default class Archive extends Vue {
                     utilsStore.deselectAll();
                 }
             }
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }

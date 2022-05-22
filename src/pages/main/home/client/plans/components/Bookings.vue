@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appState from "../../../../../../store/modules/appState";
+import appModule from "../../../../../../store/modules/app.module";
 import bookingsStore from "../../../../../../store/modules/bookings";
 import utilsStore from "../../../../../../store/modules/utils";
 import { Booking } from "../../../../../../store/modules/types";
@@ -97,7 +97,7 @@ export default class Bookings extends Vue {
         );
     }
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
 
     /** Opens all bookings modal. */

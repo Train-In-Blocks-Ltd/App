@@ -129,7 +129,7 @@ body {
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from "vue-property-decorator";
 import { baseAPI, getClientUserData } from "./api";
-import appState from "./store/modules/appState";
+import appModule from "./store/modules/app.module";
 import accountStore from "./store/modules/account";
 import utilsStore from "./store/modules/utils";
 import clientsStore from "./store/modules/clients";
@@ -185,19 +185,19 @@ const TopBanner = () =>
 })
 export default class App extends Vue {
     get authenticated() {
-        return appState.authenticated;
+        return appModule.authenticated;
     }
     get clientUserLoaded() {
-        return appState.clientUserLoaded;
+        return appModule.clientUserLoaded;
     }
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
     get claims() {
         return accountStore.claims;
     }
     get connected() {
-        return appState.connected;
+        return appModule.connected;
     }
 
     loaded: boolean = false;
@@ -214,7 +214,7 @@ export default class App extends Vue {
     }
     @Watch("$route")
     async onRouteChange() {
-        appState.setAuthenticated(await this.$auth.isAuthenticated());
+        appModule.setAuthenticated(await this.$auth.isAuthenticated());
     }
     @Watch("authenticated")
     onAuthenticated() {
@@ -222,8 +222,8 @@ export default class App extends Vue {
     }
 
     async created() {
-        appState.setLoading(true);
-        appState.setAuthenticated(await this.$auth.isAuthenticated());
+        appModule.setLoading(true);
+        appModule.setAuthenticated(await this.$auth.isAuthenticated());
         await this.setup();
     }
 
@@ -263,7 +263,7 @@ export default class App extends Vue {
                 });
         }
         window.addEventListener("beforeunload", (e) => {
-            if (appState.dontLeave) {
+            if (appModule.dontLeave) {
                 e.preventDefault();
                 e.returnValue =
                     "Your changes might not be saved, are you sure you want to leave?";
@@ -274,21 +274,21 @@ export default class App extends Vue {
             e.preventDefault();
 
             // Stash the event so it can be triggered later.
-            appState.setPWADeferredPrompt(e);
+            appModule.setPWADeferredPrompt(e);
 
             // Update UI notify the user they can install the PWA
-            appState.setPWACanInstall(true);
+            appModule.setPWACanInstall(true);
         });
         if ("getInstalledRelatedApps" in navigator) {
             // @ts-expect-error
             const RELATED_APPS = await navigator.getInstalledRelatedApps();
-            if (RELATED_APPS.length > 0) appState.PWAInstalled();
+            if (RELATED_APPS.length > 0) appModule.PWAInstalled();
         }
         // @ts-expect-error
-        if (navigator.standalone) appState.setPWADisplayMode("standalone-ios");
+        if (navigator.standalone) appModule.setPWADisplayMode("standalone-ios");
 
         if (window.matchMedia("(display-mode: standalone)").matches)
-            appState.setPWADisplayMode("standalone");
+            appModule.setPWADisplayMode("standalone");
 
         baseAPI.interceptors.request.use(
             (config) => {
@@ -302,7 +302,7 @@ export default class App extends Vue {
                         persist: true,
                         backdrop: true,
                     });
-                    appState.setLoading(false);
+                    appModule.setLoading(false);
                     // @ts-expect-error
                     throw new baseAPI.Cancel(
                         "You are using the demo account. Your changes won't be saved"
@@ -347,10 +347,10 @@ export default class App extends Vue {
         accountStore.setClaims(claims);
 
         // Sets demo flag
-        appState.setIsDemo(claims.email === "demo@traininblocks.com");
+        appModule.setIsDemo(claims.email === "demo@traininblocks.com");
 
         // Sets trainer flag
-        appState.setIsTrainer(
+        appModule.setIsTrainer(
             claims.user_type === "Trainer" || claims.user_type === "Admin"
         );
 
@@ -368,7 +368,7 @@ export default class App extends Vue {
             // Set EULA
             if (
                 (!claims.policy ||
-                    appState.policyVersion !== claims.policy[2]) &&
+                    appModule.policyVersion !== claims.policy[2]) &&
                 claims.email !== "demo@traininblocks.com" &&
                 this.authenticated
             ) {
@@ -383,17 +383,17 @@ export default class App extends Vue {
         baseAPI.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
 
         // Set connection
-        appState.setConnected(navigator.onLine);
+        appModule.setConnected(navigator.onLine);
         window.addEventListener("offline", () => {
-            appState.setConnected(false);
+            appModule.setConnected(false);
         });
         window.addEventListener("online", () => {
-            appState.setConnected(true);
+            appModule.setConnected(true);
         });
 
         // Check build
-        if (localStorage.getItem("versionBuild") !== appState.versionBuild)
-            appState.setNewBuild(true);
+        if (localStorage.getItem("versionBuild") !== appModule.versionBuild)
+            appModule.setNewBuild(true);
 
         // Get data if not client
         try {
@@ -423,7 +423,7 @@ export default class App extends Vue {
         }
 
         this.loaded = true;
-        appState.stopLoaders();
+        appModule.stopLoaders();
     }
 
     /** Updates a client-side session. */
@@ -438,7 +438,7 @@ export default class App extends Vue {
                 title: "Session updated",
                 description: "Your changes have been saved",
             });
-            appState.setLoading(false);
+            appModule.setLoading(false);
         } catch (e) {
             utilsStore.resolveError(e as string);
         }

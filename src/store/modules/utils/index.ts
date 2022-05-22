@@ -6,7 +6,7 @@ import {
     VuexModule,
 } from "vuex-module-decorators";
 import store from "../..";
-import appState from "../appState";
+import appModule from "../app.module";
 import {
     ConfirmPopUpRef,
     ModalName,
@@ -168,7 +168,7 @@ class UtilsModule extends VuexModule {
 
     @Action
     async resolveError(msg: string) {
-        appState.stopLoaders();
+        appModule.stopLoaders();
         this.responsePopUpRef?.open({
             title: "ERROR: this problem has been reported to our developers",
             text:

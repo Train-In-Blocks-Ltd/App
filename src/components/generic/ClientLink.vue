@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import appState from "../../store/modules/appState";
+import appModule from "../../store/modules/app.module";
 import bookingsStore from "../../store/modules/bookings";
 import { Booking, Client } from "../../store/modules/types";
 import { Component, Prop, Mixins } from "vue-property-decorator";
@@ -111,7 +111,7 @@ export default class ClientLink extends Mixins(MainMixins) {
     nextBooking: Booking | undefined = undefined;
 
     get isDemo() {
-        return appState.isDemo;
+        return appModule.isDemo;
     }
     get bookings() {
         return bookingsStore.bookings;

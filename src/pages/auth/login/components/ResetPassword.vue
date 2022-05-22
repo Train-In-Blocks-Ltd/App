@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appState from "../../../../store/modules/appState";
+import appModule from "../../../../store/modules/app.module";
 import utilsStore from "../../../../store/modules/utils";
 import { baseAPI } from "../../../../api";
 
@@ -28,7 +28,7 @@ export default class ResetPassword extends Vue {
     success: string = "";
 
     async reset() {
-        appState.setDontLeave(true);
+        appModule.setDontLeave(true);
         this.error = "";
         this.success = "";
         if (this.email !== "demo@traininblocks.com") {
@@ -46,7 +46,7 @@ export default class ResetPassword extends Vue {
         } else {
             this.error = "You cannot reset the password for the demo account";
         }
-        appState.stopLoaders();
+        appModule.stopLoaders();
     }
 }
 </script>

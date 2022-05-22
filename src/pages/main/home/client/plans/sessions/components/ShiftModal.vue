@@ -22,7 +22,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import utilsStore from "../../../../../../../store/modules/utils";
-import appState from "../../../../../../../store/modules/appState";
+import appModule from "../../../../../../../store/modules/app.module";
 import planStore from "../../../../../../../store/modules/plan";
 
 @Component
@@ -38,7 +38,7 @@ export default class ShiftModal extends Vue {
 
     /** Shifts the selected sessions by specified days. */
     async shiftAcross() {
-        appState.setDontLeave(true);
+        appModule.setDontLeave(true);
         await planStore.shiftSessions(this.shiftDays);
         utilsStore.closeModal();
         utilsStore.responsePopUpRef?.open({
@@ -51,7 +51,7 @@ export default class ShiftModal extends Vue {
         this.shiftDays = 1;
         utilsStore.deselectAll();
         this.$ga.event("Session", "shift");
-        appState.stopLoaders();
+        appModule.stopLoaders();
     }
 }
 </script>

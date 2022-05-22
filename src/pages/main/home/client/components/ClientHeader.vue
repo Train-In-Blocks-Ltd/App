@@ -103,7 +103,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appState from "../../../../../store/modules/appState";
+import appModule from "../../../../../store/modules/app.module";
 import clientStore from "../../../../../store/modules/client";
 import clientsStore from "../../../../../store/modules/clients";
 import accountStore from "../../../../../store/modules/account";
@@ -129,10 +129,10 @@ export default class ClientHeader extends Vue {
         clientStore.setClientDetails(value);
     }
     get silentLoading() {
-        return appState.silentLoading;
+        return appModule.silentLoading;
     }
     get isDemo() {
-        return appState.isDemo;
+        return appModule.isDemo;
     }
     get claims() {
         return accountStore.claims;
@@ -152,10 +152,10 @@ export default class ClientHeader extends Vue {
     /** Updates the client. */
     async updateClient() {
         try {
-            appState.setSilentLoading(true);
-            appState.setDontLeave(true);
+            appModule.setSilentLoading(true);
+            appModule.setDontLeave(true);
             await clientStore.updateClient();
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }
@@ -163,7 +163,7 @@ export default class ClientHeader extends Vue {
 
     /** Gives access to the client user. */
     async giveAccess() {
-        appState.setDontLeave(true);
+        appModule.setDontLeave(true);
         try {
             if (this.clientAlreadyMsg === "Resend activation email") {
                 const OKTA_ONE = await baseAPI.post(
@@ -260,7 +260,7 @@ export default class ClientHeader extends Vue {
             persist: true,
             backdrop: true,
         });
-        appState.stopLoaders();
+        appModule.stopLoaders();
     }
 
     /** Checks if the client already exists on Okta. */
@@ -314,14 +314,14 @@ export default class ClientHeader extends Vue {
         ) {
             try {
                 const { client_id: id, email } = this.clientDetails;
-                appState.setDontLeave(true);
+                appModule.setDontLeave(true);
                 await clientsStore.archiveClient(id, email);
                 this.$ga.event("Client", "archive");
                 utilsStore.responsePopUpRef?.open({
                     title: "Client archived",
                     text: "Their data will be kept safe on the archive page",
                 });
-                appState.stopLoaders();
+                appModule.stopLoaders();
                 this.$router.push("/");
             } catch (e) {
                 utilsStore.resolveError(e as string);

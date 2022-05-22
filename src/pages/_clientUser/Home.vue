@@ -135,7 +135,7 @@
 import { Component, Mixins } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
 import { EditorState, Plan, Session } from "../../store/modules/types";
-import appState from "../../store/modules/appState";
+import appModule from "../../store/modules/app.module";
 import clientUserStore from "../../store/modules/clientUser";
 import utilsStore from "../../store/modules/utils";
 import MainMixins from "../../main.mixins";
@@ -162,13 +162,13 @@ export default class ClientHome extends Mixins(MainMixins) {
     showing_current_session: number = 0;
 
     get pwa() {
-        return appState.pwa;
+        return appModule.pwa;
     }
     get loading() {
-        return appState.loading;
+        return appModule.loading;
     }
     get dontLeave() {
-        return appState.dontLeave;
+        return appModule.dontLeave;
     }
     get portfolio() {
         return clientUserStore.portfolio;
@@ -192,7 +192,7 @@ export default class ClientHome extends Mixins(MainMixins) {
                   })
                 : true
         ) {
-            appState.setDontLeave(false);
+            appModule.setDontLeave(false);
             next();
         }
     }
@@ -218,7 +218,7 @@ export default class ClientHome extends Mixins(MainMixins) {
         if (!session) return;
         switch (state) {
             case "edit":
-                appState.setDontLeave(true);
+                appModule.setDontLeave(true);
                 this.feedbackId = id;
                 this.forceStop += 1;
                 this.tempEditorStore = session.feedback;
@@ -228,7 +228,7 @@ export default class ClientHome extends Mixins(MainMixins) {
                 clientUserStore.updateSession(session);
                 break;
             case "cancel":
-                appState.setDontLeave(false);
+                appModule.setDontLeave(false);
                 this.feedbackId = null;
                 session.feedback = this.tempEditorStore;
                 break;
@@ -261,7 +261,7 @@ export default class ClientHome extends Mixins(MainMixins) {
             ...session,
             checked: !!session.checked ? 0 : 1,
         });
-        appState.stopLoaders();
+        appModule.stopLoaders();
     }
 }
 </script>

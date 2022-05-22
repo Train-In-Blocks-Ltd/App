@@ -144,7 +144,7 @@
 </template>
 
 <script lang="ts">
-import appState from "../../../store/modules/appState";
+import appModule from "../../../store/modules/app.module";
 import accountStore from "../../../store/modules/account";
 import utilsStore from "../../../store/modules/utils";
 import { Component, Vue } from "vue-property-decorator";
@@ -220,7 +220,7 @@ export default class Account extends Vue {
     ];
 
     get dontLeave() {
-        return appState.dontLeave;
+        return appModule.dontLeave;
     }
     get claims() {
         return accountStore.claims;
@@ -229,13 +229,13 @@ export default class Account extends Vue {
         accountStore.setClaims(value);
     }
     get versionName() {
-        return appState.versionName;
+        return appModule.versionName;
     }
     get versionBuild() {
-        return appState.versionBuild;
+        return appModule.versionBuild;
     }
     get isTrainer() {
-        return appState.isTrainer;
+        return appModule.isTrainer;
     }
     get darkmodeTheme() {
         const theme = localStorage.getItem("darkmode");
@@ -255,7 +255,7 @@ export default class Account extends Vue {
                   })
                 : true
         ) {
-            appState.setDontLeave(false);
+            appModule.setDontLeave(false);
             next();
         }
     }
@@ -345,7 +345,7 @@ export default class Account extends Vue {
     /** Checks if the user already has coupons activated. */
     async checkCoupon() {
         try {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             const response = await baseAPI.post(
                 "/.netlify/functions/check-coupon",
                 {
@@ -369,7 +369,7 @@ export default class Account extends Vue {
                         .replace(/[\W_]+/g, ""),
                 });
             }
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }
@@ -378,7 +378,7 @@ export default class Account extends Vue {
     /** Creates a new discount coupon */
     async generateCoupon() {
         try {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             await baseAPI.post("/.netlify/functions/create-coupon", {
                 email: this.claims?.email,
             });
@@ -391,7 +391,7 @@ export default class Account extends Vue {
                     ?.toUpperCase()
                     .replace(/[\W_]+/g, ""),
             });
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }

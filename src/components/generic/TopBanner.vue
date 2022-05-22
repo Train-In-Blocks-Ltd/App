@@ -20,22 +20,22 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appState from "../../store/modules/appState";
+import appModule from "../../store/modules/app.module";
 import accountStore from "../../store/modules/account";
 
 @Component
 export default class TopBanner extends Vue {
     get authenticated() {
-        return appState.authenticated;
+        return appModule.authenticated;
     }
     get claims() {
         return accountStore.claims;
     }
     get connected() {
-        return appState.connected;
+        return appModule.connected;
     }
     get isDemo() {
-        return appState.isDemo;
+        return appModule.isDemo;
     }
 }
 </script>

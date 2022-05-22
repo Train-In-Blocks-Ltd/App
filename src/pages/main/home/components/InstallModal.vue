@@ -58,13 +58,13 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appState from "../../../../store/modules/appState";
+import appModule from "../../../../store/modules/app.module";
 import utilsStore from "../../../../store/modules/utils";
 
 @Component
 export default class InstallModal extends Vue {
     get pwa() {
-        return appState.pwa;
+        return appModule.pwa;
     }
 
     handleInstall() {
@@ -78,10 +78,10 @@ export default class InstallModal extends Vue {
             (choiceResult: { outcome: string }) => {
                 if (choiceResult.outcome === "accepted") {
                     // Hide the app provided install promotion
-                    appState.setPWACanInstall(false);
-                    appState.setPWADisplayMode("standalone");
+                    appModule.setPWACanInstall(false);
+                    appModule.setPWADisplayMode("standalone");
                 } else {
-                    appState.setPWACanInstall(true);
+                    appModule.setPWACanInstall(true);
                 }
             }
         );

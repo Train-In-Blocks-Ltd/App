@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import appState from "../../../store/modules/appState";
+import appModule from "../../../store/modules/app.module";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import utilsStore from "../../../store/modules/utils";
 
@@ -182,10 +182,10 @@ export default class Modal extends Vue {
         return utilsStore.previewTitle;
     }
     get versionName() {
-        return appState.versionName;
+        return appModule.versionName;
     }
     get versionBuild() {
-        return appState.versionBuild;
+        return appModule.versionBuild;
     }
 
     @Watch("modalContent")

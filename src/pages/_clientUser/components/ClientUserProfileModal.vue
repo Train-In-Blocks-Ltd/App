@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import appState from "../../../store/modules/appState";
+import appModule from "../../../store/modules/app.module";
 import accountStore from "../../../store/modules/account";
 import clientUserStore from "../../../store/modules/clientUser";
 import utilsStore from "../../../store/modules/utils";
@@ -92,7 +92,7 @@ const BookingForm = () =>
 })
 export default class ClientUserProfileModal extends Vue {
     get silentLoading() {
-        return appState.silentLoading;
+        return appModule.silentLoading;
     }
     get claims() {
         return accountStore.claims;
@@ -125,7 +125,7 @@ export default class ClientUserProfileModal extends Vue {
     /** Adds a user profile image. */
     handleOpenUpload() {
         try {
-            appState.setDontLeave(true);
+            appModule.setDontLeave(true);
             utilsStore.uploadPopUpRef?.open({
                 title: "Upload image",
                 text: "Please make sure that it's less than 1MB.",
@@ -139,7 +139,7 @@ export default class ClientUserProfileModal extends Vue {
                     clientUserStore.updateClientUser();
                 },
             });
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }
@@ -148,10 +148,10 @@ export default class ClientUserProfileModal extends Vue {
     /** Updates the client details. */
     updateClientDetails() {
         try {
-            appState.setSilentLoading(true);
-            appState.setDontLeave(true);
+            appModule.setSilentLoading(true);
+            appModule.setDontLeave(true);
             clientUserStore.updateClientUser();
-            appState.stopLoaders();
+            appModule.stopLoaders();
         } catch (e) {
             utilsStore.resolveError(e as string);
         }

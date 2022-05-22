@@ -143,7 +143,7 @@
 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
-import appState from "../../../../../../../store/modules/appState";
+import appModule from "../../../../../../../store/modules/app.module";
 import utilsStore from "../../../../../../../store/modules/utils";
 import planStore from "../../../../../../../store/modules/plan";
 import { Protocol } from "../../../../../../../store/modules/types";
@@ -226,7 +226,7 @@ export default class ProgressModal extends Mixins(MainMixins) {
 
     /** Initiates the changes and POST it to the database. */
     __complete() {
-        appState.setLoading(true);
+        appModule.setLoading(true);
 
         let iIndex = 0;
         for (
@@ -262,7 +262,7 @@ export default class ProgressModal extends Mixins(MainMixins) {
             title: "Sessions have been progressed",
             text: "Please go through them to make sure that you're happy with it",
         });
-        appState.stopLoaders();
+        appModule.stopLoaders();
     }
 }
 </script>
