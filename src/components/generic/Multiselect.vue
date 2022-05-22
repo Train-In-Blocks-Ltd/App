@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { MultiselectOption } from "@/src/common/types";
+import { MultiselectOption } from "src/common/types";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import utilsModule from "../../store/utils.module";
 

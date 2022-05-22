@@ -11,7 +11,7 @@
         <inline-svg
             :class="svgClass"
             :style="{ height: `${size}px`, width: `${size}px` }"
-            :src="require(`@/assets/icons/${svg}.svg`)"
+            :src="require(`../../assets/icons/${svg}.svg`)"
         />
     </div>
 </template>

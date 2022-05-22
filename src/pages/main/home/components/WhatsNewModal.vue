@@ -9,7 +9,7 @@
             >
                 <img
                     v-if="item.img"
-                    :src="require(`@/assets/whats-new/${item.img}`)"
+                    :src="require(`../../../../assets/whats-new/${item.img}`)"
                     :alt="item.title"
                     loading="lazy"
                     class="rounded-lg my-4"
@@ -47,7 +47,7 @@ import { baseAPI } from "../../../../api";
 import appModule from "../../../../store/app.module";
 import accountModule from "../../../../store/account.module";
 import { Component, Vue } from "vue-property-decorator";
-import { WhatsNewItem } from "@/src/common/types";
+import { WhatsNewItem } from "src/common/types";
 const emailBuilder = require("../../../../components/js/email");
 
 const CardWrapper = () =>

@@ -72,8 +72,8 @@ export default class PolicyModal extends Mixins(MainMixins) {
 
     created() {
         if (this.claims?.user_type === "Client")
-            this.eula = require("@/common/legal/eula-client.md");
-        else this.eula = require("@/common/legal/eula.md");
+            this.eula = require("../../../../common/legal/eula-client.md");
+        else this.eula = require("../../../../common/legal/eula.md");
     }
 
     /** Agree to EULA terms. */

@@ -21,13 +21,13 @@
                 <txt>2. Select <i>Add to Home Screen</i></txt>
                 <div class="grid gap-8 md:flex mt-8">
                     <img
-                        :src="require('@/assets/install/1.jpg')"
+                        :src="require('../../../../assets/install/1.jpg')"
                         alt="Open share menu"
                         loading="lazy"
                         class="rounded-lg mt-8 w-full md:w-1/2 lg:w-1/3 2xl:w-1/4 md:mr-4"
                     />
                     <img
-                        :src="require('@/assets/install/2.jpg')"
+                        :src="require('../../../../assets/install/2.jpg')"
                         alt="Add to home screen"
                         loading="lazy"
                         class="rounded-lg mt-8 w-full md:w-1/2 lg:w-1/3 2xl:w-1/4"

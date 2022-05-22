@@ -117,7 +117,7 @@ import templatesModule from "../../../store/templates.module";
 import utilsModule from "../../../store/utils.module";
 import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
-import { EditorState } from "@/src/common/types";
+import { EditorState } from "src/common/types";
 
 const Checkbox = () =>
     import(
