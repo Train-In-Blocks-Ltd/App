@@ -2,6 +2,11 @@ import { Node, nodeInputRule, mergeAttributes } from "@tiptap/core";
 
 const inputRegex = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/;
 
+export type TipTapImageParams = {
+    src: string;
+    loading: string;
+};
+
 export default Node.create({
     name: "image",
 
@@ -52,11 +57,12 @@ export default Node.create({
         ];
     },
 
+    // @ts-expect-error
     addCommands() {
         return {
             setImage:
-                (options) =>
-                ({ commands }) => {
+                (options: TipTapImageParams) =>
+                ({ commands }: { commands: any }) => {
                     return commands.insertContent({
                         type: this.name,
                         attrs: options,
