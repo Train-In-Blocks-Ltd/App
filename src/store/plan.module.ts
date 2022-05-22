@@ -113,14 +113,14 @@ class PlanModule extends VuexModule {
     async toggleSessionChecked(checked: 1 | 0) {
         const plan = this.plan;
         if (!plan) return;
-        const sessions = plan.sessions
-            ?.filter((s) => utilsModule.selectedIds.includes(s.id))
-            .map((s) => {
-                return {
-                    ...s,
-                    checked,
-                };
-            });
+        const sessions = plan.sessions?.map((s) => {
+            return {
+                ...s,
+                checked: utilsModule.selectedIds.includes(s.id)
+                    ? checked
+                    : s.checked,
+            };
+        });
         if (!sessions) return;
         await baseAPI.put(
             "https://api.traininblocks.com/v2/batch/sessions",
@@ -134,12 +134,21 @@ class PlanModule extends VuexModule {
     }
 
     @MutationAction
-    async updateSession(id: number) {
-        const session = this.plan?.sessions?.find((s) => s.id === id);
-        if (!session) return;
+    async updateSession(session: Session) {
         await baseAPI.put("https://api.traininblocks.com/v2/sessions", session);
 
-        return {};
+        if (!this.plan?.sessions) return;
+
+        const plan: Plan = {
+            ...this.plan,
+            sessions: this.plan.sessions.map((s) =>
+                s.id === session.id ? session : s
+            ),
+        };
+
+        return {
+            plan,
+        };
     }
 
     @MutationAction

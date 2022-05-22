@@ -251,9 +251,7 @@
                                         type="date"
                                         name="session-date"
                                         :value="session.date"
-                                        @output="
-                                            (data) => (session.date = data)
-                                        "
+                                        @output="(data) => (newDate = data)"
                                     />
                                 </div>
 
@@ -413,6 +411,7 @@ export default class Session extends Mixins(MainMixins) {
     weekSessions: number[] = [];
     showMonthlyCal: boolean = false;
     allowMoreWeeks: boolean = false;
+    newDate: string = "";
 
     get plan() {
         return planModule.plan;
@@ -579,7 +578,7 @@ export default class Session extends Mixins(MainMixins) {
     }
 
     /** Resolves the state of the session editor. */
-    handleSessionNotesChange(state: EditorState, id: number) {
+    async handleSessionNotesChange(state: EditorState, id: number) {
         const session = this.plan?.sessions?.find((s) => s.id === id);
         if (!session) return;
         switch (state) {
@@ -595,7 +594,11 @@ export default class Session extends Mixins(MainMixins) {
                 appModule.setDontLeave(true);
                 this.isEditingSession = false;
                 this.editSession = null;
-                this.updateSingleSession(id);
+                await planModule.updateSession({
+                    ...session,
+                    date: this.newDate || session.date,
+                });
+                this.$ga.event("Session", "update");
                 utilsModule.responsePopUpRef?.open({
                     title: "Session updated",
                     text: "Your changes have been saved",
@@ -781,18 +784,6 @@ export default class Session extends Mixins(MainMixins) {
             appModule.setLoading(true);
             await planModule.updateDuration();
             this.$ga.event("Plan", "update");
-            appModule.stopLoaders();
-        } catch (e) {
-            utilsModule.resolveError(e as string);
-        }
-    }
-
-    /** Updates a single session. */
-    async updateSingleSession(id: number) {
-        try {
-            appModule.setDontLeave(true);
-            await planModule.updateSession(id);
-            this.$ga.event("Session", "update");
             appModule.stopLoaders();
         } catch (e) {
             utilsModule.resolveError(e as string);
