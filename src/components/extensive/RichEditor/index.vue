@@ -162,7 +162,7 @@ div#rich_show_content {
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch, Mixins } from "vue-property-decorator";
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import { defaultExtensions } from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -172,6 +172,7 @@ import TaskItem from "@tiptap/extension-task-item";
 import LazyImage from "../../js/LazyImage";
 import utilsStore from "../../../store/modules/utils";
 import { baseAPI } from "../../../api";
+import GeneralMixins from "../../../generalMixins";
 
 const ToolBar = () =>
     import(
@@ -184,7 +185,7 @@ const ToolBar = () =>
         ToolBar,
     },
 })
-export default class RichEditor extends Vue {
+export default class RichEditor extends Mixins(GeneralMixins) {
     @Prop([Number, String]) readonly itemId!: number | string;
     @Prop([Number, String]) readonly editing!: number | string;
     @Prop(String) readonly value!: string;

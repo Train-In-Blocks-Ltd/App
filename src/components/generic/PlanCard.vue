@@ -15,17 +15,7 @@
                 v-if="plan.notes && plan.notes !== '<p></p>'"
                 href="javascript:void(0)"
                 aria-label="Plan notes"
-                @click="
-                    () => {
-                        $store.commit('SET_DATA', {
-                            attr: 'previewHTML',
-                            data: plan.notes,
-                        });
-                        $store.dispatch('openModal', {
-                            name: 'preview',
-                        });
-                    }
-                "
+                @click="handleOpenNotes"
             >
                 Notes
             </a>
@@ -35,6 +25,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
+import utilsStore from "../../store/modules/utils";
 
 const CardWrapper = () =>
     import(
@@ -50,5 +41,13 @@ export default class PlanCard extends Vue {
     @Prop(Object) readonly plan!: any;
     @Prop(String) readonly link!: string;
     @Prop(Boolean) readonly isTrainer!: boolean;
+
+    handleOpenNotes() {
+        utilsStore.openModal({
+            name: "preview",
+            previewTitle: "Plan Notes",
+            previewHTML: this.plan.notes,
+        });
+    }
 }
 </script>

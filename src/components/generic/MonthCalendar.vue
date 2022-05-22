@@ -104,9 +104,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Prop, Mixins } from "vue-property-decorator";
 import { EventRow } from "../../store/modules/types";
 import { MONTHS } from "../../common/helpers";
+import GeneralMixins from "../../generalMixins";
 
 const LabelWrapper = () =>
     import(
@@ -123,7 +124,7 @@ type Day = {
         LabelWrapper,
     },
 })
-export default class MonthCalendar extends Vue {
+export default class MonthCalendar extends Mixins(GeneralMixins) {
     @Prop(Array) readonly events!: EventRow[];
     @Prop(Function) readonly onEventPress!: (
         id: number,

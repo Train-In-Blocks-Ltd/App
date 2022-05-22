@@ -1,5 +1,5 @@
 import { Component, Vue } from "vue-property-decorator";
-import { Protocol } from "./store/modules/types";
+import { Booking, Protocol } from "./store/modules/types";
 
 @Component
 export default class GeneralMixins extends Vue {
@@ -92,5 +92,24 @@ export default class GeneralMixins extends Vue {
         const month = String(d.getMonth() + 1).padStart(2, "0");
         const date = String(d.getDate()).padStart(2, "0");
         return `${year}-${month}-${date}`;
+    }
+
+    /** Process into a short-form datetime. */
+    shortTime(datetime: string) {
+        const time = new Date(datetime.replace(/-/g, "/"));
+        return `${time.getHours()}:${
+            (time.getMinutes() < 10 ? "0" : "") + time.getMinutes()
+        }`;
+    }
+
+    /** Takes in the date and returns the day of the week. */
+    day(date: string) {
+        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        return days[new Date(date).getDay()];
+    }
+
+    /** Checks if the booking is in the past. */
+    isInThePast(booking: Booking) {
+        return new Date(booking.datetime) < new Date();
     }
 }

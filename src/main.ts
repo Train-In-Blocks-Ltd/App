@@ -24,7 +24,6 @@ import Wrapper from "./components/generic/Wrapper.vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import mixins from "./mixins";
 import "./assets/tailwind.css";
 import { baseAPI } from "./api";
 
@@ -58,10 +57,6 @@ Vue.component("RichEditor", RichEditor);
 Vue.component("Wrapper", Wrapper);
 
 Vue.config.productionTip = false;
-
-Vue.mixin({
-    methods: mixins,
-});
 
 // Sentry.init({
 //     Vue,

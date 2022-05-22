@@ -51,7 +51,6 @@ export default class TxtInput extends Vue {
     @Prop(String) readonly label!: string;
     @Prop(String) readonly info!: string;
     @Prop(String) readonly error!: string;
-    @Prop(String) readonly value!: string;
     @Prop(String) readonly inputClass!: string;
     @Prop(String) readonly labelClass!: string;
     @Prop(String) readonly infoClass!: string;
@@ -67,6 +66,7 @@ export default class TxtInput extends Vue {
     @Prop(Function) readonly onBlur!: () => void;
     @Prop(Boolean) readonly required!: boolean;
     @Prop(Boolean) readonly focusFirst!: boolean;
+    @Prop([String, Number]) readonly value!: string | number;
     @Prop([String, Number]) readonly min!: string | number;
     @Prop([String, Number]) readonly max!: string | number;
     @Prop([String, Number]) readonly minLength!: string | number;

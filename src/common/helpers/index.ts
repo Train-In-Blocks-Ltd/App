@@ -1,13 +1,3 @@
-/** Adds days to the date provided. */
-export const addDays = (date: string, days: number) => {
-    const d = new Date(date);
-    d.setDate(d.getDate() + days);
-    const year = d.getFullYear();
-    const month = d.getMonth() + 1;
-    const day = d.getDate();
-    return `${year}-${month}-${day}`;
-};
-
 export const REGEX_NUMBER = /[0-9.]+/gi;
 
 /** Extracts the sets. */
@@ -62,3 +52,13 @@ export const MONTHS = [
 
 export const EMAIL_REGEX =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+/** Adds specified days to the date provided. */
+export const addDays = (datetime: string, days: number) => {
+    const d = new Date(datetime);
+    d.setDate(d.getDate() + days);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const date = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${date}`;
+};

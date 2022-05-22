@@ -85,7 +85,8 @@
 import appState from "../../store/modules/appState";
 import bookingsStore from "../../store/modules/bookings";
 import { Booking, Client } from "../../store/modules/types";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Mixins } from "vue-property-decorator";
+import GeneralMixins from "../../generalMixins";
 
 const CardWrapper = () =>
     import(
@@ -102,7 +103,7 @@ const Checkbox = () =>
         Checkbox,
     },
 })
-export default class ClientLink extends Vue {
+export default class ClientLink extends Mixins(GeneralMixins) {
     @Prop(Object) readonly client!: Client;
     @Prop(Number) readonly clientIndex!: number;
     @Prop(Boolean) readonly archive!: boolean;
