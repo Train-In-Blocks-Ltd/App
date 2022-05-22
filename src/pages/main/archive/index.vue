@@ -67,7 +67,7 @@
 <script lang="ts">
 import appModule from "../../../store/modules/app.module";
 import utilsStore from "../../../store/modules/utils";
-import clientsStore from "../../../store/modules/clients";
+import clientsModule from "../../../store/modules/clients.module";
 import { MultiselectOption } from "../../../store/modules/types";
 import { Component, Vue } from "vue-property-decorator";
 
@@ -103,7 +103,7 @@ export default class Archive extends Vue {
         return appModule.loading;
     }
     get archivedClients() {
-        return clientsStore.archivedClients;
+        return clientsModule.archivedClients;
     }
     get selectedIds() {
         return utilsStore.selectedIds;
@@ -139,7 +139,7 @@ export default class Archive extends Vue {
                         text: "We will remove their data(s) from our database and it won't be recoverable.",
                     })
                 ) {
-                    clientsStore.deleteClients(this.selectedIds);
+                    clientsModule.deleteClients(this.selectedIds);
                     utilsStore.responsePopUpRef?.open({
                         title:
                             this.selectedIds.length > 1
@@ -167,7 +167,7 @@ export default class Archive extends Vue {
                         text: "Their data will be recovered and available on the Home page.",
                     })
                 ) {
-                    clientsStore.unarchiveClients(this.selectedIds);
+                    clientsModule.unarchiveClients(this.selectedIds);
                     utilsStore.responsePopUpRef?.open({
                         title:
                             this.selectedIds.length > 1

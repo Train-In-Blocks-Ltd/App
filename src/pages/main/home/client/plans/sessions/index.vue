@@ -330,7 +330,7 @@
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import appModule from "../../../../../../store/modules/app.module";
-import clientsStore from "../../../../../../store/modules/clients";
+import clientsModule from "../../../../../../store/modules/clients.module";
 import planStore from "../../../../../../store/modules/plan";
 import utilsStore from "../../../../../../store/modules/utils";
 import clientModule from "../../../../../../store/modules/client.module.";
@@ -461,7 +461,7 @@ export default class Session extends Mixins(MainMixins) {
         return appModule.dontLeave;
     }
     get clients() {
-        return clientsStore.clients;
+        return clientsModule.clients;
     }
     get clientDetails() {
         return clientModule.clientDetails;

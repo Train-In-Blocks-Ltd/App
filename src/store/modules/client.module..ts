@@ -6,7 +6,7 @@ import {
     VuexModule,
 } from "vuex-module-decorators";
 import { Client, Plan, Session } from "./types";
-import clientsStore from "./clients";
+import clientsModule from "./clients.module";
 import utilsStore from "./utils";
 import { baseAPI } from "../../api";
 
@@ -27,7 +27,7 @@ class ClientModule extends VuexModule {
 
     @MutationAction
     async setCurrentClient(id: number) {
-        const clientDetails = clientsStore.clients.find(
+        const clientDetails = clientsModule.clients.find(
             (c) => c.client_id === id
         );
 

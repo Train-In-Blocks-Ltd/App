@@ -23,14 +23,14 @@ import { Component, Vue } from "vue-property-decorator";
 import utilsStore from "../../../../../../../store/modules/utils";
 import appModule from "../../../../../../../store/modules/app.module";
 import planStore from "../../../../../../../store/modules/plan";
-import clientsStore from "../../../../../../../store/modules/clients";
+import clientsModule from "../../../../../../../store/modules/clients.module";
 
 @Component
 export default class DuplicatePlanModal extends Vue {
     client_id: number | null = null;
 
     get dropdownItems() {
-        return clientsStore.clients.map((client) => {
+        return clientsModule.clients.map((client) => {
             return {
                 label: client.name,
                 value: client.client_id,
@@ -47,7 +47,7 @@ export default class DuplicatePlanModal extends Vue {
             if (!this.plan || !this.client_id) return;
             appModule.setDontLeave(true);
             const { plan, client_id } = this;
-            await clientsStore.duplicatePlan({ plan, client_id });
+            await clientsModule.duplicatePlan({ plan, client_id });
             this.$ga.event("Plan", "duplicate");
             utilsStore.responsePopUpRef?.open({
                 title: "Plan duplicated",

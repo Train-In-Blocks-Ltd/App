@@ -27,7 +27,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../../../store/modules/app.module";
 import clientModule from "../../../../../../store/modules/client.module.";
-import clientsStore from "../../../../../../store/modules/clients";
+import clientsModule from "../../../../../../store/modules/clients.module";
 import utilsStore from "../../../../../../store/modules/utils";
 
 @Component
@@ -42,7 +42,7 @@ export default class NewPlanModal extends Vue {
         return clientModule.clientDetails;
     }
     get clients() {
-        return clientsStore.clients;
+        return clientsModule.clients;
     }
 
     /** Creates a new plan. */

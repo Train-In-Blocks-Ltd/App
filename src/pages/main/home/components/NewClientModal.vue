@@ -65,7 +65,7 @@ import { Component, Vue } from "vue-property-decorator";
 import accountModule from "../../../../store/modules/account.module";
 import appModule from "../../../../store/modules/app.module";
 import utilsStore from "../../../../store/modules/utils";
-import clientsStore from "../../../../store/modules/clients";
+import clientsModule from "../../../../store/modules/clients.module";
 import { EMAIL_REGEX } from "../../../../common/helpers";
 
 @Component
@@ -102,7 +102,7 @@ export default class NewClientModal extends Vue {
         } else {
             try {
                 appModule.setDontLeave(true);
-                clientsStore.createClient({
+                clientsModule.createClient({
                     pt_id: this.claims?.sub ?? "",
                     name: this.name,
                     email: this.email,

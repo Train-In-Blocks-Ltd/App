@@ -132,7 +132,7 @@ import { baseAPI, getClientUserData } from "./api";
 import appModule from "./store/modules/app.module";
 import accountModule from "./store/modules/account.module";
 import utilsStore from "./store/modules/utils";
-import clientsStore from "./store/modules/clients";
+import clientsModule from "./store/modules/clients.module";
 import templatesStore from "./store/modules/templates";
 import bookingsModule from "./store/modules/bookings.module";
 import portfolioStore from "./store/modules/portfolio";
@@ -406,8 +406,8 @@ export default class App extends Vue {
                     templates,
                     portfolio,
                 } = await getTrainerUserData(claims.sub);
-                clientsStore.setClients(sortedClients);
-                clientsStore.setArchivedClients(sortedArchiveClients);
+                clientsModule.setClients(sortedClients);
+                clientsModule.setArchivedClients(sortedArchiveClients);
                 bookingsModule.setBookings(sortedBookings);
                 templatesStore.setTemplates(templates);
 

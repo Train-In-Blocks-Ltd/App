@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import appModule from "../../../../store/modules/app.module";
-import clientsModule from "../../../../store/modules/clients";
+import clientsModule from "../../../../store/modules/clients.module";
 import { Component, Vue } from "vue-property-decorator";
 import utils from "../../../../store/modules/utils";
 

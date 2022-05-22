@@ -105,7 +105,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../../store/modules/app.module";
 import clientModule from "../../../../../store/modules/client.module.";
-import clientsStore from "../../../../../store/modules/clients";
+import clientsModule from "../../../../../store/modules/clients.module";
 import accountModule from "../../../../../store/modules/account.module";
 import utilsStore from "../../../../../store/modules/utils";
 import { baseAPI } from "../../../../../api";
@@ -315,7 +315,7 @@ export default class ClientHeader extends Vue {
             try {
                 const { client_id: id, email } = this.clientDetails;
                 appModule.setDontLeave(true);
-                await clientsStore.archiveClient(id, email);
+                await clientsModule.archiveClient(id, email);
                 this.$ga.event("Client", "archive");
                 utilsStore.responsePopUpRef?.open({
                     title: "Client archived",

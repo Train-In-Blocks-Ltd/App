@@ -9,7 +9,7 @@ import { Booking } from "./types";
 import { baseAPI } from "../../api";
 import portfolioStore from "./portfolio";
 import clientUserStore from "./clientUser";
-import clientsStore from "./clients";
+import clientsModule from "./clients.module";
 import emailBuilder from "../../components/js/email";
 
 @Module({
@@ -46,7 +46,7 @@ class BookingsModule extends VuexModule {
         );
 
         await baseAPI.post("/.netlify/functions/send-email", {
-            to: clientsStore.clients.find(
+            to: clientsModule.clients.find(
                 (client) => client.client_id === client_id
             )?.email,
             ...emailBuilder("booking-created", {
@@ -81,7 +81,7 @@ class BookingsModule extends VuexModule {
             status,
         });
         await baseAPI.post("/.netlify/functions/send-email", {
-            to: clientsStore.clients.find(
+            to: clientsModule.clients.find(
                 (client) => client.client_id === client_id
             )?.email,
             ...emailBuilder("booking-accepted", {
@@ -115,7 +115,7 @@ class BookingsModule extends VuexModule {
         await baseAPI.delete(`https://api.traininblocks.com/v2/bookings/${id}`);
         if (new Date(datetime) > new Date()) {
             await baseAPI.post("/.netlify/functions/send-email", {
-                to: clientsStore.clients.find(
+                to: clientsModule.clients.find(
                     (client) => client.client_id === client_id
                 )?.email,
                 ...emailBuilder("booking-rejected", {
