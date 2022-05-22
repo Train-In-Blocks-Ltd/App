@@ -1,4 +1,5 @@
 export * from "./email";
+export * from "./ics";
 
 export const REGEX_NUMBER = /[0-9.]+/gi;
 
