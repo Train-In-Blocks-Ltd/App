@@ -21,7 +21,7 @@ export default class GeneralMixins extends Vue {
     }
 
     /** Determines if a colour has acceptable contrast and returns ideal colour. */
-    accessible_colors(hex: string) {
+    getAccessibleColor(hex: string) {
         if (hex !== undefined) {
             hex = hex.replace("#", "");
             const r = parseInt(hex.substring(0, 2), 16);
@@ -64,7 +64,7 @@ export default class GeneralMixins extends Vue {
     }
 
     /** Extracts anything that is wrapped in square brackets */
-    pull_protocols(name: string, notes: string, date: string): Protocol[] {
+    pullProtocols(name: string, notes: string, date: string): Protocol[] {
         const protocolRegex = /\[\s*(.*?)\s*:\s*(.*?)\]/gi;
         const protocols: Protocol[] = [];
         let finder;

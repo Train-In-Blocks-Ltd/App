@@ -194,7 +194,7 @@ export default class ProgressModal extends Mixins(GeneralMixins) {
         if (!sessions) return;
 
         this.progressProtocols = sessions.map(({ id, name, date, notes }) => {
-            const protocols = this.pull_protocols(name, notes, date);
+            const protocols = this.pullProtocols(name, notes, date);
             return {
                 id,
                 name,

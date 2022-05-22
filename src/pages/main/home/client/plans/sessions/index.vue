@@ -482,7 +482,7 @@ export default class Session extends Mixins(GeneralMixins) {
                     date,
                     week_id,
                     color: this.weekColor[week_id - 1],
-                    textColor: this.accessible_colors(
+                    textColor: this.getAccessibleColor(
                         this.weekColor[week_id - 1]
                     ),
                 };

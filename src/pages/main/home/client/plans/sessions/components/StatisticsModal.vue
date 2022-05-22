@@ -159,7 +159,7 @@ export default class StatisticsModal extends Mixins(GeneralMixins) {
         return this.plan.sessions
             .filter((session) => !!session.notes)
             .map(({ name, notes, date }) =>
-                this.pull_protocols(name, notes, date)
+                this.pullProtocols(name, notes, date)
             );
     }
     get measurementDropdownItems() {
