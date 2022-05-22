@@ -1,5 +1,5 @@
 <template>
-    <div id="plan" class="mt-16">
+    <div v-if="plan" id="plan" class="mt-16">
         <multiselect
             type="session"
             :options="multiselectOption"
