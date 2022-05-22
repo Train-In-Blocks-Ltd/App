@@ -300,7 +300,7 @@ export default class Account extends Vue {
         utilsModule.openModal({
             name: "preview",
             previewTitle: "EULA",
-            previewHTML: require(`@/components/legal/eula${
+            previewHTML: require(`@/common/legal/eula${
                 this.claims?.user_type === "Client" ? "-client" : ""
             }.md`).html,
         });
