@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white dark:bg-gray-800 z-10 sticky top-0 pt-4">
+    <div v-if="editor" class="bg-white dark:bg-gray-800 z-10 sticky top-0 pt-4">
         <div
             class="flex flex-wrap px-4 pt-4 border-2 rounded-t-lg transition-all"
             :class="toolbarClass"
