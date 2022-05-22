@@ -295,7 +295,7 @@ export default class Account extends Mixins(MainMixins) {
         if (!this.claims) return;
         await accountModule.updateClaims({
             ...this.claims,
-            calendar: true,
+            calendar: this.claims.calendar,
         });
     }
 
@@ -304,7 +304,7 @@ export default class Account extends Mixins(MainMixins) {
         if (!this.claims) return;
         await accountModule.updateClaims({
             ...this.claims,
-            ga: true,
+            ga: this.claims.ga,
         });
     }
 

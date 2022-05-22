@@ -92,7 +92,6 @@
 </template>
 
 <script lang="ts">
-import OktaSignIn from "@okta/okta-signin-widget";
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../store/app.module";
 import utilsModule from "../../../store/utils.module";
@@ -132,7 +131,7 @@ export default class Login extends Vue {
     showDemo: boolean = false;
     open: boolean = false;
     splash: boolean = false;
-    widget: OktaSignIn | null = null;
+    widget: any = null;
 
     get authenticated() {
         return appModule.authenticated;
@@ -145,6 +144,13 @@ export default class Login extends Vue {
     }
 
     async mounted() {
+        let OktaSignIn: any;
+        await import(
+            // @ts-expect-error
+            /* webpackChunkName: "okta.signin", webpackPreload: true  */ "@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js"
+        ).then((module) => {
+            OktaSignIn = module.default;
+        });
         this.$nextTick(function () {
             const self = this;
             const scopes = ["openid", "profile", "email"];
