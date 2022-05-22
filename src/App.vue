@@ -336,40 +336,37 @@ export default class App extends Mixins(MainMixins) {
             claims.user_type === "Trainer" || claims.user_type === "Admin"
         );
 
-        if (claims) {
-            if (!claims.ga || !claims)
-                accountModule.setClaims({
-                    ...claims,
-                    ga: true,
-                });
+        if (claims.ga === undefined || claims.ga === null)
+            accountModule.setClaims({
+                ...claims,
+                ga: true,
+            });
 
-            if (!claims.theme || !claims)
-                accountModule.setClaims({
-                    ...claims,
-                    theme: "system",
-                });
+        if (claims.theme === undefined || claims.theme === null)
+            accountModule.setClaims({
+                ...claims,
+                theme: "system",
+            });
 
-            // Sets theme
-            this.darkmode(claims.theme);
+        // Sets theme
+        this.darkmode(claims.theme);
 
-            // Set analytics and theme
-            claims.ga !== false ? this.$ga.enable() : this.$ga.disable();
+        // Set analytics and theme
+        claims.ga !== false ? this.$ga.enable() : this.$ga.disable();
 
-            if (localStorage.getItem("darkmode"))
-                this.darkmode(localStorage.getItem("darkmode") as DarkmodeType);
+        if (localStorage.getItem("darkmode"))
+            this.darkmode(localStorage.getItem("darkmode") as DarkmodeType);
 
-            // Set EULA
-            if (
-                (!claims.policy ||
-                    appModule.policyVersion !== claims.policy[2]) &&
-                claims.email !== "demo@traininblocks.com" &&
-                this.authenticated
-            ) {
-                utilsModule.openModal({
-                    name: "eula",
-                    persist: true,
-                });
-            }
+        // Set EULA
+        if (
+            (!claims.policy || appModule.policyVersion !== claims.policy[2]) &&
+            claims.email !== "demo@traininblocks.com" &&
+            this.authenticated
+        ) {
+            utilsModule.openModal({
+                name: "eula",
+                persist: true,
+            });
         }
 
         // Set auth header
