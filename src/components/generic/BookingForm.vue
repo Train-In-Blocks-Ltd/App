@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
-import GeneralMixins from "../../generalMixins";
+import MainMixins from "../../main.mixins";
 import appState from "../../store/modules/appState";
 import accountStore from "../../store/modules/account";
 import utilsStore from "../../store/modules/utils";
@@ -53,7 +53,7 @@ import clientUserStore from "../../store/modules/clientUser";
 import { Booking } from "../../store/modules/types";
 
 @Component
-export default class BookingForm extends Mixins(GeneralMixins) {
+export default class BookingForm extends Mixins(MainMixins) {
     @Prop(Boolean) readonly isTrainer!: boolean;
 
     bookingForm = {

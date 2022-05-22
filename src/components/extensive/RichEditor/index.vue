@@ -172,7 +172,7 @@ import TaskItem from "@tiptap/extension-task-item";
 import LazyImage from "../../js/LazyImage";
 import utilsStore from "../../../store/modules/utils";
 import { baseAPI } from "../../../api";
-import GeneralMixins from "../../../generalMixins";
+import MainMixins from "../../../main.mixins";
 
 const ToolBar = () =>
     import(
@@ -185,7 +185,7 @@ const ToolBar = () =>
         ToolBar,
     },
 })
-export default class RichEditor extends Mixins(GeneralMixins) {
+export default class RichEditor extends Mixins(MainMixins) {
     @Prop([Number, String]) readonly itemId!: number | string;
     @Prop([Number, String]) readonly editing!: number | string;
     @Prop(String) readonly value!: string;

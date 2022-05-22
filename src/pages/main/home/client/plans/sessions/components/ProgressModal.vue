@@ -147,7 +147,7 @@ import appState from "../../../../../../../store/modules/appState";
 import utilsStore from "../../../../../../../store/modules/utils";
 import planStore from "../../../../../../../store/modules/plan";
 import { Protocol } from "../../../../../../../store/modules/types";
-import GeneralMixins from "../../../../../../../generalMixins";
+import MainMixins from "../../../../../../../main.mixins";
 
 const CardWrapper = () =>
     import(
@@ -168,7 +168,7 @@ type ProgressProtocol = {
         CardWrapper,
     },
 })
-export default class ProgressModal extends Mixins(GeneralMixins) {
+export default class ProgressModal extends Mixins(MainMixins) {
     target: number = 2;
     daysBetween: number = 7;
     page: number = 0;

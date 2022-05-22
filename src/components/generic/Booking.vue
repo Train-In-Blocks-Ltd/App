@@ -89,7 +89,7 @@ import appState from "../../store/modules/appState";
 import utilsStore from "../../store/modules/utils";
 import bookingsStore from "../../store/modules/bookings";
 import clientUserStore from "../../store/modules/clientUser";
-import GeneralMixins from "../../generalMixins";
+import MainMixins from "../../main.mixins";
 
 const CardWrapper = () =>
     import(
@@ -101,7 +101,7 @@ const CardWrapper = () =>
         CardWrapper,
     },
 })
-export default class Booking extends Mixins(GeneralMixins) {
+export default class Booking extends Mixins(MainMixins) {
     @Prop(Object) readonly booking!: BookingType;
     @Prop(Boolean) readonly isTrainer!: boolean;
 

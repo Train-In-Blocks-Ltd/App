@@ -90,7 +90,7 @@
 <script lang="ts">
 import { Component, Prop, Mixins } from "vue-property-decorator";
 import { EventRow } from "../../store/modules/types";
-import GeneralMixins from "../../generalMixins";
+import MainMixins from "../../main.mixins";
 import { MONTHS } from "../../common/helpers";
 
 const LabelWrapper = () =>
@@ -105,7 +105,7 @@ type WeekRow = { date: string; dateSplit: number[]; events: EventRow[] };
         LabelWrapper,
     },
 })
-export default class WeekCalendar extends Mixins(GeneralMixins) {
+export default class WeekCalendar extends Mixins(MainMixins) {
     @Prop(Array) readonly events!: EventRow[];
     @Prop(Function) readonly onEventPress!: (
         id: number,

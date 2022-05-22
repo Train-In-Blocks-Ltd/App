@@ -56,10 +56,10 @@ import appState from "../../../../store/modules/appState";
 import accountStore from "../../../../store/modules/account";
 import utilsStore from "../../../../store/modules/utils";
 import { Component, Mixins } from "vue-property-decorator";
-import GeneralMixins from "../../../../generalMixins";
+import MainMixins from "../../../../main.mixins";
 
 @Component
-export default class PolicyModal extends Mixins(GeneralMixins) {
+export default class PolicyModal extends Mixins(MainMixins) {
     name: string | null = null;
     eula: string | null = null;
 

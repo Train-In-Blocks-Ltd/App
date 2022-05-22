@@ -96,7 +96,7 @@ import {
     VisualiseData,
 } from "../../../../../../../store/modules/types";
 import planStore from "../../../../../../../store/modules/plan";
-import GeneralMixins from "../../../../../../../generalMixins";
+import MainMixins from "../../../../../../../main.mixins";
 import { getLoad, getReps, getSets } from "../../../../../../../common/helpers";
 import { ChartItem } from "chart.js";
 import Chart from "chart.js/auto";
@@ -104,7 +104,7 @@ import Chart from "chart.js/auto";
 type DataType = "Sets" | "Reps" | "Load" | "Volume";
 
 @Component
-export default class StatisticsModal extends Mixins(GeneralMixins) {
+export default class StatisticsModal extends Mixins(MainMixins) {
     descData: string[] = [];
     showLoadsVolumeOptions: boolean = false;
     selectedDataName: string | "Plan Overview" = "Plan Overview";

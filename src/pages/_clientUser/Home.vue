@@ -138,7 +138,7 @@ import { EditorState, Plan, Session } from "../../store/modules/types";
 import appState from "../../store/modules/appState";
 import clientUserStore from "../../store/modules/clientUser";
 import utilsStore from "../../store/modules/utils";
-import GeneralMixins from "../../generalMixins";
+import MainMixins from "../../main.mixins";
 
 const PlanCard = () =>
     import(
@@ -155,7 +155,7 @@ const CardWrapper = () =>
         CardWrapper,
     },
 })
-export default class ClientHome extends Mixins(GeneralMixins) {
+export default class ClientHome extends Mixins(MainMixins) {
     forceStop: number = 0;
     feedbackId: number | null = null;
     tempEditorStore: string | null = null;

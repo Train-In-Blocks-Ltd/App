@@ -339,7 +339,7 @@ import {
     EditorState,
     MultiselectOption,
 } from "../../../../../../store/modules/types";
-import GeneralMixins from "../../../../../../generalMixins";
+import MainMixins from "../../../../../../main.mixins";
 
 const Checkbox = () =>
     import(
@@ -396,7 +396,7 @@ const CardWrapper = () =>
         CardWrapper,
     },
 })
-export default class Session extends Mixins(GeneralMixins) {
+export default class Session extends Mixins(MainMixins) {
     forceStop: number = 0;
     tempEditorStore: string | null = "";
     isEditingSession: boolean = false;

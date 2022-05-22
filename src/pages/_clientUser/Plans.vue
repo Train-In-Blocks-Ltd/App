@@ -183,7 +183,7 @@ import { NavigationGuardNext, Route } from "vue-router";
 import appState from "../../store/modules/appState";
 import clientUserStore from "../../store/modules/clientUser";
 import utilsStore from "../../store/modules/utils";
-import GeneralMixins from "../../generalMixins";
+import MainMixins from "../../main.mixins";
 import { EditorState, Session } from "../../store/modules/types";
 
 const WeekCalendar = () =>
@@ -216,7 +216,7 @@ const CardWrapper = () =>
         LabelWrapper,
     },
 })
-export default class ClientPlans extends Mixins(GeneralMixins) {
+export default class ClientPlans extends Mixins(MainMixins) {
     showing_current_session: number = 0;
     forceStop: number = 0;
     feedbackId: number | null = null;

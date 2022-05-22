@@ -2,7 +2,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Booking, Protocol } from "./store/modules/types";
 
 @Component
-export default class GeneralMixins extends Vue {
+export default class MainMixins extends Vue {
     /** Today's date in YYYY-MM-DD. */
     today() {
         const d = new Date();
