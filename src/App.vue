@@ -135,7 +135,7 @@ import utilsStore from "./store/modules/utils";
 import clientsModule from "./store/modules/clients.module";
 import templatesStore from "./store/modules/templates";
 import bookingsModule from "./store/modules/bookings.module";
-import portfolioStore from "./store/modules/portfolio";
+import portfolioStore from "./store/modules/portfolio.module";
 import clientUserModule from "./store/modules/clientUser.module";
 import { getTrainerUserData } from "./api";
 import {

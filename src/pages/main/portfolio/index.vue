@@ -59,7 +59,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../store/modules/app.module";
 import accountModule from "../../../store/modules/account.module";
-import portfolioStore from "../../../store/modules/portfolio";
+import portfolioStore from "../../../store/modules/portfolio.module";
 import utilsStore from "../../../store/modules/utils";
 import { NavigationGuardNext, Route } from "vue-router";
 import { EditorState } from "@/src/store/modules/types";
