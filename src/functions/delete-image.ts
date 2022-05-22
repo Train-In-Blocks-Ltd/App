@@ -15,7 +15,7 @@ cloudinary.config({
     api_secret: CUSTOM_ENV.CLOUDINARY.API_SECRET,
 });
 
-const handler: Handler = async (event) => {
+export const handler: Handler = async (event) => {
     if (event.headers.authorization) {
         const accessToken = event.headers.authorization.split(" ");
         const response = await axios.post(

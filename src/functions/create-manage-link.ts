@@ -13,12 +13,10 @@ const stripe = new Stripe(CUSTOM_ENV.STRIPE_SECRET_KEY, {
 });
 const headers = require("./helpers/headers");
 
-let response;
-
 export const handler: Handler = async (event) => {
     if (event.headers.authorization) {
         const accessToken = event.headers.authorization.split(" ");
-        response = await axios.post(
+        const response = await axios.post(
             `${CUSTOM_ENV.OKTA.ISSUER}/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
             qs.stringify({
                 token: accessToken[1],
@@ -39,7 +37,7 @@ export const handler: Handler = async (event) => {
             };
         } else if (event.body && response.data.active === true) {
             try {
-                response = await stripe.billingPortal.sessions.create({
+                const response = await stripe.billingPortal.sessions.create({
                     customer: JSON.parse(event.body).id,
                     return_url:
                         event.multiValueHeaders.Referer &&

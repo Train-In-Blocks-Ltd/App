@@ -11,7 +11,7 @@ const CUSTOM_ENV =
 const stripe = new Stripe(CUSTOM_ENV.STRIPE_SECRET_KEY, {
     apiVersion: "2020-08-27",
 });
-const headers = require("././helpers/headers");
+const headers = require("./helpers/headers");
 
 export const handler: Handler = async (event) => {
     if (event.headers.authorization) {
@@ -38,22 +38,11 @@ export const handler: Handler = async (event) => {
         } else if (event.body && response.data.active === true) {
             try {
                 if (JSON.parse(event.body).email) {
-                    const coupon = await stripe.promotionCodes.create({
-                        coupon: "Referee-20",
-                        code: JSON.parse(event.body)
-                            .email.toUpperCase()
-                            .replace(/[\W_]+/g, ""),
-                        metadata: {
-                            referrer: JSON.parse(event.body).email,
-                        },
-                        restrictions: {
-                            first_time_transaction: true,
-                        },
-                    });
+                    const coupons = await stripe.promotionCodes.list();
                     return {
                         statusCode: 200,
                         headers,
-                        body: JSON.stringify(coupon),
+                        body: JSON.stringify(coupons),
                     };
                 } else {
                     return {
@@ -71,6 +60,7 @@ export const handler: Handler = async (event) => {
             }
         }
     }
+
     return {
         statusCode: 401,
         headers,
