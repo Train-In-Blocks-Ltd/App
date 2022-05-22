@@ -146,7 +146,7 @@
 <script lang="ts">
 import appModule from "../../../store/modules/app.module";
 import accountModule from "../../../store/modules/account.module";
-import utilsStore from "../../../store/modules/utils";
+import utilsModule from "../../../store/modules/utils.module";
 import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
 import {
@@ -249,7 +249,7 @@ export default class Account extends Vue {
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await utilsStore.confirmPopUpRef?.open({
+                ? await utilsModule.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
@@ -273,7 +273,7 @@ export default class Account extends Vue {
 
     /** Opens password reset modal. */
     handlePasswordReset() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "reset-password",
         });
     }
@@ -297,7 +297,7 @@ export default class Account extends Vue {
 
     /** Opens EULA modal respective to user type. */
     openEULA() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "preview",
             previewTitle: "EULA",
             previewHTML: require(`@/components/legal/eula${
@@ -317,7 +317,7 @@ export default class Account extends Vue {
             );
             window.location.href = RESPONSE.data;
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 
@@ -371,7 +371,7 @@ export default class Account extends Vue {
             }
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 
@@ -393,7 +393,7 @@ export default class Account extends Vue {
             });
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 

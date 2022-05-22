@@ -8,7 +8,7 @@ import {
 import { Plan, Session } from "./types";
 import { baseAPI } from "../../api";
 import clientModule from "./client.module.";
-import utilsStore from "./utils";
+import utilsModule from "./utils.module";
 import { addDays } from "../../common/helpers";
 
 @Module({
@@ -114,7 +114,7 @@ class PlanModule extends VuexModule {
         const plan = this.plan;
         if (!plan) return;
         const sessions = plan.sessions
-            ?.filter((s) => utilsStore.selectedIds.includes(s.id))
+            ?.filter((s) => utilsModule.selectedIds.includes(s.id))
             .map((s) => {
                 return {
                     ...s,
@@ -144,7 +144,7 @@ class PlanModule extends VuexModule {
 
     @MutationAction
     async deleteSessions() {
-        const data = utilsStore.selectedIds.map((id) => {
+        const data = utilsModule.selectedIds.map((id) => {
             return {
                 id,
             };
@@ -159,7 +159,7 @@ class PlanModule extends VuexModule {
         const plan = this.plan;
         if (!plan) return;
         plan.sessions = plan.sessions?.filter(
-            (s) => !utilsStore.selectedIds.includes(s.id)
+            (s) => !utilsModule.selectedIds.includes(s.id)
         );
         return {
             plan,
@@ -236,7 +236,7 @@ class PlanModule extends VuexModule {
         const sessions = plan.sessions?.map((s) => {
             return {
                 ...s,
-                date: utilsStore.selectedIds.includes(s.id)
+                date: utilsModule.selectedIds.includes(s.id)
                     ? addDays(s.date, shiftDays)
                     : s.date,
             };
@@ -261,7 +261,7 @@ class PlanModule extends VuexModule {
         const sessions = plan.sessions?.map((s) => {
             return {
                 ...s,
-                week_id: utilsStore.selectedIds.includes(s.id)
+                week_id: utilsModule.selectedIds.includes(s.id)
                     ? week_id
                     : s.week_id,
             };

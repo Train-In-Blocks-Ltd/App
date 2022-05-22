@@ -131,7 +131,7 @@ import { Component, Ref, Vue, Watch } from "vue-property-decorator";
 import { baseAPI, getClientUserData } from "./api";
 import appModule from "./store/modules/app.module";
 import accountModule from "./store/modules/account.module";
-import utilsStore from "./store/modules/utils";
+import utilsModule from "./store/modules/utils.module";
 import clientsModule from "./store/modules/clients.module";
 import templatesModule from "./store/modules/templates.module";
 import bookingsModule from "./store/modules/bookings.module";
@@ -229,10 +229,10 @@ export default class App extends Vue {
 
     async mounted() {
         // Sets refs after app mount
-        utilsStore.setResponsePopUpRef(this.responsePopUpRef);
-        utilsStore.setConfirmPopUpRef(this.confirmPopUpRef);
-        utilsStore.setUploadPopUpRef(this.uploadPopUpRef);
-        utilsStore.setTxtInputPopUpRef(this.txtInputPopUpRef);
+        utilsModule.setResponsePopUpRef(this.responsePopUpRef);
+        utilsModule.setConfirmPopUpRef(this.confirmPopUpRef);
+        utilsModule.setUploadPopUpRef(this.uploadPopUpRef);
+        utilsModule.setTxtInputPopUpRef(this.txtInputPopUpRef);
 
         // Sets the body to have dark mode.
         document.body.setAttribute(
@@ -373,7 +373,7 @@ export default class App extends Vue {
                 claims.email !== "demo@traininblocks.com" &&
                 this.authenticated
             ) {
-                utilsStore.openModal({
+                utilsModule.openModal({
                     name: "eula",
                     persist: true,
                 });
@@ -420,7 +420,7 @@ export default class App extends Vue {
                 clientUserModule.setClientUser(clientUserData);
             }
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
 
         this.loaded = true;
@@ -441,7 +441,7 @@ export default class App extends Vue {
             });
             appModule.setLoading(false);
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 }

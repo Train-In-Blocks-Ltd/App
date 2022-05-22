@@ -8,7 +8,7 @@ import {
 } from "vuex-module-decorators";
 import store from "..";
 import { Client, Plan, Session } from "./types";
-import utilsStore from "./utils";
+import utilsModule from "./utils.module";
 
 @Module({
     name: "clients",
@@ -65,7 +65,7 @@ class ClientsModule extends VuexModule {
                 archivedClients,
             };
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 

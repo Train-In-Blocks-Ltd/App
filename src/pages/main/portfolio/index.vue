@@ -60,7 +60,7 @@ import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../store/modules/app.module";
 import accountModule from "../../../store/modules/account.module";
 import portfolioModule from "../../../store/modules/portfolio.module";
-import utilsStore from "../../../store/modules/utils";
+import utilsModule from "../../../store/modules/utils.module";
 import { NavigationGuardNext, Route } from "vue-router";
 import { EditorState } from "@/src/store/modules/types";
 
@@ -125,7 +125,7 @@ export default class Portfolio extends Vue {
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await utilsStore.confirmPopUpRef?.open({
+                ? await utilsModule.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
@@ -170,13 +170,13 @@ export default class Portfolio extends Vue {
 
             await portfolioModule.updatePortfolio();
             this.$ga.event("Portfolio", "update");
-            utilsStore.responsePopUpRef?.open({
+            utilsModule.responsePopUpRef?.open({
                 title: "Portfolio updated",
                 text: "Your clients can access this information",
             });
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 }

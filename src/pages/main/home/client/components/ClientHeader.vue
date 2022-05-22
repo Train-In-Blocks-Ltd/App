@@ -107,7 +107,7 @@ import appModule from "../../../../../store/modules/app.module";
 import clientModule from "../../../../../store/modules/client.module.";
 import clientsModule from "../../../../../store/modules/clients.module";
 import accountModule from "../../../../../store/modules/account.module";
-import utilsStore from "../../../../../store/modules/utils";
+import utilsModule from "../../../../../store/modules/utils.module";
 import { baseAPI } from "../../../../../api";
 
 const emailBuilder = require("../../../../../components/js/email");
@@ -144,7 +144,7 @@ export default class ClientHeader extends Vue {
 
     /** Opens toolkit. */
     handleOpenToolkit() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "toolkit",
         });
     }
@@ -157,7 +157,7 @@ export default class ClientHeader extends Vue {
             await clientModule.updateClient();
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 
@@ -251,10 +251,10 @@ export default class ClientHeader extends Vue {
                 });
             }
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
         await this.checkClient();
-        utilsStore.responsePopUpRef?.open({
+        utilsModule.responsePopUpRef?.open({
             title: "An activation email was sent to your client",
             text: "Please ask them to check their inbox",
             persist: true,
@@ -296,7 +296,7 @@ export default class ClientHeader extends Vue {
             } catch (e) {
                 this.clientAlready = true;
                 this.clientAlreadyMsg = "Error";
-                utilsStore.resolveError(e as string);
+                utilsModule.resolveError(e as string);
             }
         } else {
             this.clientAlreadyMsg = "Restricted";
@@ -306,7 +306,7 @@ export default class ClientHeader extends Vue {
     /** Archives the client. */
     async archiveClient() {
         if (
-            (await utilsStore.confirmPopUpRef?.open({
+            (await utilsModule.confirmPopUpRef?.open({
                 title: "Are you sure that you want to archive/hide this client?",
                 text: "Their data will be stored, but it will be removed if deleted from the Archive.",
             })) &&
@@ -317,14 +317,14 @@ export default class ClientHeader extends Vue {
                 appModule.setDontLeave(true);
                 await clientsModule.archiveClient(id, email);
                 this.$ga.event("Client", "archive");
-                utilsStore.responsePopUpRef?.open({
+                utilsModule.responsePopUpRef?.open({
                     title: "Client archived",
                     text: "Their data will be kept safe on the archive page",
                 });
                 appModule.stopLoaders();
                 this.$router.push("/");
             } catch (e) {
-                utilsStore.resolveError(e as string);
+                utilsModule.resolveError(e as string);
             }
         }
     }

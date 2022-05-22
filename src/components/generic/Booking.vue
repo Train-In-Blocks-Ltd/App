@@ -86,7 +86,7 @@ import {
 import { Component, Prop, Mixins } from "vue-property-decorator";
 import accountModule from "../../store/modules/account.module";
 import appModule from "../../store/modules/app.module";
-import utilsStore from "../../store/modules/utils";
+import utilsModule from "../../store/modules/utils.module";
 import bookingsModule from "../../store/modules/bookings.module";
 import clientUserModule from "../../store/modules/clientUser.module";
 import MainMixins from "../../main.mixins";
@@ -127,7 +127,7 @@ export default class Booking extends Mixins(MainMixins) {
     async acceptBookingRequest() {
         if (!this.claims) return;
         if (
-            await utilsStore.confirmPopUpRef?.open({
+            await utilsModule.confirmPopUpRef?.open({
                 title: "Are you sure you want to accept this booking?",
                 text: "It will appear as scheduled on your client's profile.",
             })
@@ -141,13 +141,13 @@ export default class Booking extends Mixins(MainMixins) {
                         : this.claims?.client_id_db,
                     status: "Scheduled",
                 });
-                utilsStore.responsePopUpRef?.open({
+                utilsModule.responsePopUpRef?.open({
                     title: "Booking request accepted",
                     text: "Your client will be notified of any upcoming bookings that were accepted.",
                 });
                 appModule.stopLoaders();
             } catch (e) {
-                utilsStore.resolveError(e as string);
+                utilsModule.resolveError(e as string);
             }
         }
     }
@@ -156,7 +156,7 @@ export default class Booking extends Mixins(MainMixins) {
     async cancelBooking() {
         if (!this.claims) return;
         if (
-            await utilsStore.confirmPopUpRef?.open({
+            await utilsModule.confirmPopUpRef?.open({
                 title: "Are you sure you want to cancel this booking?",
                 text: "Your trainer will be notified.",
             })
@@ -174,13 +174,13 @@ export default class Booking extends Mixins(MainMixins) {
                 if (this.isTrainer)
                     await bookingsModule.deleteTrainerBooking(data);
                 else await clientUserModule.deleteClientBooking(data);
-                utilsStore.responsePopUpRef?.open({
+                utilsModule.responsePopUpRef?.open({
                     title: "Booking cancelled",
                     text: "Your trainer will be notified",
                 });
                 appModule.stopLoaders();
             } catch (e) {
-                utilsStore.resolveError(e as string);
+                utilsModule.resolveError(e as string);
             }
         }
     }

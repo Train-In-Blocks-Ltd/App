@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import utilsStore from "../../../../../../../store/modules/utils";
+import utilsModule from "../../../../../../../store/modules/utils.module";
 import appModule from "../../../../../../../store/modules/app.module";
 import planModule from "../../../../../../../store/modules/plan.module";
 import clientsModule from "../../../../../../../store/modules/clients.module";
@@ -49,15 +49,15 @@ export default class DuplicatePlanModal extends Vue {
             const { plan, client_id } = this;
             await clientsModule.duplicatePlan({ plan, client_id });
             this.$ga.event("Plan", "duplicate");
-            utilsStore.responsePopUpRef?.open({
+            utilsModule.responsePopUpRef?.open({
                 title: "Plan duplicated",
                 text: "Access it on your client's profile",
             });
-            utilsStore.closeModal();
+            utilsModule.closeModal();
             appModule.stopLoaders();
             this.$router.push({ path: `/client/${this.client_id}/` });
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 }

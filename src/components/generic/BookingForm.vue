@@ -47,7 +47,7 @@ import { Component, Mixins, Prop } from "vue-property-decorator";
 import MainMixins from "../../main.mixins";
 import appModule from "../../store/modules/app.module";
 import accountModule from "../../store/modules/account.module";
-import utilsStore from "../../store/modules/utils";
+import utilsModule from "../../store/modules/utils.module";
 import bookingsModule from "../../store/modules/bookings.module";
 import clientUserModule from "../../store/modules/clientUser.module";
 import { Booking } from "../../store/modules/types";
@@ -91,7 +91,7 @@ export default class BookingForm extends Mixins(MainMixins) {
                 time: this.timeNow(),
                 notes: null,
             };
-            utilsStore.responsePopUpRef?.open({
+            utilsModule.responsePopUpRef?.open({
                 title: "Booking created",
                 text: this.isTrainer
                     ? "Your client will be notified of any upcoming bookings that were created."
@@ -99,7 +99,7 @@ export default class BookingForm extends Mixins(MainMixins) {
             });
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 }

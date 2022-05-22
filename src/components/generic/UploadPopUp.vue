@@ -22,7 +22,7 @@ import { UploadPopUpParams } from "../../store/modules/types";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import Compressor from "compressorjs";
 import { baseAPI } from "../../api";
-import utilsStore from "../../store/modules/utils";
+import utilsModule from "../../store/modules/utils.module";
 
 const Backdrop = () =>
     import(
@@ -101,7 +101,7 @@ export default class UploadPopUp extends Vue {
                 },
             });
         } else {
-            utilsStore.responsePopUpRef?.open({
+            utilsModule.responsePopUpRef?.open({
                 title: "File size is too big",
                 text: "Please compress it to 1MB or lower",
                 persist: true,

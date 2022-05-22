@@ -182,7 +182,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
 import appModule from "../../store/modules/app.module";
 import clientUserModule from "../../store/modules/clientUser.module";
-import utilsStore from "../../store/modules/utils";
+import utilsModule from "../../store/modules/utils.module";
 import MainMixins from "../../main.mixins";
 import { EditorState, Session } from "../../store/modules/types";
 
@@ -270,7 +270,7 @@ export default class ClientPlans extends Mixins(MainMixins) {
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await utilsStore.confirmPopUpRef?.open({
+                ? await utilsModule.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })

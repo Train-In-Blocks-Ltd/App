@@ -31,7 +31,7 @@
 import appModule from "../../../../store/modules/app.module";
 import clientsModule from "../../../../store/modules/clients.module";
 import { Component, Vue } from "vue-property-decorator";
-import utils from "../../../../store/modules/utils";
+import utils from "../../../../store/modules/utils.module";
 
 const ClientLink = () =>
     import(

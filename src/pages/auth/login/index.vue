@@ -95,7 +95,7 @@
 import OktaSignIn from "@okta/okta-signin-widget";
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../store/modules/app.module";
-import utilsStore from "../../../store/modules/utils";
+import utilsModule from "../../../store/modules/utils.module";
 
 const Splash = () =>
     import(
@@ -196,7 +196,7 @@ export default class Login extends Vue {
                     await this.$auth.handleLoginRedirect(tokens);
                 })
                 .catch((e: any) => {
-                    utilsStore.resolveError(e as string);
+                    utilsModule.resolveError(e as string);
                 });
         });
         if (await this.$auth.isAuthenticated()) {

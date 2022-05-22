@@ -5,8 +5,8 @@ import {
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import store from "../..";
-import appModule from "../app.module";
+import store from "..";
+import appModule from "./app.module";
 import {
     ConfirmPopUpRef,
     ModalName,
@@ -14,7 +14,7 @@ import {
     ResponsePopUpRef,
     TxtInputPopUpRef,
     UploadPopUpRef,
-} from "../types";
+} from "./types";
 import { Editor } from "@tiptap/core";
 
 type ModalParams =

@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import utilsStore from "../../../../../../../store/modules/utils";
+import utilsModule from "../../../../../../../store/modules/utils.module";
 import appModule from "../../../../../../../store/modules/app.module";
 import planModule from "../../../../../../../store/modules/plan.module";
 
@@ -30,7 +30,7 @@ export default class ShiftModal extends Vue {
     shiftDays: number = 1;
 
     get selectedIds() {
-        return utilsStore.selectedIds;
+        return utilsModule.selectedIds;
     }
     get plan() {
         return planModule.plan;
@@ -40,8 +40,8 @@ export default class ShiftModal extends Vue {
     async shiftAcross() {
         appModule.setDontLeave(true);
         await planModule.shiftSessions(this.shiftDays);
-        utilsStore.closeModal();
-        utilsStore.responsePopUpRef?.open({
+        utilsModule.closeModal();
+        utilsModule.responsePopUpRef?.open({
             title:
                 this.selectedIds.length > 1
                     ? "Shifted sessions"
@@ -49,7 +49,7 @@ export default class ShiftModal extends Vue {
             text: "Your changes have been saved",
         });
         this.shiftDays = 1;
-        utilsStore.deselectAll();
+        utilsModule.deselectAll();
         this.$ga.event("Session", "shift");
         appModule.stopLoaders();
     }

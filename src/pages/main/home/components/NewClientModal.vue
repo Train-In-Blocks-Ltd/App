@@ -64,7 +64,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import accountModule from "../../../../store/modules/account.module";
 import appModule from "../../../../store/modules/app.module";
-import utilsStore from "../../../../store/modules/utils";
+import utilsModule from "../../../../store/modules/utils.module";
 import clientsModule from "../../../../store/modules/clients.module";
 import { EMAIL_REGEX } from "../../../../common/helpers";
 
@@ -93,7 +93,7 @@ export default class NewClientModal extends Vue {
 
     createClient() {
         if (this.email === this.claims?.email) {
-            utilsStore.responsePopUpRef?.open({
+            utilsModule.responsePopUpRef?.open({
                 title: "You cannot create a client with your own email address!",
                 text: "Please use a different one.",
                 persist: true,
@@ -108,7 +108,7 @@ export default class NewClientModal extends Vue {
                     email: this.email,
                     number: this.number,
                 });
-                utilsStore.responsePopUpRef?.open({
+                utilsModule.responsePopUpRef?.open({
                     title: `Added ${this.name}`,
                     text: "Well done on getting a new client",
                 });
@@ -121,10 +121,10 @@ export default class NewClientModal extends Vue {
                 appModule.stopLoaders();
                 appModule.stopLoaders();
             } catch (e) {
-                utilsStore.resolveError(e as string);
+                utilsModule.resolveError(e as string);
             }
         }
-        utilsStore.closeModal();
+        utilsModule.closeModal();
     }
 }
 </script>

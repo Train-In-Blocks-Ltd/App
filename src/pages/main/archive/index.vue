@@ -66,7 +66,7 @@
 
 <script lang="ts">
 import appModule from "../../../store/modules/app.module";
-import utilsStore from "../../../store/modules/utils";
+import utilsModule from "../../../store/modules/utils.module";
 import clientsModule from "../../../store/modules/clients.module";
 import { MultiselectOption } from "../../../store/modules/types";
 import { Component, Vue } from "vue-property-decorator";
@@ -106,11 +106,11 @@ export default class Archive extends Vue {
         return clientsModule.archivedClients;
     }
     get selectedIds() {
-        return utilsStore.selectedIds;
+        return utilsModule.selectedIds;
     }
 
     handleSelectAll() {
-        utilsStore.selectAll(this.archivedClients.map((c) => c.client_id));
+        utilsModule.selectAll(this.archivedClients.map((c) => c.client_id));
     }
 
     /** Resolves the archive multi-select. */
@@ -123,7 +123,7 @@ export default class Archive extends Vue {
                 this.deleteClients();
                 break;
             case "Deselect":
-                utilsStore.deselectAll();
+                utilsModule.deselectAll();
                 break;
         }
     }
@@ -134,25 +134,25 @@ export default class Archive extends Vue {
             appModule.setDontLeave(true);
             if (this.selectedIds.length !== 0) {
                 if (
-                    await utilsStore.confirmPopUpRef?.open({
+                    await utilsModule.confirmPopUpRef?.open({
                         title: "Are you sure that you want to delete all the selected clients?",
                         text: "We will remove their data(s) from our database and it won't be recoverable.",
                     })
                 ) {
                     clientsModule.deleteClients(this.selectedIds);
-                    utilsStore.responsePopUpRef?.open({
+                    utilsModule.responsePopUpRef?.open({
                         title:
                             this.selectedIds.length > 1
                                 ? "Clients deleted"
                                 : "Client Delete",
                         text: "All their data has been removed",
                     });
-                    utilsStore.deselectAll();
+                    utilsModule.deselectAll();
                 }
             }
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 
@@ -162,25 +162,25 @@ export default class Archive extends Vue {
             appModule.setDontLeave(true);
             if (this.selectedIds.length !== 0) {
                 if (
-                    await utilsStore.confirmPopUpRef?.open({
+                    await utilsModule.confirmPopUpRef?.open({
                         title: "Are you sure that you want to unarchive all the selected clients?",
                         text: "Their data will be recovered and available on the Home page.",
                     })
                 ) {
                     clientsModule.unarchiveClients(this.selectedIds);
-                    utilsStore.responsePopUpRef?.open({
+                    utilsModule.responsePopUpRef?.open({
                         title:
                             this.selectedIds.length > 1
                                 ? "Unarchived clients"
                                 : "Unarchived client",
                         text: "All their data has been recovered",
                     });
-                    utilsStore.deselectAll();
+                    utilsModule.deselectAll();
                 }
             }
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 }

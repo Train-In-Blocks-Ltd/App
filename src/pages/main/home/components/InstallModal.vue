@@ -59,7 +59,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../store/modules/app.module";
-import utilsStore from "../../../../store/modules/utils";
+import utilsModule from "../../../../store/modules/utils.module";
 
 @Component
 export default class InstallModal extends Vue {
@@ -85,7 +85,7 @@ export default class InstallModal extends Vue {
                 }
             }
         );
-        utilsStore.closeModal();
+        utilsModule.closeModal();
     }
 }
 </script>

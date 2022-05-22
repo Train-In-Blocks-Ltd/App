@@ -18,7 +18,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../store/modules/app.module";
-import utilsStore from "../../../../store/modules/utils";
+import utilsModule from "../../../../store/modules/utils.module";
 import { baseAPI } from "../../../../api";
 
 @Component
@@ -39,7 +39,7 @@ export default class ResetPassword extends Vue {
                 this.success = "An email has been sent successfully.";
                 this.email = "";
             } catch (e) {
-                utilsStore.resolveError(e as string);
+                utilsModule.resolveError(e as string);
                 this.error =
                     "An error occurred. Are you sure your email is correct?";
             }

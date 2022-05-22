@@ -170,7 +170,7 @@ import Link from "@tiptap/extension-link";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import LazyImage from "../../js/LazyImage";
-import utilsStore from "../../../store/modules/utils";
+import utilsModule from "../../../store/modules/utils.module";
 import { baseAPI } from "../../../api";
 import MainMixins from "../../../main.mixins";
 
@@ -197,10 +197,10 @@ export default class RichEditor extends Mixins(MainMixins) {
     saving: boolean = false;
 
     get editor() {
-        return utilsStore.editor;
+        return utilsModule.editor;
     }
     get newImgs() {
-        return utilsStore.newImgs;
+        return utilsModule.newImgs;
     }
 
     @Watch("editState")
@@ -227,15 +227,15 @@ export default class RichEditor extends Mixins(MainMixins) {
                 },
                 onDestroy: async () => {
                     if (!this.saving) await this.cancelledRemoveNewImgs();
-                    utilsStore.setEditor(null);
-                    utilsStore.setNewImgs([]);
+                    utilsModule.setEditor(null);
+                    utilsModule.setNewImgs([]);
                 },
             });
 
-            utilsStore.setEditor(editor);
+            utilsModule.setEditor(editor);
         } else {
             this.editor?.destroy();
-            utilsStore.setEditor(null);
+            utilsModule.setEditor(null);
         }
     }
     @Watch("forceStop")

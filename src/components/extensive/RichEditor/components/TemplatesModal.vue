@@ -59,7 +59,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import templatesModule from "../../../../store/modules/templates.module";
-import utilsStore from "../../../../store/modules/utils";
+import utilsModule from "../../../../store/modules/utils.module";
 
 const CardWrapper = () =>
     import(
@@ -92,7 +92,7 @@ export default class TemplatesModal extends Vue {
         return templatesModule.templates;
     }
     get editor() {
-        return utilsStore.editor;
+        return utilsModule.editor;
     }
     get searchEmpty() {
         return (
@@ -106,7 +106,7 @@ export default class TemplatesModal extends Vue {
 
     handleInsert(html: string) {
         this.editor?.commands.insertContent(html);
-        utilsStore.closeModal();
+        utilsModule.closeModal();
     }
 }
 </script>

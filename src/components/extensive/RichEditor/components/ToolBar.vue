@@ -155,7 +155,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import templatesModule from "../../../../store/modules/templates.module";
-import utilsStore from "../../../../store/modules/utils";
+import utilsModule from "../../../../store/modules/utils.module";
 import { ChainedCommands } from "@tiptap/core";
 
 @Component
@@ -163,18 +163,18 @@ export default class ToolBar extends Vue {
     @Prop(String) readonly toolbarClass!: string;
 
     get editor() {
-        return utilsStore.editor;
+        return utilsModule.editor;
     }
     get templates() {
         return templatesModule.templates;
     }
     get newImgs() {
-        return utilsStore.newImgs;
+        return utilsModule.newImgs;
     }
 
     /** Opens templates selector. */
     handleOpenTemplates() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "templates",
         });
     }
@@ -184,7 +184,7 @@ export default class ToolBar extends Vue {
         if (this.editor?.isActive("link"))
             return this.editor?.chain().focus().unsetLink().run();
 
-        utilsStore.txtInputPopUpRef?.open({
+        utilsModule.txtInputPopUpRef?.open({
             title: "Enter URL link",
             text: "Make sure to include the https://",
             label: "Link",
@@ -197,7 +197,7 @@ export default class ToolBar extends Vue {
 
     /** Opens image picker. */
     handleOpenUpload() {
-        utilsStore.uploadPopUpRef?.open({
+        utilsModule.uploadPopUpRef?.open({
             title: "Upload image",
             text: "Please make sure that it's less than 1MB.",
             onSuccess: (response) => {
@@ -211,7 +211,7 @@ export default class ToolBar extends Vue {
                         loading: "lazy",
                     })
                     .run();
-                utilsStore.setNewImgs([...this.newImgs, response.data.url]);
+                utilsModule.setNewImgs([...this.newImgs, response.data.url]);
             },
         });
     }

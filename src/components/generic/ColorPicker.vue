@@ -28,7 +28,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import planModule from "../../store/modules/plan.module";
-import utilsStore from "../../store/modules/utils";
+import utilsModule from "../../store/modules/utils.module";
 
 const Backdrop = () =>
     import(
@@ -61,7 +61,7 @@ export default class ColorPicker extends Vue {
         try {
             await planModule.updateWeekColor(color);
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
         this.editingWeekColor = false;
     }

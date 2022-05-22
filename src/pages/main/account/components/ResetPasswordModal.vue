@@ -48,7 +48,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../store/modules/app.module";
-import utilsStore from "../../../../store/modules/utils";
+import utilsModule from "../../../../store/modules/utils.module";
 
 @Component
 export default class ResetPasswordModal extends Vue {
@@ -82,7 +82,7 @@ export default class ResetPasswordModal extends Vue {
         try {
             appModule.setDontLeave(true);
             this.error = "";
-            utilsStore.responsePopUpRef?.open({
+            utilsModule.responsePopUpRef?.open({
                 title: "Password changed",
                 text: "Remember to not share it and keep it safe",
             });
@@ -91,7 +91,7 @@ export default class ResetPasswordModal extends Vue {
             this.confirm = "";
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
             this.error =
                 "Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements";
         }

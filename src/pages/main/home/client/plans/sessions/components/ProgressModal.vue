@@ -144,7 +144,7 @@
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import appModule from "../../../../../../../store/modules/app.module";
-import utilsStore from "../../../../../../../store/modules/utils";
+import utilsModule from "../../../../../../../store/modules/utils.module";
 import planModule from "../../../../../../../store/modules/plan.module";
 import { Protocol } from "../../../../../../../store/modules/types";
 import MainMixins from "../../../../../../../main.mixins";
@@ -179,7 +179,7 @@ export default class ProgressModal extends Mixins(MainMixins) {
         return planModule.plan;
     }
     get selectedIds() {
-        return utilsStore.selectedIds;
+        return utilsModule.selectedIds;
     }
     get currentWeek() {
         return planModule.currentWeek;
@@ -250,15 +250,15 @@ export default class ProgressModal extends Mixins(MainMixins) {
                     }
                 );
             } catch (e) {
-                utilsStore.resolveError(e as string);
+                utilsModule.resolveError(e as string);
             }
             iIndex += 1;
         }
-        utilsStore.closeModal();
+        utilsModule.closeModal();
         planModule.setCurrentWeek(this.target);
-        utilsStore.deselectAll();
+        utilsModule.deselectAll();
         this.$ga.event("Session", "progress");
-        utilsStore.responsePopUpRef?.open({
+        utilsModule.responsePopUpRef?.open({
             title: "Sessions have been progressed",
             text: "Please go through them to make sure that you're happy with it",
         });

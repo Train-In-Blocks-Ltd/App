@@ -66,7 +66,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../../../store/modules/app.module";
 import bookingsModule from "../../../../../../store/modules/bookings.module";
-import utilsStore from "../../../../../../store/modules/utils";
+import utilsModule from "../../../../../../store/modules/utils.module";
 import { Booking } from "../../../../../../store/modules/types";
 
 const Booking = () =>
@@ -102,7 +102,7 @@ export default class Bookings extends Vue {
 
     /** Opens all bookings modal. */
     handleOpenAllBookings() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "bookings",
         });
     }

@@ -39,7 +39,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../../../../store/modules/app.module";
-import utilsStore from "../../../../../../../store/modules/utils";
+import utilsModule from "../../../../../../../store/modules/utils.module";
 import clientModule from "../../../../../../../store/modules/client.module.";
 
 @Component
@@ -52,13 +52,13 @@ export default class PlanOptions extends Vue {
     }
 
     handleOpenDuplicate() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "duplicate-plan",
         });
     }
 
     handleOpenStatistics() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "statistics",
         });
     }
@@ -66,7 +66,7 @@ export default class PlanOptions extends Vue {
     /** Deletes the plan. */
     async deletePlan() {
         if (
-            await utilsStore.confirmPopUpRef?.open({
+            await utilsModule.confirmPopUpRef?.open({
                 title: "Are you sure you want to delete this plan?",
                 text: "We will remove this plan from our database and it won't be recoverable.",
             })
@@ -75,7 +75,7 @@ export default class PlanOptions extends Vue {
                 appModule.setLoading(true);
                 clientModule.deletePlan(parseInt(this.$route.params.id));
                 this.$ga.event("Session", "delete");
-                utilsStore.responsePopUpRef?.open({
+                utilsModule.responsePopUpRef?.open({
                     title: "Plan deleted",
                     text: "Your changes have been saved",
                 });
@@ -84,7 +84,7 @@ export default class PlanOptions extends Vue {
                     path: `/client/${this.clientDetails?.client_id}/`,
                 });
             } catch (e) {
-                utilsStore.resolveError(e as string);
+                utilsModule.resolveError(e as string);
             }
         }
     }

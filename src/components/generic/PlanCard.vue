@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import utilsStore from "../../store/modules/utils";
+import utilsModule from "../../store/modules/utils.module";
 
 const CardWrapper = () =>
     import(
@@ -43,7 +43,7 @@ export default class PlanCard extends Vue {
     @Prop(Boolean) readonly isTrainer!: boolean;
 
     handleOpenNotes() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "preview",
             previewTitle: "Plan Notes",
             previewHTML: this.plan.notes,

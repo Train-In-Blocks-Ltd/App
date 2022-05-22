@@ -137,7 +137,7 @@ import { NavigationGuardNext, Route } from "vue-router";
 import { EditorState, Plan, Session } from "../../store/modules/types";
 import appModule from "../../store/modules/app.module";
 import clientUserModule from "../../store/modules/clientUser.module";
-import utilsStore from "../../store/modules/utils";
+import utilsModule from "../../store/modules/utils.module";
 import MainMixins from "../../main.mixins";
 
 const PlanCard = () =>
@@ -186,7 +186,7 @@ export default class ClientHome extends Mixins(MainMixins) {
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await utilsStore.confirmPopUpRef?.open({
+                ? await utilsModule.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
@@ -236,21 +236,21 @@ export default class ClientHome extends Mixins(MainMixins) {
     }
 
     handleOpenInstall() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "install-pwa",
         });
     }
 
     handleOpenInfo() {
         if (this.portfolio?.notes)
-            utilsStore.openModal({
+            utilsModule.openModal({
                 name: "info",
                 previewHTML: this.portfolio.notes,
             });
     }
 
     handleOpenProfile() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "client-user-profile",
         });
     }

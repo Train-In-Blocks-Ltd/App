@@ -51,7 +51,7 @@
 <script lang="ts">
 import { MultiselectOption } from "@/src/store/modules/types";
 import { Component, Vue, Prop } from "vue-property-decorator";
-import utilsStore from "../../store/modules/utils";
+import utilsModule from "../../store/modules/utils.module";
 
 @Component
 export default class Multiselect extends Vue {
@@ -59,7 +59,7 @@ export default class Multiselect extends Vue {
     @Prop(Array) readonly options!: MultiselectOption[];
 
     get selectedIds() {
-        return utilsStore.selectedIds;
+        return utilsModule.selectedIds;
     }
 }
 </script>

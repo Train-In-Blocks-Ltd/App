@@ -7,12 +7,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import utilsStore from "../../../../store/modules/utils";
+import utilsModule from "../../../../store/modules/utils.module";
 
 @Component
 export default class PreviewModal extends Vue {
     get previewHTML() {
-        return utilsStore.previewHTML;
+        return utilsModule.previewHTML;
     }
 }
 </script>

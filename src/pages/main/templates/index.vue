@@ -114,7 +114,7 @@
 <script lang="ts">
 import appModule from "../../../store/modules/app.module";
 import templatesModule from "../../../store/modules/templates.module";
-import utilsStore from "../../../store/modules/utils";
+import utilsModule from "../../../store/modules/utils.module";
 import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
 import { EditorState } from "@/src/store/modules/types";
@@ -176,13 +176,13 @@ export default class Templates extends Vue {
         templatesModule.setTemplates(value);
     }
     get selectedIds() {
-        return utilsStore.selectedIds;
+        return utilsModule.selectedIds;
     }
 
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await utilsStore.confirmPopUpRef?.open({
+                ? await utilsModule.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
@@ -200,7 +200,7 @@ export default class Templates extends Vue {
                 this.deleteMultiTemplates();
                 break;
             case "Deselect":
-                utilsStore.deselectAll();
+                utilsModule.deselectAll();
                 break;
         }
     }
@@ -265,7 +265,7 @@ export default class Templates extends Vue {
     }
 
     handleSelectAll() {
-        utilsStore.selectAll(this.templates.map((template) => template.id));
+        utilsModule.selectAll(this.templates.map((template) => template.id));
     }
 
     /** Creates a new template. */
@@ -274,14 +274,14 @@ export default class Templates extends Vue {
             appModule.setDontLeave(true);
             await templatesModule.addTemplate();
             this.checkForNew();
-            utilsStore.responsePopUpRef?.open({
+            utilsModule.responsePopUpRef?.open({
                 title: "New template created",
                 text: "Edit and use it in a client's plan",
             });
             this.$ga.event("Template", "new");
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 
@@ -290,14 +290,14 @@ export default class Templates extends Vue {
         try {
             appModule.setDontLeave(true);
             await templatesModule.updateTemplate(templateId);
-            utilsStore.responsePopUpRef?.open({
+            utilsModule.responsePopUpRef?.open({
                 title: "Updated template",
                 text: "Your changes have been saved",
             });
             this.$ga.event("Template", "update");
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 
@@ -305,7 +305,7 @@ export default class Templates extends Vue {
     async deleteMultiTemplates() {
         if (this.selectedIds.length !== 0) {
             if (
-                await utilsStore.confirmPopUpRef?.open({
+                await utilsModule.confirmPopUpRef?.open({
                     title: "Are you sure you want to delete all the selected templates?",
                     text: "We will remove these templates from our database and it won't be recoverable.",
                 })
@@ -313,9 +313,9 @@ export default class Templates extends Vue {
                 try {
                     appModule.setDontLeave(true);
                     await templatesModule.deleteTemplates(this.selectedIds);
-                    utilsStore.deselectAll();
+                    utilsModule.deselectAll();
                     appModule.stopLoaders();
-                    utilsStore.responsePopUpRef?.open({
+                    utilsModule.responsePopUpRef?.open({
                         title:
                             this.selectedIds.length > 1
                                 ? "Deleted templates"
@@ -324,7 +324,7 @@ export default class Templates extends Vue {
                     });
                     this.$ga.event("Template", "delete");
                 } catch (e) {
-                    utilsStore.resolveError(e as string);
+                    utilsModule.resolveError(e as string);
                 }
             }
         }

@@ -51,7 +51,7 @@
 <script lang="ts">
 import appModule from "../../../store/modules/app.module";
 import accountModule from "../../../store/modules/account.module";
-import utilsStore from "../../../store/modules/utils";
+import utilsModule from "../../../store/modules/utils.module";
 import { NavLinkType } from "../../../store/modules/types";
 import { Component, Vue } from "vue-property-decorator";
 
@@ -151,7 +151,7 @@ export default class NavBar extends Vue {
     /** Logs out the user. */
     async handleLogout() {
         if (
-            await utilsStore.confirmPopUpRef?.open({
+            await utilsModule.confirmPopUpRef?.open({
                 title: "Are you sure you want to log out?",
                 text: "It's recommended to do so if you are using a public device.",
             })

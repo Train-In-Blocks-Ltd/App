@@ -332,7 +332,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import appModule from "../../../../../../store/modules/app.module";
 import clientsModule from "../../../../../../store/modules/clients.module";
 import planModule from "../../../../../../store/modules/plan.module";
-import utilsStore from "../../../../../../store/modules/utils";
+import utilsModule from "../../../../../../store/modules/utils.module";
 import clientModule from "../../../../../../store/modules/client.module.";
 import { NavigationGuardNext, Route } from "vue-router";
 import {
@@ -450,7 +450,7 @@ export default class Session extends Mixins(MainMixins) {
         }
     }
     get selectedIds() {
-        return utilsStore.selectedIds;
+        return utilsModule.selectedIds;
     }
     get loading() {
         return appModule.loading;
@@ -493,7 +493,7 @@ export default class Session extends Mixins(MainMixins) {
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await utilsStore.confirmPopUpRef?.open({
+                ? await utilsModule.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
@@ -509,7 +509,7 @@ export default class Session extends Mixins(MainMixins) {
     }
 
     handleOpenInfo() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "info",
             previewHTML:
                 "<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>",
@@ -517,7 +517,7 @@ export default class Session extends Mixins(MainMixins) {
     }
 
     handleOpenFeedback(previewHTML: string) {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "preview",
             previewTitle: "Feedback",
             previewHTML,
@@ -534,21 +534,21 @@ export default class Session extends Mixins(MainMixins) {
                 this.updateCheckedState(0);
                 break;
             case "Progress":
-                utilsStore.openModal({
+                utilsModule.openModal({
                     name: "progress",
                 });
                 break;
             case "Duplicate":
                 this.duplicate();
-                utilsStore.deselectAll();
+                utilsModule.deselectAll();
                 break;
             case "Move":
-                utilsStore.openModal({
+                utilsModule.openModal({
                     name: "move",
                 });
                 break;
             case "Shift":
-                utilsStore.openModal({
+                utilsModule.openModal({
                     name: "shift",
                 });
                 break;
@@ -559,7 +559,7 @@ export default class Session extends Mixins(MainMixins) {
                 this.deleteSessions();
                 break;
             case "Deselect":
-                utilsStore.deselectAll();
+                utilsModule.deselectAll();
                 break;
         }
     }
@@ -599,7 +599,7 @@ export default class Session extends Mixins(MainMixins) {
                 this.isEditingSession = false;
                 this.editSession = null;
                 this.updateSingleSession(id);
-                utilsStore.responsePopUpRef?.open({
+                utilsModule.responsePopUpRef?.open({
                     title: "Session updated",
                     text: "Your changes have been saved",
                 });
@@ -623,7 +623,7 @@ export default class Session extends Mixins(MainMixins) {
         const toDuplicate = this.plan?.sessions?.filter((s) =>
             this.selectedIds.includes(s.id)
         );
-        utilsStore.responsePopUpRef?.open({
+        utilsModule.responsePopUpRef?.open({
             title: `${
                 this.selectedIds.length > 1 ? "Sessions" : "Session"
             } duplicated`,
@@ -655,14 +655,14 @@ export default class Session extends Mixins(MainMixins) {
         NEW_WINDOW?.stop();
         NEW_WINDOW?.print();
         this.$ga.event("Plan", "print");
-        utilsStore.deselectAll();
+        utilsModule.deselectAll();
     }
 
     /** Toggles the complete/incomplete state of the selected sessions. */
     async updateCheckedState(checked: 1 | 0) {
         appModule.setDontLeave(true);
         if (
-            await utilsStore.confirmPopUpRef?.open({
+            await utilsModule.confirmPopUpRef?.open({
                 title: `Are you sure that you want to ${
                     checked === 1 ? "complete" : "incomplete"
                 } all the selected sessions?`,
@@ -670,14 +670,14 @@ export default class Session extends Mixins(MainMixins) {
             })
         ) {
             planModule.toggleSessionChecked(checked);
-            utilsStore.responsePopUpRef?.open({
+            utilsModule.responsePopUpRef?.open({
                 title:
                     this.selectedIds.length > 1
                         ? "Sessions updated"
                         : "Session updated",
                 text: "Your changes have been saved",
             });
-            utilsStore.deselectAll();
+            utilsModule.deselectAll();
         }
         appModule.stopLoaders();
     }
@@ -686,15 +686,15 @@ export default class Session extends Mixins(MainMixins) {
     async deleteSessions() {
         appModule.setDontLeave(true);
         if (
-            await utilsStore.confirmPopUpRef?.open({
+            await utilsModule.confirmPopUpRef?.open({
                 title: "Are you sure that you want to delete all the selected sessions?",
                 text: "We will remove these sessions from our database and it won't be recoverable.",
             })
         ) {
             await planModule.deleteSessions();
-            utilsStore.deselectAll();
+            utilsModule.deselectAll();
             this.$ga.event("Session", "delete");
-            utilsStore.responsePopUpRef?.open({
+            utilsModule.responsePopUpRef?.open({
                 title:
                     this.selectedIds.length > 1
                         ? "Sessions deleted"
@@ -707,7 +707,7 @@ export default class Session extends Mixins(MainMixins) {
 
     /** Selects all the sessions in the plan or week. */
     selectAll(mode: string) {
-        utilsStore.selectAll(
+        utilsModule.selectAll(
             this.plan?.sessions
                 ?.filter((session) =>
                     mode === "all" ? true : session.week_id === this.currentWeek
@@ -774,7 +774,7 @@ export default class Session extends Mixins(MainMixins) {
             this.$ga.event("Plan", "update");
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 
@@ -786,7 +786,7 @@ export default class Session extends Mixins(MainMixins) {
             this.$ga.event("Plan", "update");
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 
@@ -798,7 +798,7 @@ export default class Session extends Mixins(MainMixins) {
             this.$ga.event("Session", "update");
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 
@@ -814,13 +814,13 @@ export default class Session extends Mixins(MainMixins) {
                 notes: "",
             });
             this.$ga.event("Session", "new");
-            utilsStore.responsePopUpRef?.open({
+            utilsModule.responsePopUpRef?.open({
                 title: "New session added",
                 text: "Get programming!",
             });
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 }

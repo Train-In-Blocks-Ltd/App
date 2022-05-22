@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import utilsStore from "../../../../../../../store/modules/utils";
+import utilsModule from "../../../../../../../store/modules/utils.module";
 import appModule from "../../../../../../../store/modules/app.module";
 import planModule from "../../../../../../../store/modules/plan.module";
 
@@ -32,7 +32,7 @@ export default class MoveModal extends Vue {
     moveTarget: number = 1;
 
     get selectedIds() {
-        return utilsStore.selectedIds;
+        return utilsModule.selectedIds;
     }
     get plan() {
         return planModule.plan;
@@ -42,8 +42,8 @@ export default class MoveModal extends Vue {
     async moveToWeek() {
         appModule.setDontLeave(true);
         await planModule.moveSessions(this.moveTarget);
-        utilsStore.closeModal();
-        utilsStore.responsePopUpRef?.open({
+        utilsModule.closeModal();
+        utilsModule.responsePopUpRef?.open({
             title:
                 this.selectedIds.length > 1
                     ? "Moved sessions"
@@ -51,7 +51,7 @@ export default class MoveModal extends Vue {
             text: "Your changes have been saved",
         });
         this.moveTarget = 1;
-        utilsStore.deselectAll();
+        utilsModule.deselectAll();
         this.$ga.event("Session", "move");
         appModule.stopLoaders();
     }

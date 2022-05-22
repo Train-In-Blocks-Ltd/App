@@ -62,14 +62,14 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import utilsStore from "../../store/modules/utils";
+import utilsModule from "../../store/modules/utils.module";
 
 @Component
 export default class Checkbox extends Vue {
     @Prop(Number) readonly itemId!: number;
 
     get selectedIds() {
-        return utilsStore.selectedIds;
+        return utilsModule.selectedIds;
     }
 
     @Watch("selectedIds")
@@ -82,7 +82,7 @@ export default class Checkbox extends Vue {
     }
 
     handleSelect() {
-        utilsStore.toggleCheckbox(this.itemId);
+        utilsModule.toggleCheckbox(this.itemId);
     }
 }
 </script>

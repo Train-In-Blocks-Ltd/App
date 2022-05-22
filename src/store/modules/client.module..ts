@@ -7,7 +7,7 @@ import {
 } from "vuex-module-decorators";
 import { Client, Plan, Session } from "./types";
 import clientsModule from "./clients.module";
-import utilsStore from "./utils";
+import utilsModule from "./utils.module";
 import { baseAPI } from "../../api";
 
 @Module({
@@ -113,7 +113,7 @@ class ClientModule extends VuexModule {
                 clientDetails,
             };
         } catch (e) {
-            return utilsStore.resolveError(e as string);
+            return utilsModule.resolveError(e as string);
         }
     }
 
@@ -129,7 +129,7 @@ class ClientModule extends VuexModule {
 
             return {};
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 

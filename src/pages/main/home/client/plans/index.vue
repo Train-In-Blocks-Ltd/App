@@ -64,7 +64,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
 import appModule from "../../../../../store/modules/app.module";
 import clientModule from "../../../../../store/modules/client.module.";
-import utilsStore from "../../../../../store/modules/utils";
+import utilsModule from "../../../../../store/modules/utils.module";
 
 const Bookings = () =>
     import(
@@ -106,7 +106,7 @@ export default class Plan extends Vue {
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await utilsStore.confirmPopUpRef?.open({
+                ? await utilsModule.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
@@ -118,7 +118,7 @@ export default class Plan extends Vue {
     }
 
     handleOpenNewPlan() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "new-plan",
             size: "xs",
         });
@@ -140,7 +140,7 @@ export default class Plan extends Vue {
                     await clientModule.updateClient();
                     appModule.stopLoaders();
                 } catch (e) {
-                    utilsStore.resolveError(e as string);
+                    utilsModule.resolveError(e as string);
                 }
                 break;
             case "cancel":

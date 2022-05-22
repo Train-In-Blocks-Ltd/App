@@ -72,7 +72,7 @@ import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../store/modules/app.module";
 import accountModule from "../../../store/modules/account.module";
 import clientUserModule from "../../../store/modules/clientUser.module";
-import utilsStore from "../../../store/modules/utils";
+import utilsModule from "../../../store/modules/utils.module";
 import { baseAPI } from "../../../api";
 
 const Booking = () =>
@@ -126,7 +126,7 @@ export default class ClientUserProfileModal extends Vue {
     handleOpenUpload() {
         try {
             appModule.setDontLeave(true);
-            utilsStore.uploadPopUpRef?.open({
+            utilsModule.uploadPopUpRef?.open({
                 title: "Upload image",
                 text: "Please make sure that it's less than 1MB.",
                 onSuccess: async (response) => {
@@ -141,7 +141,7 @@ export default class ClientUserProfileModal extends Vue {
             });
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 
@@ -153,7 +153,7 @@ export default class ClientUserProfileModal extends Vue {
             clientUserModule.updateClientUser();
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 }

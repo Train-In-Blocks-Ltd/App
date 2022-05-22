@@ -60,7 +60,7 @@
 <script lang="ts">
 import appModule from "../../../store/modules/app.module";
 import { Component, Vue, Watch } from "vue-property-decorator";
-import utilsStore from "../../../store/modules/utils";
+import utilsModule from "../../../store/modules/utils.module";
 
 const CardWrapper = () =>
     import(
@@ -167,19 +167,19 @@ const PolicyModal = () =>
 })
 export default class Modal extends Vue {
     get modalSize() {
-        return utilsStore.modalSize;
+        return utilsModule.modalSize;
     }
     get modalOpen() {
-        return utilsStore.modalOpen;
+        return utilsModule.modalOpen;
     }
     get modalContent() {
-        return utilsStore.modalContent;
+        return utilsModule.modalContent;
     }
     get modalPersist() {
-        return utilsStore.modalPersist;
+        return utilsModule.modalPersist;
     }
     get previewTitle() {
-        return utilsStore.previewTitle;
+        return utilsModule.previewTitle;
     }
     get versionName() {
         return appModule.versionName;
@@ -195,7 +195,7 @@ export default class Modal extends Vue {
     }
 
     _close() {
-        if (!this.modalPersist) utilsStore.closeModal();
+        if (!this.modalPersist) utilsModule.closeModal();
     }
 
     title() {

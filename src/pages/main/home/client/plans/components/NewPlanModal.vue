@@ -28,7 +28,7 @@ import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../../../store/modules/app.module";
 import clientModule from "../../../../../../store/modules/client.module.";
 import clientsModule from "../../../../../../store/modules/clients.module";
-import utilsStore from "../../../../../../store/modules/utils";
+import utilsModule from "../../../../../../store/modules/utils.module";
 
 @Component
 export default class NewPlanModal extends Vue {
@@ -55,16 +55,16 @@ export default class NewPlanModal extends Vue {
                 duration: parseInt(this.duration),
             });
             this.$ga.event("Plan", "new");
-            utilsStore.responsePopUpRef?.open({
+            utilsModule.responsePopUpRef?.open({
                 title: `${this.name} created`,
                 text: "You're all set, get programming",
             });
             this.name = "";
             this.duration = "";
-            utilsStore.closeModal();
+            utilsModule.closeModal();
             appModule.stopLoaders();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 }

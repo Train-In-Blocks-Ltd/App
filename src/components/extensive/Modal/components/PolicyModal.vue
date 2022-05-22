@@ -54,7 +54,7 @@
 <script lang="ts">
 import appModule from "../../../../store/modules/app.module";
 import accountModule from "../../../../store/modules/account.module";
-import utilsStore from "../../../../store/modules/utils";
+import utilsModule from "../../../../store/modules/utils.module";
 import { Component, Mixins } from "vue-property-decorator";
 import MainMixins from "../../../../main.mixins";
 
@@ -87,9 +87,9 @@ export default class PolicyModal extends Mixins(MainMixins) {
             appModule.setDontLeave(true);
             await accountModule.updateClaims();
             appModule.stopLoaders();
-            utilsStore.closeModal();
+            utilsModule.closeModal();
         } catch (e) {
-            utilsStore.resolveError(e as string);
+            utilsModule.resolveError(e as string);
         }
     }
 }

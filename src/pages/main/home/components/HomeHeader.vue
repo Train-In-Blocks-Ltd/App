@@ -48,17 +48,17 @@
 
 <script lang="ts">
 import appModule from "../../../../store/modules/app.module";
-import utilsStore from "../../../../store/modules/utils";
+import utilsModule from "../../../../store/modules/utils.module";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
     computed: {
         search: {
             get() {
-                return utilsStore.search;
+                return utilsModule.search;
             },
             set(value) {
-                utilsStore.setSearch(value);
+                utilsModule.setSearch(value);
             },
         },
     },
@@ -72,25 +72,25 @@ export default class HomeHeader extends Vue {
     }
 
     handleSearch(value: string) {
-        utilsStore.setSearch(value);
+        utilsModule.setSearch(value);
     }
 
     handleOpenNewClient() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "new-client",
             size: "xs",
         });
     }
 
     handleOpenWhatsNew() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "whats-new",
             size: "lg",
         });
     }
 
     handleOpenInstall() {
-        utilsStore.openModal({
+        utilsModule.openModal({
             name: "install-pwa",
         });
     }
