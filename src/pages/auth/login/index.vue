@@ -46,8 +46,8 @@
         v-if="!authenticated"
         class="p-8 md:p-0 w-full max-w-xl pb-16 md:pr-24 m-auto"
     >
-        <splash v-if="!splashed" />
-        <icon svg="full-logo" :icon-size="150" />
+        <splash v-if="splash" />
+        <icon svg="full-logo" :size="150" />
         <a
             class="demo-details"
             href="javascript:void(0)"
@@ -91,20 +91,23 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appModule from "../../../store/app.module";
+import utilsModule from "../../../store/utils.module";
 
 const Splash = () =>
     import(
-        /* webpackChunkName: "components.splash", webpackPreload: true  */ "@/components/generic/Splash"
+        /* webpackChunkName: "components.splash", webpackPreload: true  */ "../../../components/generic/Splash.vue"
     );
+
 const ResetPassword = () =>
     import(
-        /* webpackChunkName: "components.resetPassword", webpackPreload: true  */ "./components/ResetPassword"
+        /* webpackChunkName: "components.resetPassword", webpackPreload: true  */ "./components/ResetPassword.vue"
     );
 const VersionLabel = () =>
     import(
-        /* webpackChunkName: "components.versionLabel", webpackPreload: true  */ "@/components/generic/VersionLabel"
+        /* webpackChunkName: "components.versionLabel", webpackPreload: true  */ "../../../components/generic/VersionLabel.vue"
     );
 
 const CUSTOM_ENV =
@@ -112,31 +115,45 @@ const CUSTOM_ENV =
         ? require("../../../../config/prod.env")
         : require("../../../../config/dev.env");
 
-export default {
+@Component({
+    metaInfo() {
+        return {
+            title: "Login",
+        };
+    },
     components: {
         Splash,
         ResetPassword,
         VersionLabel,
     },
-    data() {
-        return {
-            showDemo: false,
-            splashed: false,
-            open: false,
-            id: null,
-        };
-    },
-    computed: mapState(["authenticated", "versionName", "versionBuild"]),
+})
+export default class Login extends Vue {
+    showDemo: boolean = false;
+    open: boolean = false;
+    splash: boolean = false;
+    widget: any = null;
+
+    get authenticated() {
+        return appModule.authenticated;
+    }
+    get versionName() {
+        return appModule.versionName;
+    }
+    get versionBuild() {
+        return appModule.versionBuild;
+    }
+
     async mounted() {
-        const scopes = ["openid", "profile", "email"];
-        let OktaSignIn;
+        let OktaSignIn: any;
         await import(
+            // @ts-expect-error
             /* webpackChunkName: "okta.signin", webpackPreload: true  */ "@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js"
         ).then((module) => {
             OktaSignIn = module.default;
         });
-        this.splashed = true;
         this.$nextTick(function () {
+            const self = this;
+            const scopes = ["openid", "profile", "email"];
             this.widget = new OktaSignIn({
                 baseUrl: CUSTOM_ENV.OKTA.CLIENT_ID,
                 issuer: CUSTOM_ENV.OKTA.ISSUER + "/oauth2/default",
@@ -158,7 +175,7 @@ export default {
                         "primaryauth.password.tooltip": "Enter your password",
                         "error.username.required": "Please enter your email",
                         "errors.E0000004":
-                            "That didn't work. Was your password correct?",
+                            "Something went wrong, please re-enter your password",
                     },
                 },
                 authParams: {
@@ -172,18 +189,17 @@ export default {
                     },
                 },
             });
-            const self = this;
             this.widget
                 .showSignInToGetTokens({
                     el: "#okta-signin-container",
                     scopes,
                 })
-                .then(async (tokens) => {
-                    self.splashed = false;
+                .then(async (tokens: any) => {
+                    self.splash = true;
                     await this.$auth.handleLoginRedirect(tokens);
                 })
-                .catch((err) => {
-                    throw err;
+                .catch((e: any) => {
+                    utilsModule.resolveError(e as string);
                 });
         });
         if (await this.$auth.isAuthenticated()) {
@@ -198,13 +214,11 @@ export default {
                     name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
             }
         }
-    },
+    }
+
     async beforeDestroy() {
-        await this.$parent.isAuthenticated();
-        await this.$parent.setup();
-        if (this.$ga && !this.authenticated) {
-            this.$ga.event("Auth", "login");
-        }
-    },
-};
+        appModule.setAuthenticated(await this.$auth.isAuthenticated());
+        if (this.$ga && !this.authenticated) this.$ga.event("Auth", "login");
+    }
+}
 </script>

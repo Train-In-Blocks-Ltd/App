@@ -1,16 +1,23 @@
 <template>
     <div class="flex items-center">
-        <icon :svg="versionName.toLowerCase()" :icon-size="20" />
+        <icon :svg="versionName.toLowerCase()" :size="20" />
         <txt type="tiny" class="ml-2" bold>
             {{ versionName }} {{ versionBuild }}
         </txt>
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appModule from "../../store/app.module";
+import { Component, Vue } from "vue-property-decorator";
 
-export default {
-    computed: mapState(["versionName", "versionBuild"]),
-};
+@Component
+export default class VersionLabel extends Vue {
+    get versionName() {
+        return appModule.versionName;
+    }
+    get versionBuild() {
+        return appModule.versionBuild;
+    }
+}
 </script>

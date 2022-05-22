@@ -1,7 +1,5 @@
 <template>
-    <div class="bg-white dark:bg-gray-800 z-10 sticky top-0 pt-4">
-        <upload-pop-up />
-        <txt-input-pop-up />
+    <div v-if="editor" class="bg-white dark:bg-gray-800 z-10 sticky top-0 pt-4">
         <div
             class="flex flex-wrap px-4 pt-4 border-2 rounded-t-lg transition-all"
             :class="toolbarClass"
@@ -10,7 +8,7 @@
             <icon-button
                 svg="bold"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{ 'opacity-60': editor.isActive('bold') }"
                 :on-click="() => editor.chain().focus().toggleBold().run()"
                 aria-label="Bold"
@@ -21,7 +19,7 @@
             <icon-button
                 svg="italic"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{ 'opacity-60': editor.isActive('italic') }"
                 :on-click="() => editor.chain().focus().toggleItalic().run()"
                 aria-label="Italic"
@@ -32,7 +30,7 @@
             <icon-button
                 svg="underline"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{ 'opacity-60': editor.isActive('underline') }"
                 :on-click="() => editor.chain().focus().toggleUnderline().run()"
                 aria-label="Underline"
@@ -43,7 +41,7 @@
             <icon-button
                 svg="ol"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{
                     'opacity-60': editor.isActive('ordered_list'),
                 }"
@@ -58,7 +56,7 @@
             <icon-button
                 svg="ul"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{
                     'opacity-60': editor.isActive('bullet_list'),
                 }"
@@ -73,7 +71,7 @@
             <icon-button
                 svg="check-square"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{
                     'opacity-60': editor.isActive('taskList'),
                 }"
@@ -86,7 +84,7 @@
             <icon-button
                 svg="horizontal-rule"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{
                     'opacity-60': editor.isActive('horizontalRule'),
                 }"
@@ -101,23 +99,11 @@
             <icon-button
                 svg="link"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :class="{
                     'opacity-60': editor.isActive('link'),
                 }"
-                :on-click="
-                    () => {
-                        if (editor.isActive('link'))
-                            return editor.chain().focus().unsetLink().run();
-
-                        $store.dispatch('openTxtInputPopUp', {
-                            title: 'Enter URL link',
-                            text: 'Make sure to include the https://',
-                            label: 'Link',
-                            placeholder: 'Link',
-                        });
-                    }
-                "
+                :on-click="handleOpenLinkBuilder"
                 aria-label="Link"
                 title="Link"
             />
@@ -126,15 +112,8 @@
             <icon-button
                 svg="image"
                 class="mr-3 mb-4"
-                :icon-size="22"
-                :on-click="
-                    () => {
-                        $store.dispatch('openUploadPopUp', {
-                            title: 'Upload image',
-                            text: 'Please make sure that it\'s less than 1MB.',
-                        });
-                    }
-                "
+                :size="22"
+                :on-click="handleOpenUpload"
                 aria-label="Image"
                 title="Image"
             />
@@ -144,18 +123,8 @@
                 v-if="templates"
                 svg="file-text"
                 class="mr-3 mb-4"
-                :icon-size="22"
-                :on-click="
-                    () => {
-                        $store.commit('SET_DATA', {
-                            attr: 'editor',
-                            data: editor,
-                        });
-                        $store.dispatch('openModal', {
-                            name: 'templates',
-                        });
-                    }
-                "
+                :size="22"
+                :on-click="handleOpenTemplates"
                 aria-label="Templates"
                 title="Templates"
             />
@@ -164,7 +133,7 @@
             <icon-button
                 svg="rotate-ccw"
                 class="mr-3 mb-4"
-                :icon-size="22"
+                :size="22"
                 :on-click="() => editor.chain().focus().undo().run()"
                 aria-label="Undo"
                 title="Undo"
@@ -174,7 +143,7 @@
             <icon-button
                 svg="rotate-cw"
                 class="mb-4"
-                :icon-size="22"
+                :size="22"
                 :on-click="() => editor.chain().focus().redo().run()"
                 aria-label="Redo"
                 title="redo"
@@ -183,103 +152,68 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
-import Compressor from "compressorjs";
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import templatesModule from "../../../../store/templates.module";
+import utilsModule from "../../../../store/utils.module";
+import { ChainedCommands } from "@tiptap/core";
 
-const UploadPopUp = () =>
-    import(
-        /* webpackChunkName: "components.uploadPopUp", webpackPrefetch: true  */ "@/components/generic/UploadPopUp"
-    );
-const TxtInputPopUp = () =>
-    import(
-        /* webpackChunkName: "components.txtInputPopUp", webpackPrefetch: true  */ "@/components/generic/TxtInputPopUp"
-    );
+@Component
+export default class ToolBar extends Vue {
+    @Prop(String) readonly toolbarClass!: string;
 
-export default {
-    components: {
-        UploadPopUp,
-        TxtInputPopUp,
-    },
-    props: {
-        toolbarClass: String,
-    },
-    computed: mapState(["editor", "templates", "cloudinaryImages", "newImgs"]),
-    methods: {
-        /**
-         * Sets the link of the selected text.
-         */
-        handleReturnInput(link) {
-            this.editor.chain().focus().setLink({ href: link }).run();
-        },
+    get editor() {
+        return utilsModule.editor;
+    }
+    get templates() {
+        return templatesModule.templates;
+    }
+    get newImgs() {
+        return utilsModule.newImgs;
+    }
 
-        /**
-         * Adds an image.
-         */
-        handleImageSelect() {
-            const FILE = document.getElementById("img-uploader").files[0];
-            const READER = new FileReader();
-            READER.addEventListener(
-                "load",
-                () => {
-                    this.$axios
-                        .post("/.netlify/functions/upload-image", {
-                            file: READER.result.toString(),
-                        })
-                        .then((response) => {
-                            this.editor
-                                .chain()
-                                .focus()
-                                .setImage({
-                                    src: response.data.url,
-                                    loading: "lazy",
-                                })
-                                .run();
-                            this.$store.commit("SET_DATA", {
-                                attr: "cloudinaryImages",
-                                data: {
-                                    startingWith: [
-                                        ...this.cloudinaryImages.startingWith,
-                                        response.data.url,
-                                    ],
-                                    endingWith: [
-                                        ...this.cloudinaryImages.endingWith,
-                                        response.data.url,
-                                    ],
-                                },
-                            });
-                            this.$store.commit("SET_DATA", {
-                                attr: "newImgs",
-                                data: [...this.newImgs, response.data.url],
-                            });
-                        });
-                },
-                false
-            );
+    /** Opens templates selector. */
+    handleOpenTemplates() {
+        utilsModule.openModal({
+            name: "templates",
+        });
+    }
 
-            if (FILE) {
-                if (FILE.size < 1100000) {
-                    // eslint-disable-next-line
-                    new Compressor(FILE, {
-                        quality: 0.6,
-                        success(result) {
-                            READER.readAsDataURL(result);
-                        },
-                        error(err) {
-                            console.error(err.message);
-                        },
-                    });
-                } else {
-                    this.$store.dispatch("openResponsePopUp", {
-                        title: "File size is too big",
-                        description: "Please compress it to 1MB or lower",
-                        persist: true,
-                        backdrop: true,
-                    });
-                    document.getElementById("img-uploader").value = "";
-                }
-            }
-        },
-    },
-};
+    /** Opens link builder. */
+    handleOpenLinkBuilder() {
+        if (this.editor?.isActive("link"))
+            return this.editor?.chain().focus().unsetLink().run();
+
+        utilsModule.txtInputPopUpRef?.open({
+            title: "Enter URL link",
+            text: "Make sure to include the https://",
+            label: "Link",
+            placeholder: "Link",
+            onSuccess: (link: string) => {
+                this.editor?.chain().focus().setLink({ href: link }).run();
+            },
+        });
+    }
+
+    /** Opens image picker. */
+    handleOpenUpload() {
+        utilsModule.uploadPopUpRef?.open({
+            title: "Upload image",
+            text: "Please make sure that it's less than 1MB.",
+            onSuccess: (response) => {
+                (
+                    this.editor?.chain().focus() as ChainedCommands & {
+                        setImage: any;
+                    }
+                )
+                    .setImage({
+                        src: response.data.url,
+                        loading: "lazy",
+                    })
+                    .run();
+                utilsModule.setNewImgs([...this.newImgs, response.data.url]);
+            },
+        });
+    }
+}
 </script>

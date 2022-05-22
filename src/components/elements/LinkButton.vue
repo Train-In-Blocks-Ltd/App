@@ -11,14 +11,12 @@
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        link: {
-            type: String,
-            default: "",
-        },
-        newTab: Boolean,
-    },
-};
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+
+@Component
+export default class LinkButton extends Vue {
+    @Prop(String) readonly link!: string;
+    @Prop(Boolean) readonly newTab!: boolean;
+}
 </script>

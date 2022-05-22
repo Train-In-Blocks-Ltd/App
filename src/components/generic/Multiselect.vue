@@ -1,12 +1,12 @@
 <template>
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
         <div
-            v-if="selected.length !== 0"
+            v-if="selectedIds.length !== 0"
             class="fixed top-0 left-0 z-50 bg-white dark:bg-gray-800 shadow-lg w-full p-8 md:p-12"
         >
             <txt type="large-body" class="text-center mb-8" bold
-                >Selected {{ selected.length }}
-                {{ selected.length === 1 ? type : `${type}s` }} to ...
+                >Selected {{ selectedIds.length }}
+                {{ selectedIds.length === 1 ? type : `${type}s` }} to ...
             </txt>
             <div
                 :class="
@@ -39,7 +39,7 @@
                     <icon
                         v-if="option.svg"
                         :svg="option.svg"
-                        :icon-size="31"
+                        :size="31"
                         :class="{ 'text-red-700': option.name === 'Delete' }"
                     />
                 </a>
@@ -48,16 +48,18 @@
     </transition>
 </template>
 
-<script>
-export default {
-    props: {
-        type: String,
-        options: Array,
-    },
-    computed: {
-        selected() {
-            return this.$store.state.selectedIds;
-        },
-    },
-};
+<script lang="ts">
+import { MultiselectOption } from "../../common/types";
+import { Component, Vue, Prop } from "vue-property-decorator";
+import utilsModule from "../../store/utils.module";
+
+@Component
+export default class Multiselect extends Vue {
+    @Prop(String) readonly type!: string;
+    @Prop(Array) readonly options!: MultiselectOption[];
+
+    get selectedIds() {
+        return utilsModule.selectedIds;
+    }
+}
 </script>

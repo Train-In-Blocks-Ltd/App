@@ -1,102 +1,71 @@
 <template>
-    <form
-        name="add_plan"
-        class="grid gap-4 mt-8"
-        @submit.prevent="
-            () => {
-                createPlan();
-                $parent.isNewPlanOpen = false;
-            }
-        "
-    >
+    <form name="add_plan" class="grid gap-4 mt-8" @submit.prevent="createPlan">
         <txt-input
             ref="name"
-            :value="newPlan.name"
+            :value="name"
             type="text"
             placeholder="Name*"
             aria-label="Name"
-            @output="
-                (data) => {
-                    newPlan.name = data;
-                    checkForm();
-                }
-            "
+            @output="(data) => (name = data)"
             focus-first
             required
         />
         <txt-input
-            :value="newPlan.duration"
+            :value="duration"
             type="number"
             min="1"
             placeholder="Duration*"
             aria-label="Duration"
-            @output="
-                (data) => {
-                    newPlan.duration = data;
-                    checkForm();
-                }
-            "
+            @output="(data) => (duration = data)"
             required
         />
-        <default-button
-            :is-disabled="disableCreatePlanButton"
-            type="submit"
-            aria-label="Save"
-        >
-            Save
-        </default-button>
+        <default-button type="submit" aria-label="Save"> Save </default-button>
     </form>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appModule from "../../../../../../store/app.module";
+import clientModule from "../../../../../../store/client.module.";
+import clientsModule from "../../../../../../store/clients.module";
+import utilsModule from "../../../../../../store/utils.module";
 
-export default {
-    data() {
-        return {
-            newPlan: {
-                name: "",
-                duration: "",
-            },
-            disableCreatePlanButton: true,
-        };
-    },
-    computed: mapState(["dontLeave", "clientDetails", "clients"]),
-    methods: {
-        checkForm() {
-            this.disableCreatePlanButton = !(
-                this.newPlan.name && this.newPlan.duration
-            );
-        },
+@Component
+export default class NewPlanModal extends Vue {
+    name: string = "";
+    duration: string = "";
 
-        /**
-         * Creates a new plan.
-         */
-        async createPlan() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    loading: true,
-                    dontLeave: true,
-                });
-                await this.$store.dispatch("createPlan", {
-                    clientId: this.clientDetails.client_id,
-                    name: this.newPlan.name,
-                    duration: this.newPlan.duration,
-                });
-                this.$ga.event("Plan", "new");
-                this.$store.dispatch("openResponsePopUp", {
-                    title: `${this.newPlan.name} created`,
-                    description: "You're all set, get programming",
-                });
-                this.newPlan = {
-                    name: "",
-                    duration: "",
-                };
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-    },
-};
+    get dontLeave() {
+        return appModule.dontLeave;
+    }
+    get clientDetails() {
+        return clientModule.clientDetails;
+    }
+    get clients() {
+        return clientsModule.clients;
+    }
+
+    /** Creates a new plan. */
+    async createPlan() {
+        try {
+            appModule.setDontLeave(true);
+            await clientModule.createPlan({
+                client_id: parseInt(this.$route.params.client_id),
+                name: this.name,
+                duration: parseInt(this.duration),
+            });
+            this.$ga.event("Plan", "new");
+            utilsModule.responsePopUpRef?.open({
+                title: `${this.name} created`,
+                text: "You're all set, get programming",
+            });
+            this.name = "";
+            this.duration = "";
+            utilsModule.closeModal();
+            appModule.stopLoaders();
+        } catch (e) {
+            utilsModule.resolveError(e as string);
+        }
+    }
+}
 </script>

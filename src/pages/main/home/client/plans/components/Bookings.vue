@@ -4,13 +4,8 @@
             <txt type="title">Bookings</txt>
             <icon-button
                 svg="list"
-                :on-click="
-                    () =>
-                        $store.dispatch('openModal', {
-                            name: 'bookings',
-                        })
-                "
-                :icon-size="28"
+                :on-click="handleOpenAllBookings"
+                :size="28"
                 aria-label="See all bookings"
                 title="See all bookings"
             />
@@ -50,9 +45,9 @@
 
         <!-- Booking grid -->
         <div v-else class="grid sm:grid-cols-2 sm:gap-8">
-            <div v-if="upcoming().length > 0" class="flex flex-col">
+            <div v-if="bookings.length > 0" class="flex flex-col">
                 <booking
-                    v-for="(booking, bookingIndex) in upcoming().slice(0, 3)"
+                    v-for="(booking, bookingIndex) in bookings.slice(0, 3)"
                     :key="`bookings_${bookingIndex}`"
                     :booking="booking"
                     class="mb-4"
@@ -67,38 +62,49 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appModule from "../../../../../../store/app.module";
+import bookingsModule from "../../../../../../store/bookings.module";
+import utilsModule from "../../../../../../store/utils.module";
+import { Booking } from "../../../../../../common/types";
 
 const Booking = () =>
     import(
-        /* webpackChunkName: "components.booking", webpackPreload: true  */ "@/components/generic/Booking"
+        /* webpackChunkName: "components.booking", webpackPreload: true  */ "../../../../../../components/generic/Booking.vue"
     );
 const BookingForm = () =>
     import(
-        /* webpackChunkName: "components.bookingForm", webpackPreload: true  */ "@/components/generic/BookingForm"
+        /* webpackChunkName: "components.bookingForm", webpackPreload: true  */ "./../../../../../../components/generic/BookingForm.vue"
     );
 
-export default {
+@Component({
     components: {
         Booking,
         BookingForm,
     },
-    computed: mapState(["bookings", "loading"]),
-    methods: {
-        upcoming() {
-            return (
-                this.bookings
-                    .filter(
-                        (booking) => new Date(booking.datetime) > new Date()
-                    )
-                    .filter(
-                        (booking) =>
-                            booking.client_id ===
-                            parseInt(this.$route.params.client_id)
-                    ) ?? []
-            );
-        },
-    },
-};
+})
+export default class Bookings extends Vue {
+    get bookings() {
+        return (
+            bookingsModule.bookings
+                .filter((booking) => new Date(booking.datetime) > new Date())
+                .filter(
+                    (booking) =>
+                        booking.client_id ===
+                        parseInt(this.$route.params.client_id)
+                ) ?? []
+        );
+    }
+    get loading() {
+        return appModule.loading;
+    }
+
+    /** Opens all bookings modal. */
+    handleOpenAllBookings() {
+        utilsModule.openModal({
+            name: "bookings",
+        });
+    }
+}
 </script>

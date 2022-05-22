@@ -4,41 +4,31 @@
             class="mr-4"
             svg="arrow-left"
             :on-click="() => $router.back()"
-            :icon-size="32"
+            :size="32"
             aria-label="Back"
             title="Back"
         />
         <icon-button
             class="mr-4"
             svg="copy"
-            :on-click="
-                () =>
-                    $store.dispatch('openModal', {
-                        name: 'duplicate-plan',
-                    })
-            "
-            :icon-size="32"
+            :on-click="handleOpenDuplicate"
+            :size="32"
             aria-label="Duplicate plan"
             title="Duplicate plan"
         />
         <icon-button
             class="mr-4"
             svg="pie-chart"
-            :on-click="
-                () =>
-                    $store.dispatch('openModal', {
-                        name: 'statistics',
-                    })
-            "
-            :icon-size="32"
+            :on-click="handleOpenStatistics"
+            :size="32"
             aria-label="Statistics"
             title="Statistics"
         />
         <icon-button
             v-if="!isDemo"
             svg="trash"
-            :on-click="() => deletePlan()"
-            :icon-size="32"
+            :on-click="deletePlan"
+            :size="32"
             class="text-red-700"
             aria-label="Delete plan"
             title="Delete plan"
@@ -46,42 +36,57 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appModule from "../../../../../../../store/app.module";
+import utilsModule from "../../../../../../../store/utils.module";
+import clientModule from "../../../../../../../store/client.module.";
 
-export default {
-    computed: mapState(["isDemo"]),
-    methods: {
-        /** Deletes the plan. */
-        async deletePlan() {
-            if (
-                await this.$store.dispatch("openConfirmPopUp", {
-                    title: "Are you sure you want to delete this plan?",
-                    text: "We will remove this plan from our database and it won't be recoverable.",
-                })
-            ) {
-                try {
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: true,
-                    });
-                    await this.$store.dispatch("deletePlan", {
-                        clientId: this.$route.params.client_id,
-                        planId: this.$route.params.id,
-                    });
-                    this.$ga.event("Session", "delete");
-                    this.$store.dispatch("openResponsePopUp", {
-                        title: "Plan deleted",
-                        description: "Your changes have been saved",
-                    });
-                    this.$store.dispatch("setLoading", false);
-                    this.$router.push({
-                        path: `/client/${this.clientDetails.client_id}/`,
-                    });
-                } catch (e) {
-                    this.$store.dispatch("resolveError", e);
-                }
+@Component
+export default class PlanOptions extends Vue {
+    get isDemo() {
+        return appModule.isDemo;
+    }
+    get clientDetails() {
+        return clientModule.clientDetails;
+    }
+
+    handleOpenDuplicate() {
+        utilsModule.openModal({
+            name: "duplicate-plan",
+        });
+    }
+
+    handleOpenStatistics() {
+        utilsModule.openModal({
+            name: "statistics",
+        });
+    }
+
+    /** Deletes the plan. */
+    async deletePlan() {
+        if (
+            await utilsModule.confirmPopUpRef?.open({
+                title: "Are you sure you want to delete this plan?",
+                text: "We will remove this plan from our database and it won't be recoverable.",
+            })
+        ) {
+            try {
+                appModule.setLoading(true);
+                clientModule.deletePlan(parseInt(this.$route.params.id));
+                this.$ga.event("Session", "delete");
+                utilsModule.responsePopUpRef?.open({
+                    title: "Plan deleted",
+                    text: "Your changes have been saved",
+                });
+                appModule.stopLoaders();
+                this.$router.push({
+                    path: `/client/${this.clientDetails?.client_id}/`,
+                });
+            } catch (e) {
+                utilsModule.resolveError(e as string);
             }
-        },
-    },
-};
+        }
+    }
+}
 </script>

@@ -24,12 +24,7 @@
         >
             <div v-html="system.html" />
             <default-button
-                :on-click="
-                    () => {
-                        editor.commands.insertContent(system.html);
-                        $store.dispatch('closeModal');
-                    }
-                "
+                :on-click="() => handleInsert(system.html)"
                 :aria-label="system.name"
             >
                 {{ system.name }}
@@ -50,12 +45,7 @@
             >
                 <div v-html="item.template" />
                 <default-button
-                    :on-click="
-                        () => {
-                            editor.commands.insertContent(item.template);
-                            $store.dispatch('closeModal');
-                        }
-                    "
+                    :on-click="() => handleInsert(item.template)"
                     :aria-label="item.name"
                 >
                     {{ item.name }}
@@ -66,48 +56,57 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import templatesModule from "../../../../store/templates.module";
+import utilsModule from "../../../../store/utils.module";
 
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "../../../../components/generic/CardWrapper.vue"
     );
 
-export default {
+@Component({
     components: {
         CardWrapper,
     },
-    data() {
-        return {
-            search: "",
-            systemTemplates: [
-                {
-                    name: "Track with sets, reps, and load",
-                    html: "<div>[ EXERCISE: SETS x REPS at LOAD ]</div><div>Tip: You can break LOAD into different sets. E.g. 70/80/90kg where SETS must be 3.</div>",
-                },
-                {
-                    name: "Track with sets, reps",
-                    html: "<div>[ EXERCISE: SETS x REPS ]</div>",
-                },
-                {
-                    name: "Track with other measurements",
-                    html: "<div>[ MEASUREMENT: VALUE ]</div><div>You can use any single measurements like [ BD Fat: 16% ]. E.g. RPE, weight, body-fat, jump height, etc. </div>",
-                },
-            ],
-        };
-    },
-    computed: {
-        ...mapState(["templates", "editor"]),
-        searchEmpty() {
-            return (
-                this.templates.filter((template) =>
-                    template.name
-                        .toLowerCase()
-                        .startsWith(this.search.toLowerCase())
-                ).length === 0
-            );
+})
+export default class TemplatesModal extends Vue {
+    search: string = "";
+    systemTemplates: { name: string; html: string }[] = [
+        {
+            name: "Track with sets, reps, and load",
+            html: "<div>[ EXERCISE: SETS x REPS at LOAD ]</div><div>Tip: You can break LOAD into different sets. E.g. 70/80/90kg where SETS must be 3.</div>",
         },
-    },
-};
+        {
+            name: "Track with sets, reps",
+            html: "<div>[ EXERCISE: SETS x REPS ]</div>",
+        },
+        {
+            name: "Track with other measurements",
+            html: "<div>[ MEASUREMENT: VALUE ]</div><div>You can use any single measurements like [ BD Fat: 16% ]. E.g. RPE, weight, body-fat, jump height, etc. </div>",
+        },
+    ];
+
+    get templates() {
+        return templatesModule.templates;
+    }
+    get editor() {
+        return utilsModule.editor;
+    }
+    get searchEmpty() {
+        return (
+            this.templates.filter((template) =>
+                template.name
+                    .toLowerCase()
+                    .startsWith(this.search?.toLowerCase())
+            ).length === 0
+        );
+    }
+
+    handleInsert(html: string) {
+        this.editor?.commands.insertContent(html);
+        utilsModule.closeModal();
+    }
+}
 </script>

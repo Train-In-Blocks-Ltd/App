@@ -3,18 +3,18 @@
         <div class="relative z-40">
             <div
                 :style="{
-                    backgroundColor: weekColor[currentWeek - 1],
+                    backgroundColor,
                 }"
                 class="h-8 w-16 rounded border-2 border-gray-800: dark:border-white hover:opacity-60 transition-opacity mr-4 cursor-pointer"
                 @click="editingWeekColor = !editingWeekColor"
             />
             <div v-if="editingWeekColor" class="absolute top-8 left-0 z-10">
                 <div
-                    v-for="(paint, index) in colorPalette"
+                    v-for="(color, index) in colorPalette"
                     :key="'color_' + index"
-                    :style="{ backgroundColor: paint.color }"
+                    :style="{ backgroundColor: color }"
                     class="h-8 w-16 rounded cursor-pointer hover:opacity-60 transition-opacity mt-2"
-                    @click="handleSelect(paint.color)"
+                    @click="updateWeekColor(color)"
                 />
             </div>
         </div>
@@ -25,38 +25,45 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+import planModule from "../../store/plan.module";
+import utilsModule from "../../store/utils.module";
+
 const Backdrop = () =>
     import(
-        /* webpackChunkName: "components.backdrop", webpackPreload: true */ "@/components/generic/Backdrop"
+        /* webpackChunkName: "components.backdrop", webpackPreload: true */ "../../components/generic/Backdrop.vue"
     );
 
-export default {
-    props: {
-        plan: Object,
-        weekColor: Array,
-        currentWeek: Number,
-    },
+@Component({
     components: {
         Backdrop,
     },
-    data() {
-        return {
-            editingWeekColor: false,
-            colorPalette: [
-                { color: "#EB4034" },
-                { color: "#EB9634" },
-                { color: "#34EB6B" },
-                { color: "#346BEB" },
-                { color: "#303030" },
-            ],
-        };
-    },
-    methods: {
-        handleSelect(color) {
-            this.$emit("output", color);
-            this.editingWeekColor = false;
-        },
-    },
-};
+})
+export default class ColorPicker extends Vue {
+    @Prop(Array) readonly weekColor!: string[];
+
+    get backgroundColor() {
+        if (!this.weekColor) return "#FFFFFF";
+        return this.weekColor[planModule.currentWeek - 1];
+    }
+
+    editingWeekColor: boolean = false;
+    colorPalette: string[] = [
+        "#EB4034",
+        "#EB9634",
+        "#34EB6B",
+        "#346BEB",
+        "#303030",
+    ];
+
+    async updateWeekColor(color: string) {
+        try {
+            await planModule.updateWeekColor(color);
+        } catch (e) {
+            utilsModule.resolveError(e as string);
+        }
+        this.editingWeekColor = false;
+    }
+}
 </script>

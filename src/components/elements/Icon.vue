@@ -1,16 +1,17 @@
 <template>
     <inline-svg
-        :style="{ height: `${iconSize}px`, width: `${iconSize}px` }"
-        :src="require(`@/assets/icons/${svg}.svg`)"
+        :style="{ height: `${size}px`, width: `${size}px` }"
+        :src="require(`../../assets/icons/${svg}.svg`)"
         class="stroke-current"
     />
 </template>
 
-<script>
-export default {
-    props: {
-        svg: String,
-        iconSize: Number,
-    },
-};
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+
+@Component
+export default class Icon extends Vue {
+    @Prop(String) readonly svg!: string;
+    @Prop(Number) readonly size!: number;
+}
 </script>

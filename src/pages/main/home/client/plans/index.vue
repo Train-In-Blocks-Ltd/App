@@ -4,7 +4,7 @@
         <label-wrapper title="Client Information" class="my-16">
             <rich-editor
                 v-model="clientDetails.notes"
-                :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
+                :placeholder="'What goals does your client have? What physical measures have you taken?'"
                 @on-edit-change="resolve_client_info_editor"
             />
         </label-wrapper>
@@ -19,14 +19,8 @@
                 <txt type="title">Plans</txt>
                 <icon-button
                     svg="file-plus"
-                    :on-click="
-                        () =>
-                            $store.dispatch('openModal', {
-                                name: 'new-plan',
-                                size: 'xs',
-                            })
-                    "
-                    :icon-size="28"
+                    :on-click="handleOpenNewPlan"
+                    :size="28"
                     aria-label="New plan"
                     title="New plan"
                 />
@@ -44,7 +38,9 @@
                 </div>
             </div>
             <div
-                v-else-if="clientDetails.plans.length !== 0"
+                v-else-if="
+                    !!clientDetails.plans && clientDetails.plans.length !== 0
+                "
                 class="grid sm:grid-cols-2 gap-4"
             >
                 <plan-card
@@ -62,86 +58,101 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { EditorState } from "../../../../../common/types";
+import { Component, Vue } from "vue-property-decorator";
+import { NavigationGuardNext, Route } from "vue-router";
+import appModule from "../../../../../store/app.module";
+import clientModule from "../../../../../store/client.module.";
+import utilsModule from "../../../../../store/utils.module";
 
 const Bookings = () =>
     import(
-        /* webpackChunkName: "components.bookings", webpackPreload: true  */ "./components/Bookings"
+        /* webpackChunkName: "components.bookings", webpackPreload: true  */ "./components/Bookings.vue"
     );
 const PlanCard = () =>
     import(
-        /* webpackChunkName: "components.planCard", webpackPreload: true  */ "@/components/generic/PlanCard"
+        /* webpackChunkName: "components.planCard", webpackPreload: true  */ "../../../../../components/generic/PlanCard.vue"
     );
 const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../../../../components/generic/LabelWrapper.vue"
     );
 
-export default {
+@Component({
     components: {
         Bookings,
         PlanCard,
         LabelWrapper,
     },
-    async beforeRouteLeave(to, from, next) {
+})
+export default class Plan extends Vue {
+    tempEditorStore: string | null = "";
+    editingClientNotes: boolean = false;
+
+    get dontLeave() {
+        return appModule.dontLeave;
+    }
+    get loading() {
+        return appModule.loading;
+    }
+    get clientDetails() {
+        return clientModule.clientDetails;
+    }
+    set clientDetails(value) {
+        clientModule.setClientDetails(value);
+    }
+
+    async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await this.$store.dispatch("openConfirmPopUp", {
+                ? await utilsModule.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
                 : true
         ) {
-            this.$store.dispatch("setLoading", {
-                dontLeave: false,
-            });
+            appModule.setDontLeave(false);
             next();
         }
-    },
-    data() {
-        return {
-            tempEditorStore: null,
-            editingClientNotes: false,
-        };
-    },
-    computed: mapState(["loading", "dontLeave", "clients", "clientDetails"]),
-    methods: {
-        /**
-         * Resolves the client information editor.
-         * @param {string} state - The returned state from the editor.
-         */
-        async resolve_client_info_editor(state) {
-            switch (state) {
-                case "edit":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: true,
-                    });
-                    this.editingClientNotes = true;
-                    this.tempEditorStore = this.clientDetails.notes;
-                    break;
-                case "save":
-                    this.editingClientNotes = false;
-                    try {
-                        this.$store.dispatch("setLoading", {
-                            silentLoading: true,
-                            dontLeave: true,
-                        });
-                        await this.$store.dispatch("updateClient");
-                        this.$store.dispatch("setLoading", false);
-                    } catch (e) {
-                        this.$store.dispatch("resolveError", e);
-                    }
-                    break;
-                case "cancel":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: false,
-                    });
-                    this.editingClientNotes = false;
-                    this.clientDetails.notes = this.tempEditorStore;
-                    break;
-            }
-        },
-    },
-};
+    }
+
+    handleOpenNewPlan() {
+        utilsModule.openModal({
+            name: "new-plan",
+            size: "xs",
+        });
+    }
+
+    /** Resolves the client information editor. */
+    async resolve_client_info_editor(state: EditorState) {
+        switch (state) {
+            case "edit":
+                appModule.setDontLeave(true);
+                this.editingClientNotes = true;
+                this.tempEditorStore = this.clientDetails?.notes ?? "";
+                break;
+            case "save":
+                this.editingClientNotes = false;
+                try {
+                    appModule.setDontLeave(true);
+                    appModule.setSilentLoading(true);
+                    await clientModule.updateClient();
+                    appModule.stopLoaders();
+                } catch (e) {
+                    utilsModule.resolveError(e as string);
+                }
+                break;
+            case "cancel":
+                appModule.setDontLeave(false);
+                this.editingClientNotes = false;
+                if (!this.clientDetails) return;
+                clientModule.setClientDetails({
+                    ...this.clientDetails,
+                    notes: this.tempEditorStore ?? "",
+                });
+                break;
+        }
+    }
+}
 </script>

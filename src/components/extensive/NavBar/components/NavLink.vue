@@ -17,7 +17,7 @@
         :class="{ 'md:hidden': name === 'Refresh' }"
         class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all"
     >
-        <icon :svg="svg" :icon-size="24" />
+        <icon :svg="svg" :size="24" />
     </router-link>
     <a
         v-else-if="
@@ -32,22 +32,29 @@
         :class="{ 'md:hidden': name === 'Refresh' }"
         class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all"
     >
-        <icon :svg="svg" :icon-size="24" />
+        <icon :svg="svg" :size="24" />
     </a>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appModule from "../../../../store/app.module";
+import accountModule from "../../../../store/account.module";
+import { Component, Vue, Prop } from "vue-property-decorator";
 
-export default {
-    props: {
-        internal: Boolean,
-        name: String,
-        link: String,
-        svg: String,
-        forUser: Array,
-        onClick: Function,
-    },
-    computed: mapState(["claims", "isDemo"]),
-};
+@Component
+export default class NavLink extends Vue {
+    @Prop(Boolean) readonly internal!: boolean;
+    @Prop(String) readonly name!: string;
+    @Prop(String) readonly link!: string;
+    @Prop(String) readonly svg!: string;
+    @Prop(Array) readonly forUser!: string[];
+    @Prop(Function) readonly onClick!: () => void;
+
+    get claims() {
+        return accountModule.claims;
+    }
+    get isDemo() {
+        return appModule.isDemo;
+    }
+}
 </script>

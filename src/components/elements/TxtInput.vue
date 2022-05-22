@@ -40,44 +40,46 @@
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        name: String,
-        inputId: String,
-        inputRef: String,
-        label: String,
-        info: String,
-        error: String,
-        value: [String, Number],
-        inputClass: String,
-        labelClass: String,
-        infoClass: String,
-        errorClass: String,
-        type: String,
-        rel: String,
-        inputmode: String,
-        autocomplete: String,
-        placeholder: String,
-        ariaLabel: String,
-        pattern: String,
-        onInput: Function,
-        onBlur: Function,
-        required: Boolean,
-        focusFirst: Boolean,
-        min: [String, Number],
-        max: [String, Number],
-        minLength: [String, Number],
-        maxLength: [String, Number],
-    },
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+
+@Component
+export default class TxtInput extends Vue {
+    @Prop(String) readonly name!: string;
+    @Prop(String) readonly inputId!: string;
+    @Prop(String) readonly inputRef!: string;
+    @Prop(String) readonly label!: string;
+    @Prop(String) readonly info!: string;
+    @Prop(String) readonly error!: string;
+    @Prop(String) readonly inputClass!: string;
+    @Prop(String) readonly labelClass!: string;
+    @Prop(String) readonly infoClass!: string;
+    @Prop(String) readonly errorClass!: string;
+    @Prop(String) readonly type!: string;
+    @Prop(String) readonly rel!: string;
+    @Prop(String) readonly inputmode!: string;
+    @Prop(String) readonly autocomplete!: string;
+    @Prop(String) readonly placeholder!: string;
+    @Prop(String) readonly ariaLabel!: string;
+    @Prop(String) readonly pattern!: string;
+    @Prop(Function) readonly onInput!: () => void;
+    @Prop(Function) readonly onBlur!: () => void;
+    @Prop(Boolean) readonly required!: boolean;
+    @Prop(Boolean) readonly focusFirst!: boolean;
+    @Prop([String, Number]) readonly value!: string | number;
+    @Prop([String, Number]) readonly min!: string | number;
+    @Prop([String, Number]) readonly max!: string | number;
+    @Prop([String, Number]) readonly minLength!: string | number;
+    @Prop([String, Number]) readonly maxLength!: string | number;
+
     mounted() {
+        // @ts-expect-error
         if (this.focusFirst) this.$el.children[0].focus();
-    },
-    methods: {
-        handleInput(e) {
-            if (this.onInput) this.onInput();
-            this.$emit("output", e.target.value);
-        },
-    },
-};
+    }
+
+    handleInput(e: any) {
+        if (this.onInput) this.onInput();
+        this.$emit("output", e.target.value);
+    }
+}
 </script>

@@ -3,47 +3,30 @@
         <div class="grid mb-8">
             <home-header />
             <clients-list />
-            <txt v-if="!loading" type="large-body" grey>
-                No clients added yet, use the button on the top-right of your
-                screen.
-            </txt>
         </div>
     </wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appModule from "../../../store/app.module";
 
 const HomeHeader = () =>
     import(
-        /* webpackChunkName: "components.homeHeader", webpackPreload: true  */ "./components/HomeHeader"
+        /* webpackChunkName: "components.homeHeader", webpackPreload: true  */ "./components/HomeHeader.vue"
     );
 const ClientsList = () =>
     import(
-        /* webpackChunkName: "components.clientsList", webpackPreload: true  */ "./components/ClientsList"
+        /* webpackChunkName: "components.clientsList", webpackPreload: true  */ "./components/ClientsList.vue"
     );
 
-export default {
+@Component({
     components: {
         ClientsList,
         HomeHeader,
     },
-    data() {
-        return {
-            persistResponse: "",
-        };
-    },
-    computed: mapState(["loading", "modalOpen"]),
-    async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
-        this.$store.commit("SET_DATA", {
-            attr: "clientDetails",
-            data: null,
-        });
-        await this.$parent.setup();
-        this.$store.dispatch("setLoading", false);
-    },
-};
+})
+export default class Home extends Vue {
+    persistResponse: string = "";
+}
 </script>

@@ -2,7 +2,7 @@
     <div
         class="flex flex-col cursor-pointer border-2 border-gray-800 dark:border-white rounded w-12 select-none"
         :class="weekNumber === currentWeek ? 'opacity-100' : 'opacity-60'"
-        @click="$store.dispatch('changeWeek', weekNumber)"
+        @click="handleChangeWeek"
     >
         <div
             :style="{
@@ -24,13 +24,22 @@
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        weekNumber: Number,
-        currentWeek: Number,
-        weekColor: Array,
-        plan: Object,
-    },
-};
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import planModule from "../../../../../../../store/plan.module";
+
+@Component
+export default class Week extends Vue {
+    @Prop(Number) readonly weekNumber!: number;
+    @Prop(Array) readonly weekColor!: string[];
+
+    get currentWeek() {
+        return planModule.currentWeek;
+    }
+
+    /** Changes the week. */
+    handleChangeWeek() {
+        planModule.setCurrentWeek(this.weekNumber);
+    }
+}
 </script>

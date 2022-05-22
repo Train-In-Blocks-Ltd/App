@@ -15,48 +15,38 @@
     </form>
 </template>
 
-<script>
-export default {
-    data() {
-        return {
-            email: null,
-            error: null,
-            success: null,
-        };
-    },
-    methods: {
-        async reset() {
-            this.$store.dispatch("setLoading", {
-                dontLeave: true,
-            });
-            this.error = null;
-            this.success = null;
-            if (this.email !== "demo@traininblocks.com") {
-                try {
-                    await this.$axios.post(
-                        "/.netlify/functions/reset-password",
-                        {
-                            email: this.email,
-                        }
-                    );
-                    this.success = "An email has been sent successfully.";
-                    setTimeout(() => {
-                        this.open = false;
-                        this.email = null;
-                    }, 3000);
-                    this.$store.dispatch("setLoading", false);
-                } catch (e) {
-                    this.$store.dispatch("setLoading", false);
-                    this.error =
-                        "An error occurred. Are you sure your email is correct?";
-                    console.error(e);
-                }
-            } else {
-                this.$store.dispatch("setLoading", false);
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appModule from "../../../../store/app.module";
+import utilsModule from "../../../../store/utils.module";
+import { baseAPI } from "../../../../api";
+
+@Component
+export default class ResetPassword extends Vue {
+    email: string = "";
+    error: string = "";
+    success: string = "";
+
+    async reset() {
+        appModule.setDontLeave(true);
+        this.error = "";
+        this.success = "";
+        if (this.email !== "demo@traininblocks.com") {
+            try {
+                await baseAPI.post("/.netlify/functions/reset-password", {
+                    email: this.email,
+                });
+                this.success = "An email has been sent successfully.";
+                this.email = "";
+            } catch (e) {
+                utilsModule.resolveError(e as string);
                 this.error =
-                    "You cannot reset the password for the demo account";
+                    "An error occurred. Are you sure your email is correct?";
             }
-        },
-    },
-};
+        } else {
+            this.error = "You cannot reset the password for the demo account";
+        }
+        appModule.stopLoaders();
+    }
+}
 </script>

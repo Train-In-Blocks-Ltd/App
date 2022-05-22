@@ -57,18 +57,18 @@
                 } view`"
                 @click="showMonthlyCal = !showMonthlyCal"
             >
-                <icon svg="calendar" :icon-size="20" class="mr-2" />
+                <icon svg="calendar" :size="20" class="mr-2" />
                 Switch to {{ !showMonthlyCal ? "month" : "week" }} view
             </a>
             <week-calendar
                 v-if="!showMonthlyCal"
-                :events="sessionDates"
+                :events="events"
                 :is-trainer="false"
                 :on-event-press="goToEvent"
             />
             <month-calendar
                 v-else
-                :events="sessionDates"
+                :events="events"
                 :is-trainer="false"
                 :on-event-press="goToEvent"
             />
@@ -87,7 +87,7 @@
             <div class="flex items-center justify-between mb-8">
                 <icon-button
                     svg="arrow-left"
-                    :icon-size="32"
+                    :size="32"
                     :on-click="() => showing_current_session--"
                     :disabled="showing_current_session === 0"
                     aria-label="Previous session"
@@ -98,7 +98,7 @@
                 </txt>
                 <icon-button
                     svg="arrow-right"
-                    :icon-size="32"
+                    :size="32"
                     :on-click="() => showing_current_session++"
                     :disabled="
                         showing_current_session ===
@@ -136,14 +136,7 @@
                 <default-button
                     v-if="!feedbackId"
                     :theme="session.checked === 1 ? 'green' : 'red'"
-                    :on-click="
-                        () =>
-                            handleToggleComplete(
-                                plan.id,
-                                session.id,
-                                session.checked
-                            )
-                    "
+                    :on-click="() => handleToggleComplete(session)"
                     :aria-label="
                         session.checked === 1
                             ? 'Completed'
@@ -166,7 +159,7 @@
                         v-model="session.feedback"
                         :item-id="session.id"
                         :editing="feedbackId"
-                        :empty-placeholder="'What would you like to share with your trainer?'"
+                        :placeholder="'What would you like to share with your trainer?'"
                         :force-stop="forceStop"
                         @on-edit-change="resolveFeedbackEditor"
                     />
@@ -184,27 +177,33 @@
     </wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Mixins } from "vue-property-decorator";
+import { NavigationGuardNext, Route } from "vue-router";
+import appModule from "../../store/app.module";
+import clientUserModule from "../../store/clientUser.module";
+import utilsModule from "../../store/utils.module";
+import MainMixins from "../../main.mixins";
+import { EditorState, Session } from "../../common/types";
 
 const WeekCalendar = () =>
     import(
-        /* webpackChunkName: "components.weekCalendar", webpackPreload: true  */ "@/components/generic/WeekCalendar"
+        /* webpackChunkName: "components.weekCalendar", webpackPreload: true  */ "../../components/generic/WeekCalendar.vue"
     );
 const MonthCalendar = () =>
     import(
-        /* webpackChunkName: "components.monthCalendar", webpackPreload: true */ "@/components/generic/MonthCalendar"
+        /* webpackChunkName: "components.monthCalendar", webpackPreload: true */ "../../components/generic/MonthCalendar.vue"
     );
 const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../components/generic/LabelWrapper.vue"
     );
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "../../components/generic/CardWrapper.vue"
     );
 
-export default {
+@Component({
     metaInfo() {
         return {
             title: "Plans",
@@ -216,160 +215,114 @@ export default {
         CardWrapper,
         LabelWrapper,
     },
-    async beforeRouteLeave(to, from, next) {
+})
+export default class ClientPlans extends Mixins(MainMixins) {
+    showing_current_session: number = 0;
+    forceStop: number = 0;
+    feedbackId: number | null = null;
+    tempEditorStore: string | null = null;
+    showMonthlyCal: boolean = false;
+
+    get dontLeave() {
+        return appModule.dontLeave;
+    }
+    get loading() {
+        return appModule.loading;
+    }
+    get plan() {
+        return clientUserModule.plans.find(
+            (p) => p.id === parseInt(this.$route.params.id)
+        );
+    }
+    set plan(value) {
+        if (value)
+            clientUserModule.setPlans(
+                clientUserModule.plans.map((p) =>
+                    p.id !== value.id ? p : value
+                )
+            );
+    }
+    get weekColor() {
+        const colors = this.plan?.block_color;
+        if (!colors) return new Array(this.plan?.duration).fill("#282828");
+        return JSON.parse(colors);
+    }
+    get events() {
+        return this.plan?.sessions
+            ?.sort(
+                (a, b) =>
+                    new Date(a.date).getTime() - new Date(b.date).getTime()
+            )
+            .map(({ name, date, week_id, id }) => {
+                return {
+                    id,
+                    name,
+                    date,
+                    week_id,
+                    color: this.weekColor[week_id - 1],
+                    textColor: this.getAccessibleColor(
+                        this.weekColor[week_id - 1]
+                    ),
+                };
+            });
+    }
+
+    async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await this.$store.dispatch("openConfirmPopUp", {
+                ? await utilsModule.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
                 : true
         ) {
-            this.$store.dispatch("setLoading", {
-                dontLeave: false,
-            });
+            appModule.setDontLeave(false);
             next();
         }
-    },
-    data() {
-        return {
-            // SYSTEM
+    }
 
-            showing_current_session: 0,
+    /** Resolves the state of the feedback editor. */
+    resolveFeedbackEditor(state: EditorState, id: number) {
+        const session = this.plan?.sessions?.find((s) => s.id === id);
+        if (!session) return;
+        switch (state) {
+            case "edit":
+                appModule.setDontLeave(true);
+                this.feedbackId = id;
+                this.forceStop += 1;
+                this.tempEditorStore = session.feedback;
+                break;
+            case "save":
+                this.feedbackId = null;
+                clientUserModule.updateSession(session);
+                break;
+            case "cancel":
+                appModule.setDontLeave(false);
+                this.feedbackId = null;
+                session.feedback = this.tempEditorStore;
+                break;
+        }
+    }
 
-            // EDIT
+    /** Scrolls towards the target session. */
+    goToEvent(id: number) {
+        const sIndex = this.plan?.sessions?.findIndex((s) => s.id === id);
+        if (sIndex === undefined) return;
+        this.showing_current_session = sIndex;
+        setTimeout(() => {
+            document
+                .getElementById(`session-${id}`)
+                ?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+    }
 
-            forceStop: 0,
-            feedbackId: null,
-            tempEditorStore: null,
-
-            // CALENDAR
-
-            showMonthlyCal: false,
-            sessionDates: [],
-        };
-    },
-    computed: {
-        ...mapState(["clientUserLoaded", "loading", "dontLeave", "clientUser"]),
-        plan() {
-            return (
-                this.$store.state.clientUser.plans?.find(
-                    (plan) => plan.id === parseInt(this.$route.params.id)
-                ) ?? []
-            );
-        },
-    },
-    async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
+    /** Toggles the complete state of the session. */
+    handleToggleComplete(session: Session) {
+        clientUserModule.updateSession({
+            ...session,
+            checked: !!session.checked ? 0 : 1,
         });
-        await this.$parent.setup();
-        await this.$parent.getClientSideData();
-        this.loadPlanData();
-        this.$store.dispatch("setLoading", false);
-    },
-    methods: {
-        /** Loads new data into the plan. */
-        loadPlanData() {
-            this.__getWeekColor();
-            this.__getCalendarSessions();
-        },
-
-        /** Gets the week colors. */
-        __getWeekColor() {
-            this.weekColor = this.plan.block_color
-                .replace("[", "")
-                .replace("]", "")
-                .split(",");
-        },
-
-        /** Updates calendar events. */
-        __getCalendarSessions() {
-            if (!this.plan.sessions) return [];
-
-            this.sessionDates = this.plan.sessions
-                .sort((a, b) => new Date(a.date) - new Date(b.date))
-                .map((session) => {
-                    return {
-                        title: session.name,
-                        date: session.date,
-                        color: this.weekColor[session.week_id - 1],
-                        textColor: this.accessible_colors(
-                            this.weekColor[session.week_id - 1]
-                        ),
-                        week_id: session.week_id,
-                        session_id: session.id,
-                    };
-                });
-        },
-
-        /**
-         * Resolves the state of the feedback editor.
-         */
-        resolveFeedbackEditor(state, id) {
-            let plan;
-            let session;
-            this.clientUser.plans.forEach((planItem) => {
-                if (planItem.sessions) {
-                    planItem.sessions.forEach((sessionItem) => {
-                        if (sessionItem.id === id) {
-                            plan = planItem;
-                            session = sessionItem;
-                        }
-                    });
-                }
-            });
-            switch (state) {
-                case "edit":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: true,
-                    });
-                    this.feedbackId = id;
-                    this.forceStop += 1;
-                    this.tempEditorStore = session.feedback;
-                    break;
-                case "save":
-                    this.feedbackId = null;
-                    this.$parent.updateClientSideSession(plan.id, session.id);
-                    break;
-                case "cancel":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: false,
-                    });
-                    this.feedbackId = null;
-                    session.feedback = this.tempEditorStore;
-                    break;
-            }
-        },
-
-        /**
-         * Scrolls towards the target session.
-         */
-        goToEvent(id) {
-            const SESSION_INDEX = this.sessionDates.findIndex(
-                (session) => session.session_id === id
-            );
-            this.showing_current_session = SESSION_INDEX;
-            setTimeout(() => {
-                document
-                    .getElementById(`session-${id}`)
-                    .scrollIntoView({ behavior: "smooth" });
-            }, 100);
-        },
-
-        /**
-         * Toggles the complete state of the session.
-         */
-        handleToggleComplete(planId, sessionId, currentChecked) {
-            this.$store.commit("updateClientUserPlanSingleSession", {
-                planId,
-                sessionId,
-                attr: "checked",
-                data: !currentChecked ? 1 : 0,
-            });
-            this.$parent.updateClientSideSession(planId, sessionId);
-            this.$store.dispatch("setLoading", false);
-        },
-    },
-};
+        appModule.stopLoaders();
+    }
+}
 </script>

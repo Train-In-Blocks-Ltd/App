@@ -4,11 +4,10 @@
         <div class="flex items-center justify-between my-8">
             <icon-button
                 svg="arrow-left"
-                :icon-size="32"
+                :size="32"
                 :on-click="
                     () => {
                         monthDiff--;
-                        getMonth();
                     }
                 "
                 aria-label="Previous month"
@@ -20,7 +19,6 @@
                 @click="
                     () => {
                         monthDiff = 1;
-                        getMonth();
                     }
                 "
                 aria-label="Today"
@@ -29,11 +27,10 @@
             </a>
             <icon-button
                 svg="arrow-right"
-                :icon-size="32"
+                :size="32"
                 :on-click="
                     () => {
                         monthDiff++;
-                        getMonth();
                     }
                 "
                 aria-label="Next month"
@@ -60,175 +57,117 @@
             >
 
             <!-- Date grid -->
-            <div
-                v-for="(day, index) in month"
-                :key="`day_${index}`"
-                :class="{
-                    'bg-transparent shadow-none': day[1] === '',
-                    'bg-yellow-100 dark:bg-gray-400': today() === day[2],
-                }"
-                class="min-h-28 p-2 rounded-lg shadow-lg text-right"
-            >
-                <!-- Day label -->
-                <txt grey>
-                    {{ day[1] }}
-                </txt>
-
-                <!-- Event -->
-                <a
-                    v-for="event in day[0]"
-                    href="javascript:void(0)"
-                    :aria-label="event.title"
-                    :key="`event-${event.session_id}`"
-                    @click="() => onEventPress(event.session_id, event.week_id)"
+            <div v-for="(day, index) in month" :key="`day_${index}`">
+                <div
+                    v-if="!!day"
+                    :class="{
+                        'bg-transparent shadow-none': !day,
+                        'bg-yellow-100 dark:bg-gray-400': today() === day.date,
+                    }"
+                    class="min-h-28 p-2 rounded-lg shadow-lg text-right"
                 >
-                    <txt
-                        type="tiny"
-                        class="mt-1 border-2 text-center rounded hover:opacity-60 transition-opacity"
-                        :style="{
-                            backgroundColor: event.color,
-                            color: event.textColor,
-                        }"
-                        :class="
-                            event.color === undefined ||
-                            event.color === '' ||
-                            event.color === '#FFFFFF'
-                                ? 'border-gray-800'
-                                : 'border-transparent'
-                        "
-                    >
-                        {{ event.title }}
+                    <!-- Day label -->
+                    <txt grey>
+                        {{ new Date(day.date).getDate() }}
                     </txt>
-                </a>
+
+                    <!-- Event -->
+                    <a
+                        v-for="event in day.events"
+                        href="javascript:void(0)"
+                        :aria-label="event.name"
+                        :key="`event-${event.id}`"
+                        @click="() => onEventPress(event.id, event.week_id)"
+                    >
+                        <txt
+                            type="tiny"
+                            class="mt-1 border-2 text-center rounded hover:opacity-60 transition-opacity"
+                            :style="{
+                                backgroundColor: event.color,
+                                color: event.textColor,
+                            }"
+                            :class="
+                                event.color === undefined ||
+                                event.color === '' ||
+                                event.color === '#FFFFFF'
+                                    ? 'border-gray-800'
+                                    : 'border-transparent'
+                            "
+                        >
+                            {{ event.name }}
+                        </txt>
+                    </a>
+                </div>
             </div>
         </div>
     </label-wrapper>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Prop, Mixins } from "vue-property-decorator";
+import { EventRow } from "../../common/types";
+import { MONTHS } from "../../common/helpers";
+import MainMixins from "../../main.mixins";
+
 const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../components/generic/LabelWrapper.vue"
     );
 
-export default {
+type Day = {
+    date: string;
+    events: EventRow[];
+};
+
+@Component({
     components: {
         LabelWrapper,
     },
-    props: {
-        events: Array,
-        onEventPress: Function,
-    },
-    data() {
-        return {
-            currentMonth: "",
-            currentYear: "",
-            monthDiff: 1,
-            month: [],
-        };
-    },
-    watch: {
-        events() {
-            this.getMonth();
-        },
-    },
-    mounted() {
-        this.getMonth();
-    },
-    methods: {
-        /**
-         * Converts index to month.
-         */
-        getMonthNumber(month) {
-            const MONTHS = [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
-            ];
-            return MONTHS.indexOf(month) + 1;
-        },
+})
+export default class MonthCalendar extends Mixins(MainMixins) {
+    @Prop(Array) readonly events!: EventRow[];
+    @Prop(Function) readonly onEventPress!: (
+        id: number,
+        week_id?: number
+    ) => void;
 
-        /**
-         * Initiates the calendar and populates it.
-         */
-        getMonth() {
-            const MONTHS = [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
-            ];
-            const TODAY = new Date();
-            const LAST_DAY_OF_MONTH = new Date(
-                TODAY.getFullYear(),
-                TODAY.getMonth() + this.monthDiff,
-                "0"
-            );
-            this.month = [];
-            this.currentMonth = MONTHS[LAST_DAY_OF_MONTH.getMonth()];
-            this.currentYear = LAST_DAY_OF_MONTH.getFullYear();
-            const MONTH_END = LAST_DAY_OF_MONTH.getDate();
-            let date;
-            for (date = 1; date <= MONTH_END; date++) {
-                const WEEKDAY = new Date(
-                    `${this.currentYear}-${this.getMonthNumber(
-                        this.currentMonth
-                    ).toLocaleString("en-US", {
-                        minimumIntegerDigits: 2,
-                    })}-${date.toLocaleString("en-US", {
-                        minimumIntegerDigits: 2,
-                    })}`
-                ).getDay();
-                if (date === 1 && WEEKDAY !== 1) {
-                    let holder;
-                    if (WEEKDAY === 0) {
-                        for (holder = 1; holder < 7; holder++) {
-                            this.month.push([[], ""]);
-                        }
-                    } else {
-                        for (holder = 1; holder < WEEKDAY; holder++) {
-                            this.month.push([[], ""]);
-                        }
-                    }
-                }
-                const DATA_PACKETS = [];
-                this.events.forEach((event) => {
-                    const DATE_SPLIT = event.date.split("-");
-                    if (
-                        parseInt(DATE_SPLIT[0]) === this.currentYear &&
-                        parseInt(DATE_SPLIT[1] - 1) ===
-                            LAST_DAY_OF_MONTH.getMonth() &&
-                        parseInt(DATE_SPLIT[2]) === date
-                    ) {
-                        DATA_PACKETS.push(event);
-                    }
-                });
-                this.month.push([
-                    DATA_PACKETS,
+    currentMonth: string = "";
+    currentYear: string = "";
+    monthDiff: number = 1;
+
+    get month() {
+        const today = new Date();
+        const startDay = new Date(
+            today.getFullYear(),
+            today.getMonth() - 1 + this.monthDiff,
+            1
+        ).getDay();
+        const monthEnd = new Date(
+            today.getFullYear(),
+            today.getMonth() + this.monthDiff,
+            0
+        );
+        this.currentMonth = MONTHS[monthEnd.getMonth()];
+        this.currentYear = monthEnd.getFullYear().toString();
+        const holders = new Array(startDay - 1 >= 0 ? startDay - 1 : 6).fill(
+            null
+        );
+        const days: Day[] = (new Array(monthEnd.getDate()) as Day[])
+            .fill({
+                date: "",
+                events: [],
+            })
+            .map((_, i) => {
+                const date = `${this.currentYear}-${(monthEnd.getMonth() + 1)
+                    .toString()
+                    .padStart(2, "0")}-${(i + 1).toString().padStart(2, "0")}`;
+                return {
                     date,
-                    `${this.currentYear}-${String(
-                        this.getMonthNumber(this.currentMonth)
-                    ).padStart(2, "0")}-${String(date).padStart(2, "0")}`,
-                ]);
-            }
-        },
-    },
-};
+                    events: this.events.filter((e) => e.date === date),
+                };
+            });
+        const month: Day[] = [...holders, ...days];
+        return month;
+    }
+}
 </script>

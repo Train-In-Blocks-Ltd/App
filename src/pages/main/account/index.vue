@@ -1,6 +1,6 @@
 <template>
     <wrapper v-if="claims" id="account">
-        <txt type="title" is-main>Your Account</txt>
+        <txt type="title" main>Your Account</txt>
         <div v-if="claims" class="grid md:grid-cols-2 gap-16 my-8">
             <!-- Left-side -->
             <div>
@@ -19,12 +19,7 @@
                         Manage Subscription
                     </default-button>
                     <default-button
-                        :on-click="
-                            () =>
-                                $store.dispatch('openModal', {
-                                    name: 'reset-password',
-                                })
-                        "
+                        :on-click="handlePasswordReset"
                         aria-label="Change password"
                     >
                         Change Password
@@ -79,7 +74,7 @@
                             v-model="claims.calendar"
                             class="claims-calendar"
                             type="checkbox"
-                            @change="$parent.saveClaims()"
+                            @change="handleEnableCalendar"
                         />
                     </label>
                     <txt type="tiny">
@@ -137,7 +132,7 @@
                         <input
                             v-model="claims.ga"
                             type="checkbox"
-                            @change="$parent.saveClaims()"
+                            @change="handleAllowCookies"
                             class="ml-4"
                         />
                     </label>
@@ -148,15 +143,29 @@
     </wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appModule from "../../../store/app.module";
+import accountModule from "../../../store/account.module";
+import utilsModule from "../../../store/utils.module";
+import { Component, Mixins } from "vue-property-decorator";
+import { NavigationGuardNext, Route } from "vue-router";
+import {
+    CalendarGuide,
+    Coupon,
+    DarkmodeType,
+    DropdownItem,
+    PolicyLink,
+    TIBUserClaims,
+} from "../../../common/types";
+import { baseAPI } from "../../../api";
+import MainMixins from "../../../main.mixins";
 
 const VersionLabel = () =>
     import(
-        /* webpackChunkName: "components.versionLabel", webpackPreload: true  */ "@/components/generic/VersionLabel"
+        /* webpackChunkName: "components.versionLabel", webpackPreload: true  */ "../../../components/generic/VersionLabel.vue"
     );
 
-export default {
+@Component({
     metaInfo() {
         return {
             title: "Account",
@@ -165,90 +174,93 @@ export default {
     components: {
         VersionLabel,
     },
-    async beforeRouteLeave(to, from, next) {
+})
+export default class Account extends Mixins(MainMixins) {
+    dropdownItems: DropdownItem[] = [
+        {
+            label: "System Default",
+            value: "system",
+        },
+        {
+            label: "Light",
+            value: "light",
+        },
+        {
+            label: "Dark",
+            value: "dark",
+        },
+    ];
+    calendarText: string = "Get your calendar link";
+    calendarGuides: CalendarGuide[] = [
+        {
+            name: "Google",
+            link: "",
+        },
+        {
+            name: "Outlook",
+            link: "https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c",
+        },
+        {
+            name: "Apple",
+            link: "https://support.apple.com/en-gb/guide/calendar/icl1022/mac",
+        },
+    ];
+    policies: PolicyLink[] = [
+        {
+            title: "Privacy and Data Policy",
+            link: "http://traininblocks.com/legal/privacy-and-data-policy",
+        },
+        {
+            title: "Cookies Policy",
+            link: "http://traininblocks.com/legal/cookies-policy",
+        },
+        {
+            title: "Terms of Use",
+            link: "http://traininblocks.com/legal/terms-of-use",
+        },
+    ];
+
+    get dontLeave() {
+        return appModule.dontLeave;
+    }
+    get claims() {
+        return accountModule.claims;
+    }
+    set claims(value: TIBUserClaims | null) {
+        accountModule.setClaims(value);
+    }
+    get versionName() {
+        return appModule.versionName;
+    }
+    get versionBuild() {
+        return appModule.versionBuild;
+    }
+    get isTrainer() {
+        return appModule.isTrainer;
+    }
+    get darkmodeTheme() {
+        const theme = localStorage.getItem("darkmode") ?? this.claims?.theme;
+        if (!!theme) return theme;
+        return "system";
+    }
+    get coupon() {
+        return accountModule.coupon;
+    }
+
+    async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await this.$store.dispatch("openConfirmPopUp", {
+                ? await utilsModule.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
                 : true
         ) {
-            this.$store.dispatch("setLoading", {
-                dontLeave: false,
-            });
+            appModule.setDontLeave(false);
             next();
         }
-    },
-    data() {
-        return {
-            dropdownItems: [
-                {
-                    label: "System Default",
-                    value: "system",
-                },
-                {
-                    label: "Light",
-                    value: "light",
-                },
-                {
-                    label: "Dark",
-                    value: "dark",
-                },
-            ],
-            calendarText: "Get your calendar link",
-            calendarGuides: [
-                {
-                    name: "Google",
-                    link: "",
-                },
-                {
-                    name: "Outlook",
-                    link: "https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c",
-                },
-                {
-                    name: "Apple",
-                    link: "https://support.apple.com/en-gb/guide/calendar/icl1022/mac",
-                },
-            ],
-            policies: [
-                {
-                    title: "Privacy and Data Policy",
-                    link: "http://traininblocks.com/legal/privacy-and-data-policy",
-                },
-                {
-                    title: "Cookies Policy",
-                    link: "http://traininblocks.com/legal/cookies-policy",
-                },
-                {
-                    title: "Terms of Use",
-                    link: "http://traininblocks.com/legal/terms-of-use",
-                },
-            ],
-        };
-    },
-    computed: {
-        ...mapState([
-            "dontLeave",
-            "claims",
-            "versionName",
-            "versionBuild",
-            "coupon",
-            "isTrainer",
-        ]),
-        darkmodeTheme() {
-            const theme = localStorage.getItem("darkmode");
-            if (theme) return theme;
-            return "system";
-        },
-    },
-    async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
-        await this.$parent.setup();
-        this.$store.dispatch("setLoading", false);
-    },
+    }
+
     async mounted() {
         if (!this.coupon.checked) {
             await this.checkCoupon();
@@ -257,177 +269,179 @@ export default {
             window.location.host === "localhost:8080"
                 ? "http://" + window.location.host
                 : "https://" + window.location.host
-        }/.netlify/functions/calendar?email=${this.claims.email}`;
-    },
-    methods: {
-        /** Stores theme in local storage. */
-        handleThemeSelect(theme) {
-            localStorage.setItem("darkmode", theme);
-            this.$parent.darkmode(theme);
-        },
+        }/.netlify/functions/calendar?email=${this.claims?.email}`;
+    }
 
-        /** Opens EULA modal respective to user type. */
-        openEULA() {
-            this.$store.commit("SET_DATA", {
-                attr: "previewTitle",
-                data: "EULA",
-            });
-            this.$store.commit("SET_DATA", {
-                attr: "previewHTML",
-                data: require(`@/components/legal/eula${
-                    this.claims.user_type === "Client" ? "-client" : ""
-                }.md`).html,
-            });
-            this.$store.dispatch("openModal", {
-                name: "preview",
-            });
-        },
+    /** Opens password reset modal. */
+    handlePasswordReset() {
+        utilsModule.openModal({
+            name: "reset-password",
+        });
+    }
 
-        /** Redirects the user to their Stripe management page. */
-        async manageSubscription() {
-            try {
-                const RESPONSE = await this.$axios.post(
-                    "/.netlify/functions/create-manage-link",
-                    {
-                        id: this.claims.stripeId,
-                    }
-                );
-                window.location.href = RESPONSE.data;
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
+    /** Stores theme in local storage. */
+    async handleThemeSelect(theme: DarkmodeType) {
+        if (!this.claims) return;
+        localStorage.setItem("darkmode", theme);
+        this.darkmode(theme);
+        await accountModule.updateClaims({
+            ...this.claims,
+            theme,
+        });
+    }
 
-        /** Generates the user's calendar link. */
-        copyCalendarLink() {
-            const link = `${
-                window.location.host === "localhost:8080"
-                    ? "http://" + window.location.host
-                    : "https://" + window.location.host
-            }/.netlify/functions/calendar?email=${this.claims.email}`;
-            const self = this;
-            navigator.clipboard.writeText(link).then(
-                function () {
-                    self.calendarText = "Copied!";
-                    setTimeout(function () {
-                        self.calendarText = "Get your calendar link";
-                    }, 2000);
-                },
-                function (err) {
-                    self.calendarText = "Could not copy text: " + err;
+    /** Toggles enabled calendar. */
+    async handleEnableCalendar() {
+        if (!this.claims) return;
+        await accountModule.updateClaims({
+            ...this.claims,
+            calendar: this.claims.calendar,
+        });
+    }
+
+    /** Toggles tracking. */
+    async handleAllowCookies() {
+        if (!this.claims) return;
+        await accountModule.updateClaims({
+            ...this.claims,
+            ga: this.claims.ga,
+        });
+    }
+
+    /** Opens EULA modal respective to user type. */
+    openEULA() {
+        utilsModule.openModal({
+            name: "preview",
+            previewTitle: "EULA",
+            previewHTML: require(`../../../common/legal/eula${
+                this.claims?.user_type === "Client" ? "-client" : ""
+            }.md`).html,
+        });
+    }
+
+    /** Redirects the user to their Stripe management page. */
+    async manageSubscription() {
+        try {
+            const RESPONSE = await baseAPI.post(
+                "/.netlify/functions/create-manage-link",
+                {
+                    id: this.claims?.stripeId,
                 }
             );
-        },
+            window.location.href = RESPONSE.data;
+        } catch (e) {
+            utilsModule.resolveError(e as string);
+        }
+    }
 
-        /** Checks if the user already has coupons activated. */
-        async checkCoupon() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                const RESPONSE = await this.$axios.post(
-                    "/.netlify/functions/check-coupon",
-                    {
-                        email: this.claims.email,
-                    }
-                );
-                if (
-                    RESPONSE.data.data.find(
-                        (coupon) =>
-                            coupon.code ===
-                            this.claims.email
-                                .toUpperCase()
-                                .replace(/[\W_]+/g, "")
-                    ) &&
-                    RESPONSE.data.data.find(
-                        (coupon) =>
-                            coupon.code ===
-                            this.claims.email
-                                .toUpperCase()
-                                .replace(/[\W_]+/g, "")
-                    ).active
-                ) {
-                    this.$store.commit("SET_DATA_DEEP", {
-                        attrParent: "coupon",
-                        attrChild: "generated",
-                        data: this.claims.email
-                            .toUpperCase()
-                            .replace(/[\W_]+/g, ""),
-                    });
-                    this.$store.commit("SET_DATA_DEEP", {
-                        attrParent: "coupon",
-                        attrChild: "code",
-                        data: this.claims.email
-                            .toUpperCase()
-                            .replace(/[\W_]+/g, ""),
-                    });
-                }
-                this.$store.commit("SET_DATA_DEEP", {
-                    attrParent: "coupon",
-                    attrChild: "checked",
-                    data: true,
-                });
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
+    /** Generates the user's calendar link. */
+    copyCalendarLink() {
+        const link = `${
+            window.location.host === "localhost:8080"
+                ? "http://" + window.location.host
+                : "https://" + window.location.host
+        }/.netlify/functions/calendar?email=${this.claims?.email}`;
+        const self = this;
+        navigator.clipboard.writeText(link).then(
+            function () {
+                self.calendarText = "Copied!";
+                setTimeout(function () {
+                    self.calendarText = "Get your calendar link";
+                }, 2000);
+            },
+            function (err) {
+                self.calendarText = "Could not copy text: " + err;
             }
-        },
-        async generateCoupon() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                await this.$axios.post("/.netlify/functions/create-coupon", {
-                    email: this.claims.email,
-                });
-                this.$store.commit("SET_DATA_DEEP", {
-                    attrParent: "coupon",
-                    attrChild: "generated",
-                    data: this.claims.email
-                        .toUpperCase()
-                        .replace(/[\W_]+/g, ""),
-                });
-                this.$store.commit("SET_DATA_DEEP", {
-                    attrParent: "coupon",
-                    attrChild: "code",
-                    data: this.claims.email
-                        .toUpperCase()
-                        .replace(/[\W_]+/g, ""),
-                });
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-        copyCoupon() {
-            const link = this.claims.email.toUpperCase().replace(/[\W_]+/g, "");
-            const self = this;
-            navigator.clipboard.writeText(link).then(
-                function () {
-                    self.$store.commit("SET_DATA_DEEP", {
-                        attrParent: "coupon",
-                        attrChild: "code",
-                        data: "Copied!",
-                    });
-                    setTimeout(function () {
-                        self.$store.commit("SET_DATA_DEEP", {
-                            attrParent: "coupon",
-                            attrChild: "code",
-                            data: self.claims.email
-                                .toUpperCase()
-                                .replace(/[\W_]+/g, ""),
-                        });
-                    }, 2000);
-                },
-                function (err) {
-                    self.$store.commit("SET_DATA_DEEP", {
-                        attrParent: "coupon",
-                        attrChild: "code",
-                        data: "Could not copy text: " + err,
-                    });
+        );
+    }
+
+    /** Checks if the user already has coupons activated. */
+    async checkCoupon() {
+        try {
+            appModule.setDontLeave(true);
+            const response = await baseAPI.post(
+                "/.netlify/functions/check-coupon",
+                {
+                    email: this.claims?.email,
                 }
             );
-        },
-    },
-};
+            const foundCoupon = response.data.data.find(
+                (coupon: Coupon) =>
+                    coupon.code ===
+                    this.claims?.email?.toUpperCase().replace(/[\W_]+/g, "")
+            );
+            if (foundCoupon && foundCoupon.active) {
+                accountModule.setCoupon({
+                    checked: true,
+                    code:
+                        this.claims?.email
+                            ?.toUpperCase()
+                            .replace(/[\W_]+/g, "") ?? "",
+                    generated: !!this.claims?.email
+                        ?.toUpperCase()
+                        .replace(/[\W_]+/g, ""),
+                });
+            }
+            appModule.stopLoaders();
+        } catch (e) {
+            utilsModule.resolveError(e as string);
+        }
+    }
+
+    /** Creates a new discount coupon */
+    async generateCoupon() {
+        try {
+            appModule.setDontLeave(true);
+            await baseAPI.post("/.netlify/functions/create-coupon", {
+                email: this.claims?.email,
+            });
+            accountModule.setCoupon({
+                checked: this.coupon.checked,
+                code:
+                    this.claims?.email?.toUpperCase().replace(/[\W_]+/g, "") ??
+                    "",
+                generated: !!this.claims?.email
+                    ?.toUpperCase()
+                    .replace(/[\W_]+/g, ""),
+            });
+            appModule.stopLoaders();
+        } catch (e) {
+            utilsModule.resolveError(e as string);
+        }
+    }
+
+    /** Copies user's coupon. */
+    copyCoupon() {
+        const link = this.claims?.email?.toUpperCase().replace(/[\W_]+/g, "");
+        const self = this;
+        navigator.clipboard.writeText(link ?? "").then(
+            () => {
+                const { checked, generated } = self.coupon;
+                accountModule.setCoupon({
+                    checked,
+                    generated,
+                    code: "Copied!",
+                });
+                setTimeout(() => {
+                    accountModule.setCoupon({
+                        checked,
+                        generated,
+                        code:
+                            self.claims?.email
+                                ?.toUpperCase()
+                                .replace(/[\W_]+/g, "") ?? "",
+                    });
+                }, 2000);
+            },
+            (e) => {
+                const { checked, generated } = self.coupon;
+                accountModule.setCoupon({
+                    checked,
+                    generated,
+                    code: "Could not copy text: " + e,
+                });
+            }
+        );
+    }
+}
 </script>

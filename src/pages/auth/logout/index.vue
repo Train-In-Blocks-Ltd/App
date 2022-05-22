@@ -26,9 +26,9 @@
     <wrapper id="logout">
         <div class="logout_message">
             <div class="top">
-                <icon svg="check" :icon-size="64" />
+                <icon svg="check" :size="64" />
                 <div class="text-container">
-                    <txt type="title" is-main
+                    <txt type="title" main
                         >You have been logged out successfully</txt
                     >
                     <txt type="large-body" bold

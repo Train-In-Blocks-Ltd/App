@@ -39,7 +39,7 @@
             class="checked_box"
             type="checkbox"
             style="display: none"
-            @change="$store.dispatch('toggleCheckbox', itemId)"
+            @change="handleSelect"
         />
         <label
             :for="`checkbox-${itemId}`"
@@ -60,20 +60,29 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
-export default {
-    props: {
-        itemId: [Number, Boolean],
-    },
-    computed: mapState(["selectedIds"]),
-    watch: {
-        selectedIds(val) {
-            const checkboxEl = document.getElementById(
-                `checkbox-${this.itemId}`
-            );
-            if (checkboxEl) checkboxEl.checked = val.includes(this.itemId);
-        },
-    },
-};
+<script lang="ts">
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import utilsModule from "../../store/utils.module";
+
+@Component
+export default class Checkbox extends Vue {
+    @Prop(Number) readonly itemId!: number;
+
+    get selectedIds() {
+        return utilsModule.selectedIds;
+    }
+
+    @Watch("selectedIds")
+    onSelectionChange(old: number[]) {
+        const checkboxEl: HTMLElement | null = document.getElementById(
+            `checkbox-${this.itemId}`
+        );
+        // @ts-expect-error
+        if (checkboxEl) checkboxEl.checked = old.includes(this.itemId);
+    }
+
+    handleSelect() {
+        utilsModule.toggleCheckbox(this.itemId);
+    }
+}
 </script>

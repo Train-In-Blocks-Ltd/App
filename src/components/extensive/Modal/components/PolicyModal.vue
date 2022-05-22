@@ -51,47 +51,45 @@
     </form>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appModule from "../../../../store/app.module";
+import accountModule from "../../../../store/account.module";
+import utilsModule from "../../../../store/utils.module";
+import { Component, Mixins } from "vue-property-decorator";
+import MainMixins from "../../../../main.mixins";
 
-export default {
-    data() {
-        return {
-            name: undefined,
-            eula: null,
-        };
-    },
+@Component
+export default class PolicyModal extends Mixins(MainMixins) {
+    name: string | null = null;
+    eula: string | null = null;
+
+    get claims() {
+        return accountModule.claims;
+    }
+    get policyVersion() {
+        return appModule.policyVersion;
+    }
+
     created() {
-        if (this.claims.user_type === "Client")
-            this.eula = require("@/components/legal/eula-client.md");
-        else this.eula = require("@/components/legal/eula.md");
-    },
-    computed: mapState(["claims"]),
-    methods: {
-        /**
-         * Agree to EULA terms.
-         */
-        async agreeToTerms() {
-            this.$store.commit("SET_DATA_DEEP", {
-                attrParent: "claims",
-                attrChild: "policy",
-                data: [
-                    this.name,
-                    this.today(),
-                    this.$store.state.policyVersion,
-                ],
+        if (this.claims?.user_type === "Client")
+            this.eula = require("../../../../common/legal/eula-client.md");
+        else this.eula = require("../../../../common/legal/eula.md");
+    }
+
+    /** Agree to EULA terms. */
+    async agreeToTerms() {
+        try {
+            if (!this.claims) return;
+            appModule.setDontLeave(true);
+            await accountModule.updateClaims({
+                ...this.claims,
+                policy: [this.name, this.today(), this.policyVersion],
             });
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                await this.$store.dispatch("saveClaims");
-                this.$store.dispatch("setLoading", false);
-                this.$store.dispatch("closeModal");
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-    },
-};
+            appModule.stopLoaders();
+            utilsModule.closeModal();
+        } catch (e) {
+            utilsModule.resolveError(e as string);
+        }
+    }
+}
 </script>

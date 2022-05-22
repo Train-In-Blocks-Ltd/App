@@ -7,45 +7,24 @@
                 <icon-button
                     v-if="pwa.displayMode === 'browser tab'"
                     svg="download"
-                    :on-click="
-                        () =>
-                            $store.dispatch('openModal', {
-                                name: 'install-pwa',
-                            })
-                    "
-                    :icon-size="28"
+                    :on-click="handleOpenInstall"
+                    :size="28"
                     class="mr-4"
                     aria-label="Install"
                     title="Install"
                 />
                 <icon-button
                     svg="info"
-                    :icon-size="32"
+                    :size="32"
                     class="mr-4"
-                    :on-click="
-                        () => {
-                            $store.commit('SET_DATA', {
-                                attr: 'previewHTML',
-                                data: portfolio.notes,
-                            });
-                            $store.dispatch('openModal', {
-                                name: 'preview',
-                            });
-                        }
-                    "
+                    :on-click="handleOpenInfo"
                     aria-label="Your trainer"
                     title="Your trainer"
                 />
                 <icon-button
                     svg="user"
-                    :icon-size="32"
-                    :on-click="
-                        () => {
-                            $store.dispatch('openModal', {
-                                name: 'client-user-profile',
-                            });
-                        }
-                    "
+                    :size="32"
+                    :on-click="handleOpenProfile"
                     aria-label="Your profile"
                     title="Your profile"
                 />
@@ -60,10 +39,10 @@
             <div class="skeleton-item w-1/2" />
             <div class="skeleton-item w-1/4" />
         </div>
-        <div v-else-if="clientUser.sessionsToday" class="grid gap-8 mt-8">
+        <div v-else-if="getTodaySessions(plans).length" class="grid gap-8 mt-8">
             <!-- Session -->
             <card-wrapper
-                v-for="(session, sessionIndex) in clientUser.sessionsToday"
+                v-for="(session, sessionIndex) in getTodaySessions(plans)"
                 :id="`session-${session.id}`"
                 :key="sessionIndex"
                 class="p-4 sm:p-8"
@@ -87,14 +66,7 @@
                 <default-button
                     v-if="!feedbackId"
                     :theme="session.checked === 1 ? 'green' : 'red'"
-                    :on-click="
-                        () =>
-                            handleToggleComplete(
-                                session.programme_id,
-                                session.id,
-                                session.checked
-                            )
-                    "
+                    :on-click="() => handleToggleComplete(session)"
                     :aria-label="
                         session.checked === 1
                             ? 'Completed'
@@ -117,7 +89,7 @@
                         v-model="session.feedback"
                         :item-id="session.id"
                         :editing="feedbackId"
-                        :empty-placeholder="'What would you like to share with your trainer?'"
+                        :placeholder="'What would you like to share with your trainer?'"
                         :force-stop="forceStop"
                         @on-edit-change="resolveFeedbackEditor"
                     />
@@ -126,7 +98,9 @@
         </div>
 
         <!-- Placeholder -->
-        <txt v-else type="large-body" grey> Nothing planned for today </txt>
+        <txt v-else type="large-body" class="mt-4" grey>
+            Nothing planned for today
+        </txt>
 
         <!-- Plans section -->
         <div class="mt-16">
@@ -141,9 +115,9 @@
                     <div class="skeleton-item w-3/4" />
                 </div>
             </div>
-            <div v-else-if="clientUser.plans" class="grid sm:grid-cols-2 gap-4">
+            <div v-else-if="plans" class="grid sm:grid-cols-2 gap-4">
                 <plan-card
-                    v-for="(plan, index) in clientUser.plans"
+                    v-for="(plan, index) in plans"
                     :key="`plan-${index}`"
                     :plan="plan"
                     :link="`/clientUser/plan/${plan.id}`"
@@ -157,149 +131,137 @@
     </wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Mixins } from "vue-property-decorator";
+import { NavigationGuardNext, Route } from "vue-router";
+import { EditorState, Plan, Session } from "../../common/types";
+import appModule from "../../store/app.module";
+import clientUserModule from "../../store/clientUser.module";
+import utilsModule from "../../store/utils.module";
+import MainMixins from "../../main.mixins";
 
 const PlanCard = () =>
     import(
-        /* webpackChunkName: "components.planCard", webpackPreload: true  */ "@/components/generic/PlanCard"
+        /* webpackChunkName: "components.planCard", webpackPreload: true  */ "../../components/generic/PlanCard.vue"
     );
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "../../components/generic/CardWrapper.vue"
     );
 
-// const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
-
-export default {
+@Component({
     components: {
         PlanCard,
         CardWrapper,
     },
-    async beforeRouteLeave(to, from, next) {
+})
+export default class ClientHome extends Mixins(MainMixins) {
+    forceStop: number = 0;
+    feedbackId: number | null = null;
+    tempEditorStore: string | null = null;
+    showing_current_session: number = 0;
+
+    get pwa() {
+        return appModule.pwa;
+    }
+    get loading() {
+        return appModule.loading;
+    }
+    get dontLeave() {
+        return appModule.dontLeave;
+    }
+    get portfolio() {
+        return clientUserModule.portfolio;
+    }
+    get plans() {
+        return clientUserModule.plans;
+    }
+    set plans(value) {
+        clientUserModule.setPlans(value);
+    }
+    get claims() {
+        return;
+    }
+
+    async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await this.$store.dispatch("openConfirmPopUp", {
+                ? await utilsModule.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
                 : true
         ) {
-            this.$store.dispatch("setLoading", {
-                dontLeave: false,
-            });
+            appModule.setDontLeave(false);
             next();
         }
-    },
-    data() {
-        return {
-            // EDIT
+    }
 
-            forceStop: 0,
-            feedbackId: null,
-            tempEditorStore: null,
-
-            // SYSTEM
-
-            showing_current_session: 0,
-        };
-    },
-    computed: mapState([
-        "pwa",
-        "clientUserLoaded",
-        "loading",
-        "dontLeave",
-        "clientUser",
-        "claims",
-        "portfolio",
-    ]),
-    async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
+    getTodaySessions(plans: Plan[]) {
+        const allSessions: Session[] = [];
+        plans.forEach((p) => {
+            if (!!p.sessions) allSessions.push(...p.sessions);
         });
-        await this.$parent.setup();
-        await this.$parent.getClientSideData();
-        this.$store.dispatch("setLoading", false);
-    },
-    methods: {
-        /**
-         * Resolves the state of the feedback editor.
-         */
-        resolveFeedbackEditor(state, id) {
-            let plan;
-            let session;
-            this.clientUser.plans.forEach((planItem) => {
-                if (planItem.sessions) {
-                    planItem.sessions.forEach((sessionItem) => {
-                        if (sessionItem.id === id) {
-                            plan = planItem;
-                            session = sessionItem;
-                        }
-                    });
-                }
-            });
-            switch (state) {
-                case "edit":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: true,
-                    });
-                    this.feedbackId = id;
-                    this.forceStop += 1;
-                    this.tempEditorStore = session.feedback;
-                    break;
-                case "save":
-                    this.feedbackId = null;
-                    this.$parent.updateClientSideSession(plan.id, session.id);
-                    break;
-                case "cancel":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: false,
-                    });
-                    this.feedbackId = null;
-                    session.feedback = this.tempEditorStore;
-                    break;
-            }
-        },
+        return allSessions
+            .filter((s) => this.today() === s.date)
+            .sort(
+                (a, b) =>
+                    new Date(a.date).getTime() - new Date(b.date).getTime()
+            );
+    }
 
-        /**
-         * Toggles the complete state of the session.
-         */
-        handleToggleComplete(planId, sessionId, currentChecked) {
-            this.$store.commit("updateClientUserPlanSingleSession", {
-                planId,
-                sessionId,
-                attr: "checked",
-                data: !currentChecked ? 1 : 0,
-            });
-            this.$parent.updateClientSideSession(planId, sessionId);
-            this.$store.dispatch("setLoading", false);
-        },
+    /** Resolves the state of the feedback editor. */
+    resolveFeedbackEditor(state: EditorState, id: number) {
+        const session = this.getTodaySessions(this.plans).find(
+            (s) => s.id === id
+        );
+        if (!session) return;
+        switch (state) {
+            case "edit":
+                appModule.setDontLeave(true);
+                this.feedbackId = id;
+                this.forceStop += 1;
+                this.tempEditorStore = session.feedback;
+                break;
+            case "save":
+                this.feedbackId = null;
+                clientUserModule.updateSession(session);
+                break;
+            case "cancel":
+                appModule.setDontLeave(false);
+                this.feedbackId = null;
+                session.feedback = this.tempEditorStore;
+                break;
+        }
+    }
 
-        async checkout(productId) {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                const RESPONSE = await this.$axios.post(
-                    "/.netlify/functions/checkout",
-                    {
-                        productId,
-                        ptId: this.clientUser.pt_id,
-                        email: this.claims.email,
-                    }
-                );
-                // eslint-disable-next-line no-undef
-                const stripe = await Stripe(CUSTOM_ENV.STRIPE_PUBLIC_KEY, {
-                    stripeAccount: await RESPONSE.data.connectedAccountId,
-                });
-                stripe.redirectToCheckout({
-                    sessionId: await RESPONSE.data.sessionId,
-                });
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-    },
-};
+    handleOpenInstall() {
+        utilsModule.openModal({
+            name: "install-pwa",
+        });
+    }
+
+    handleOpenInfo() {
+        if (this.portfolio?.notes)
+            utilsModule.openModal({
+                name: "info",
+                previewHTML: this.portfolio.notes,
+            });
+    }
+
+    handleOpenProfile() {
+        utilsModule.openModal({
+            name: "client-user-profile",
+        });
+    }
+
+    /** Toggles the complete state of the session. */
+    handleToggleComplete(session: Session) {
+        clientUserModule.updateSession({
+            ...session,
+            checked: !!session.checked ? 0 : 1,
+        });
+        appModule.stopLoaders();
+    }
+}
 </script>

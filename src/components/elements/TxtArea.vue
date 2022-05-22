@@ -31,39 +31,41 @@
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        inputRef: String,
-        name: String,
-        label: String,
-        info: String,
-        error: String,
-        value: String,
-        inputClass: String,
-        labelClass: String,
-        infoClass: String,
-        errorClass: String,
-        type: String,
-        rel: String,
-        inputmode: String,
-        autocomplete: String,
-        placeholder: String,
-        ariaLabel: String,
-        pattern: String,
-        onInput: Function,
-        required: Boolean,
-        focusFirst: Boolean,
-        rows: [String, Number],
-    },
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+
+@Component
+export default class TxtArea extends Vue {
+    @Prop(String) readonly inputRef!: string;
+    @Prop(String) readonly name!: string;
+    @Prop(String) readonly label!: string;
+    @Prop(String) readonly info!: string;
+    @Prop(String) readonly error!: string;
+    @Prop(String) readonly value!: string;
+    @Prop(String) readonly inputClass!: string;
+    @Prop(String) readonly labelClass!: string;
+    @Prop(String) readonly infoClass!: string;
+    @Prop(String) readonly errorClass!: string;
+    @Prop(String) readonly type!: string;
+    @Prop(String) readonly rel!: string;
+    @Prop(String) readonly inputmode!: string;
+    @Prop(String) readonly autocomplete!: string;
+    @Prop(String) readonly placeholder!: string;
+    @Prop(String) readonly ariaLabel!: string;
+    @Prop(String) readonly pattern!: string;
+    @Prop(Function) readonly onInput!: () => void;
+    @Prop(Boolean) readonly required!: boolean;
+    @Prop(Boolean) readonly focusFirst!: boolean;
+    @Prop([String, Number]) readonly rows!: string | number;
+
     mounted() {
+        // @ts-expect-error
         if (this.focusFirst) this.$el.children[0].focus();
-    },
-    methods: {
-        handleInput(e) {
-            this.$emit("output", e.target.value);
-            if (this.onInput) this.onInput();
-        },
-    },
-};
+    }
+
+    handleInput(e: any) {
+        this.$emit("output", e.target.value);
+        if (this.onInput) this.onInput();
+    }
+}
 </script>

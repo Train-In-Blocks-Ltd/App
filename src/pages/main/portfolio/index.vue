@@ -12,11 +12,11 @@
             autocomplete="name"
             class="mb-4"
             input-class="text-4xl"
-            :value="portfolio.business_name"
+            :value="business_name"
             :disabled="silentLoading"
             :on-blur="() => updatePortfolio()"
             :on-input="() => (editing_info = true)"
-            @output="(data) => (portfolio.business_name = data)"
+            @output="(data) => (business_name = data)"
         />
 
         <!-- Trainer name -->
@@ -30,11 +30,11 @@
             type="text"
             autocomplete="name"
             class="mb-16"
-            :value="portfolio.trainer_name"
+            :value="trainer_name"
             :disabled="silentLoading"
             :on-blur="() => updatePortfolio()"
             :on-input="() => (editing_info = true)"
-            @output="(data) => (portfolio.trainer_name = data)"
+            @output="(data) => (trainer_name = data)"
         />
 
         <!-- Portfolio content -->
@@ -47,26 +47,29 @@
         </div>
         <label-wrapper v-else title="Portfolio">
             <rich-editor
-                v-model="portfolio.notes"
-                :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
+                v-model="notes"
+                :placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
                 @on-edit-change="resolve_portfolio_editor"
             />
         </label-wrapper>
-
-        <!-- <products /> -->
     </wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appModule from "../../../store/app.module";
+import accountModule from "../../../store/account.module";
+import portfolioModule from "../../../store/portfolio.module";
+import utilsModule from "../../../store/utils.module";
+import { NavigationGuardNext, Route } from "vue-router";
+import { EditorState } from "../../../common/types";
 
 const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../../components/generic/LabelWrapper.vue"
     );
-// const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '@/components/Products')
 
-export default {
+@Component({
     metaInfo() {
         return {
             title: "Portfolio",
@@ -74,139 +77,107 @@ export default {
     },
     components: {
         LabelWrapper,
-        // Products
     },
-    async beforeRouteLeave(to, from, next) {
+})
+export default class Portfolio extends Vue {
+    tempEditorStore: string | null = null;
+    editingPortfolio: boolean = false;
+
+    get claims() {
+        return accountModule.claims;
+    }
+    get dontLeave() {
+        return appModule.dontLeave;
+    }
+    get loading() {
+        return appModule.loading;
+    }
+    get silentLoading() {
+        return appModule.silentLoading;
+    }
+    get pt_id() {
+        return portfolioModule.pt_id;
+    }
+
+    // Form data
+
+    get business_name() {
+        return portfolioModule.business_name;
+    }
+    set business_name(value) {
+        portfolioModule.setBusinessName(value);
+    }
+
+    get trainer_name() {
+        return portfolioModule.trainer_name;
+    }
+    set trainer_name(value) {
+        portfolioModule.setTrainerName(value);
+    }
+
+    get notes() {
+        return portfolioModule.notes;
+    }
+    set notes(value) {
+        portfolioModule.setNotes(value);
+    }
+
+    async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await this.$store.dispatch("openConfirmPopUp", {
+                ? await utilsModule.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
                 : true
         ) {
-            this.$store.dispatch("setLoading", {
-                dontLeave: false,
-            });
+            appModule.setDontLeave(false);
             next();
         }
-    },
-    data() {
-        return {
-            editingPortfolio: false,
-            tempEditorStore: null,
-        };
-    },
-    computed: mapState([
-        "claims",
-        "loading",
-        "silentLoading",
-        "dontLeave",
-        "portfolio",
-        "hasCheckedStripeConnect",
-    ]),
-    async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
-        await this.$parent.setup();
-        // await this.checkStripeConnect()
-        this.$store.dispatch("setLoading", false);
-    },
-    methods: {
-        /**
-         * Resolves the state of the portfolio editor.
-         * @param {string} state - The returned state of the editor.
-         */
-        resolve_portfolio_editor(state) {
-            switch (state) {
-                case "edit":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: true,
-                    });
-                    this.editingPortfolio = true;
-                    this.tempEditorStore = this.portfolio.notes;
-                    break;
-                case "save":
-                    this.editingPortfolio = false;
-                    this.updatePortfolio();
-                    break;
-                case "cancel":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: false,
-                    });
-                    this.editingPortfolio = false;
-                    this.$store.commit("SET_DATA_DEEP", {
-                        attrParent: "portfolio",
-                        attrChild: "notes",
-                        data: this.tempEditorStore,
-                    });
-                    break;
-            }
-        },
+    }
 
-        /**
-         * Updates the portfolio.
-         */
-        async updatePortfolio() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    silentLoading: true,
-                    dontLeave: true,
+    /** Resolves the state of the portfolio editor. */
+    resolve_portfolio_editor(state: EditorState) {
+        switch (state) {
+            case "edit":
+                appModule.setDontLeave(true);
+                this.editingPortfolio = true;
+                this.tempEditorStore = this.notes;
+                break;
+            case "save":
+                this.editingPortfolio = false;
+                this.updatePortfolio();
+                break;
+            case "cancel":
+                appModule.setDontLeave(false);
+                this.editingPortfolio = false;
+                const { pt_id, business_name, trainer_name } = this;
+                portfolioModule.setPortfolio({
+                    pt_id,
+                    business_name,
+                    trainer_name,
+                    notes: this.tempEditorStore ?? "",
                 });
-                await this.$store.dispatch("updatePortfolio");
-                this.$ga.event("Portfolio", "update");
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Portfolio updated",
-                    description: "Your clients can access this information",
-                });
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
+                break;
+        }
+    }
 
-        async stripeConnect() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                const RESPONSE = await this.$axios.post(
-                    "/.netlify/functions/create-connected-account",
-                    {
-                        email: this.claims.email,
-                        connectedAccountId: this.claims.connectedAccountId,
-                    }
-                );
-                this.claims.connectedAccountId =
-                    RESPONSE.data.connectedAccountId;
-                await this.$store.dispatch("saveClaims");
-                window.location.href = RESPONSE.data.url;
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-        async checkStripeConnect() {
-            if (!this.hasCheckedStripeConnect) {
-                const RESPONSE_STRIPE = await this.$axios.post(
-                    "/.netlify/functions/check-connected-account",
-                    {
-                        connectedAccountId: this.claims.connectedAccountId,
-                    }
-                );
-                this.$store.commit("SET_DATA", {
-                    attr: "isStripeConnected",
-                    data:
-                        this.claims.email === "demo@traininblocks.com" ||
-                        RESPONSE_STRIPE.data,
-                });
-                this.$store.commit("SET_DATA", {
-                    attr: "hasCheckedStripeConnect",
-                    data: true,
-                });
-            }
-        },
-    },
-};
+    /** Updates the portfolio. */
+    async updatePortfolio() {
+        try {
+            appModule.setSilentLoading(true);
+            appModule.setDontLeave(true);
+
+            await portfolioModule.updatePortfolio();
+            this.$ga.event("Portfolio", "update");
+            utilsModule.responsePopUpRef?.open({
+                title: "Portfolio updated",
+                text: "Your clients can access this information",
+            });
+            appModule.stopLoaders();
+        } catch (e) {
+            utilsModule.resolveError(e as string);
+        }
+    }
+}
 </script>

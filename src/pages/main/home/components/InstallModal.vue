@@ -21,13 +21,13 @@
                 <txt>2. Select <i>Add to Home Screen</i></txt>
                 <div class="grid gap-8 md:flex mt-8">
                     <img
-                        :src="require('@/assets/install/1.jpg')"
+                        :src="require('../../../../assets/install/1.jpg')"
                         alt="Open share menu"
                         loading="lazy"
                         class="rounded-lg mt-8 w-full md:w-1/2 lg:w-1/3 2xl:w-1/4 md:mr-4"
                     />
                     <img
-                        :src="require('@/assets/install/2.jpg')"
+                        :src="require('../../../../assets/install/2.jpg')"
                         alt="Add to home screen"
                         loading="lazy"
                         class="rounded-lg mt-8 w-full md:w-1/2 lg:w-1/3 2xl:w-1/4"
@@ -57,42 +57,35 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { mapState } from "vuex";
+import { Component, Vue } from "vue-property-decorator";
+import appModule from "../../../../store/app.module";
+import utilsModule from "../../../../store/utils.module";
 
-export default Vue.extend({
-    computed: mapState(["pwa"]),
-    methods: {
-        handleInstall() {
-            // Show the install prompt
-            this.pwa.deferredPrompt.prompt();
+@Component
+export default class InstallModal extends Vue {
+    get pwa() {
+        return appModule.pwa;
+    }
 
-            // Wait for the user to respond to the prompt
-            this.pwa.deferredPrompt.userChoice.then(
-                (choiceResult: { outcome: string }) => {
-                    if (choiceResult.outcome === "accepted") {
-                        // Hide the app provided install promotion
-                        this.$store.commit("SET_DATA_DEEP", {
-                            attrParent: "pwa",
-                            attrChild: "canInstall",
-                            data: false,
-                        });
-                        this.$store.commit("SET_DATA_DEEP", {
-                            attrParent: "pwa",
-                            attrChild: "displayMode",
-                            data: "standalone",
-                        });
-                    } else {
-                        this.$store.commit("SET_DATA_DEEP", {
-                            attrParent: "pwa",
-                            attrChild: "canInstall",
-                            data: true,
-                        });
-                    }
+    handleInstall() {
+        // Show the install prompt
+        // @ts-expect-error
+        this.pwa.deferredPrompt?.prompt();
+
+        // Wait for the user to respond to the prompt
+        // @ts-expect-error
+        this.pwa.deferredPrompt?.userChoice.then(
+            (choiceResult: { outcome: string }) => {
+                if (choiceResult.outcome === "accepted") {
+                    // Hide the app provided install promotion
+                    appModule.setPWACanInstall(false);
+                    appModule.setPWADisplayMode("standalone");
+                } else {
+                    appModule.setPWACanInstall(true);
                 }
-            );
-            this.$store.dispatch("closeModal");
-        },
-    },
-});
+            }
+        );
+        utilsModule.closeModal();
+    }
+}
 </script>

@@ -23,21 +23,19 @@
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        sessions: Array,
-    },
-    computed: {
-        totalSessions() {
-            return this.sessions.length ?? 1;
-        },
-        completedSessions() {
-            return (
-                this.sessions.filter((session) => session.checked === 1)
-                    .length ?? 1
-            );
-        },
-    },
-};
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+import { Session } from "../../../../../../../common/types";
+
+@Component
+export default class PlanProgressBar extends Vue {
+    @Prop(Array) readonly sessions!: Session[];
+
+    get totalSessions() {
+        return this.sessions.length ?? 1;
+    }
+    get completedSessions() {
+        return this.sessions.filter((s) => s.checked === 1).length ?? 1;
+    }
+}
 </script>

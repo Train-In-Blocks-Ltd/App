@@ -17,12 +17,15 @@
     </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+
+@Component({
     metaInfo() {
         return {
             title: "404 Not Found",
         };
     },
-};
+})
+export default class NotFound extends Vue {}
 </script>

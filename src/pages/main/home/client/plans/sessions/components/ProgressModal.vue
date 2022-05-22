@@ -2,13 +2,13 @@
     <div class="mt-4">
         <!-- Initial set-up -->
         <form
-            v-if="progressPage === 0"
+            v-if="page === 0"
             class="grid gap-4"
             @submit.prevent="
                 () => {
-                    progressPull();
-                    progressSection = 0;
-                    progressPage += 1;
+                    __setup();
+                    section = 0;
+                    page += 1;
                 }
             "
         >
@@ -21,8 +21,8 @@
                 :label="`From microcycle ${currentWeek} to ${plan.duration}:`"
                 :min="currentWeek + 1"
                 :max="plan.duration"
-                :value="progressInputs.target"
-                @output="(data) => (progressInputs.target = data)"
+                :value="target"
+                @output="(data) => (target = data)"
                 required
             />
             <txt-input
@@ -30,15 +30,13 @@
                 type="number"
                 min="1"
                 label="Days until next sessions:"
-                :value="progressInputs.daysBetween"
-                @output="(data) => (progressInputs.daysBetween = data)"
+                :value="daysBetween"
+                @output="(data) => (daysBetween = data)"
                 required
             />
             <default-button
                 type="submit"
-                :disabled="
-                    !progressInputs.daysBetween || !progressInputs.target
-                "
+                :disabled="!daysBetween || !target"
                 aria-label="Next"
             >
                 Next
@@ -46,64 +44,56 @@
         </form>
 
         <!-- Edit page -->
-        <div v-else-if="progressPage === 1">
+        <div v-else-if="page === 1">
+            <!-- Per session -->
             <form
-                v-for="(session, sessionIndex) in progressDataInputs"
-                v-show="progressSection === sessionIndex"
-                :key="`session-${sessionIndex}`"
+                v-for="(s, sIndex) in progressProtocols"
+                v-show="section === sIndex"
+                :key="`session-${s.name}-${sIndex}`"
                 class="grid gap-4"
                 @submit.prevent="
-                    sessionIndex === progressDataInputs.length - 1
-                        ? (progressPage += 1)
-                        : (progressSection += 1)
+                    () => {
+                        sIndex === progressProtocols.length - 1
+                            ? (page += 1)
+                            : (section += 1);
+                    }
                 "
             >
                 <card-wrapper class="p-4" no-hover>
                     <txt bold>
-                        {{ session.sessionName }}
+                        {{ s.name }}
                     </txt>
                     <txt grey>
-                        {{ session.sessionDate }}
+                        {{ s.date }}
                     </txt>
-                    <div v-if="session.sessionExercises.length" class="mt-4">
+                    <div v-if="s.protocols.length">
+                        <!-- Per protocol section -->
                         <div
-                            v-for="(
-                                exercise, exerciseIndex
-                            ) in session.sessionExercises"
-                            :key="`exercise-${sessionIndex}-${exerciseIndex}`"
+                            v-for="(p, pIndex) in s.protocols"
+                            :key="`protocol-${p.name}-${pIndex}`"
                         >
-                            <divider class="mb-4" />
-                            <txt bold>Metric: {{ exercise.exerciseName }}</txt>
+                            <divider class="mt-6 mb-4" />
+                            <txt bold>Metric: {{ p.exercise }}</txt>
                             <txt class="mt-2"
-                                >Week {{ currentWeek }}:
-                                {{ exercise.exerciseProtocol }}</txt
+                                >Week {{ currentWeek }}: {{ p.protocol }}</txt
                             >
+
+                            <!-- Per input -->
                             <txt-input
-                                v-for="(
-                                    progression, progressionIndex
-                                ) in exercise.progression"
+                                v-for="(i, iIndex) in s.inputs[pIndex]"
                                 type="text"
                                 class="mt-2"
-                                :key="`exercise-${sessionIndex}-${exerciseIndex}-${progressionIndex}`"
-                                :label="`Week ${
-                                    currentWeek + progressionIndex + 1
-                                }:`"
-                                :aria-label="`${exercise.exerciseName}_${progressionIndex}`"
-                                :value="exercise.progression[progressionIndex]"
+                                :key="`input-${p.exercise}-${iIndex}`"
+                                :label="`Week ${currentWeek + iIndex + 1}:`"
+                                :aria-label="`${p.name}-${iIndex}`"
+                                :value="p.protocol"
                                 @output="
                                     (data) =>
-                                        (exercise.progression[
-                                            progressionIndex
-                                        ] = data)
+                                        (progressProtocols[sIndex].inputs[
+                                            pIndex
+                                        ][iIndex] = data)
                                 "
                                 required
-                            />
-                            <divider
-                                v-if="
-                                    exerciseIndex !==
-                                    session.sessionExercises.length - 1
-                                "
-                                class="my-4"
                             />
                         </div>
                     </div>
@@ -113,10 +103,7 @@
                     <default-button
                         theme="red"
                         :on-click-prevent="
-                            () =>
-                                sessionIndex === 0
-                                    ? (progressPage -= 1)
-                                    : (progressSection -= 1)
+                            () => (sIndex === 0 ? (page -= 1) : (section -= 1))
                         "
                         aria-label="Back"
                         prevent
@@ -131,10 +118,7 @@
         </div>
 
         <!-- Complete flow -->
-        <form
-            v-else-if="progressPage === 2"
-            @submit.prevent="progressComplete(), ($parent.showProgress = false)"
-        >
+        <form v-else-if="page === 2" @submit.prevent="__complete">
             <txt bold>You're all set</txt>
             <txt grey>
                 Are you ready to progress the
@@ -143,7 +127,7 @@
             <div class="mt-4">
                 <default-button
                     theme="red"
-                    :on-click-prevent="() => (progressPage -= 1)"
+                    :on-click-prevent="() => (page -= 1)"
                     aria-label="Back"
                     prevent
                 >
@@ -157,174 +141,128 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Mixins } from "vue-property-decorator";
+import appModule from "../../../../../../../store/app.module";
+import utilsModule from "../../../../../../../store/utils.module";
+import planModule from "../../../../../../../store/plan.module";
+import { Protocol } from "../../../../../../../common/types";
+import MainMixins from "../../../../../../../main.mixins";
 
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "../../../../../../../components/generic/CardWrapper.vue"
     );
 
-export default {
+type ProgressProtocol = {
+    id: number;
+    name: string;
+    date: string;
+    notes: string;
+    protocols: Protocol[];
+    inputs: string[][];
+};
+
+@Component({
     components: {
         CardWrapper,
     },
-    data() {
-        return {
-            // User inputs
-            progressInputs: {
-                target: 2,
-                daysBetween: 7,
-            },
+})
+export default class ProgressModal extends Mixins(MainMixins) {
+    target: number = 2;
+    daysBetween: number = 7;
+    page: number = 0;
+    section: number = 0;
+    progressProtocols: ProgressProtocol[] = [];
 
-            // Navigation
-            progressPage: 0,
-            progressSection: 0,
+    get plan() {
+        return planModule.plan;
+    }
+    get selectedIds() {
+        return utilsModule.selectedIds;
+    }
+    get currentWeek() {
+        return planModule.currentWeek;
+    }
 
-            // Processing
-            sessionDataset: [],
-            progressDataInputs: [],
-        };
-    },
-    computed: {
-        plan() {
-            return this.$store.getters.getPlan({
-                clientId: this.$route.params.client_id,
-                planId: this.$route.params.id,
-            });
-        },
-        ...mapState(["selectedIds", "currentWeek"]),
-    },
-    methods: {
-        /**
-         * Pulls all the protocols in the selected session, ready for the user to manipulate before progressing.
-         */
-        progressPull() {
-            this.progressDataInputs = [];
-            this.selectedIds.forEach((sessionId, sessionIdx) => {
-                const SESSION = this.plan.sessions.find(
-                    (session) => session.id === sessionId
-                );
-                this.progressDataInputs.push({
-                    sessionId: SESSION.id,
-                    sessionName: SESSION.name,
-                    sessionDate: SESSION.date,
-                    sessionExercises: this.pull_protocols(
-                        SESSION.name,
-                        SESSION.notes,
-                        SESSION.date
+    /** Pulls all the protocols in the selected session. */
+    __setup() {
+        const sessions = this.plan?.sessions?.filter((s) =>
+            this.selectedIds.includes(s.id)
+        );
+
+        if (!sessions) return;
+
+        this.progressProtocols = sessions.map(({ id, name, date, notes }) => {
+            const protocols = this.pullProtocols(name, notes, date);
+            return {
+                id,
+                name,
+                date,
+                notes,
+                protocols,
+                inputs: new Array(protocols.length)
+                    .fill("")
+                    .map(() =>
+                        new Array(this.target - this.currentWeek).fill("")
                     ),
-                });
-                this.progressDataInputs[sessionIdx].sessionExercises.forEach(
-                    (exercise) => {
-                        exercise.progression = new Array(
-                            this.progressInputs.target - this.currentWeek
-                        ).fill(exercise.exerciseProtocol);
-                    }
-                );
-            });
-        },
+            };
+        });
+    }
 
-        /**
-         * Processes the required changes to the temporary sessions before posting it to the database.
-         */
-        progressProcess(sessionId, sessionNotes, loc) {
-            this.progressDataInputs.forEach((session) => {
-                let n = 0;
-                if (session.sessionId === sessionId) {
-                    session.sessionExercises.forEach(
-                        (exercise, exerciseIdx) => {
-                            const REGEX = new RegExp(
-                                `${exercise.exerciseName
-                                    .replace("(", "\\(")
-                                    .replace(")", "\\)")}\\s*:\\s*${
-                                    exercise.exerciseProtocol
-                                }`,
-                                "g"
-                            );
-                            sessionNotes = sessionNotes.replace(
-                                REGEX,
-                                (match) => {
-                                    return n === exerciseIdx
-                                        ? `${exercise.exerciseName}: ${
-                                              exercise.progression[loc - 1]
-                                          }`
-                                        : match;
-                                }
-                            );
-                            n++;
-                        }
-                    );
-                }
-            });
-            return sessionNotes;
-        },
-
-        /**
-         * Initiates the changes and POST it to the database.
-         */
-        progressComplete() {
-            this.$store.dispatch("setLoading", {
-                loading: true,
-            });
-            const PROGRESS_SESSIONS = [];
-            this.selectedIds.forEach((sessionId) => {
-                PROGRESS_SESSIONS.push(
-                    this.plan.sessions.find(
-                        (session) => session.id === sessionId
-                    )
+    /** Processes the required changes to sessions before posting it to the database. */
+    __process(notes: string, sIndex: number, iIndex: number) {
+        this.progressProtocols[sIndex].protocols.forEach(
+            ({ exercise, protocol }, pIndex) => {
+                const regex = new RegExp(`${exercise}:\\s*${protocol}`, "g");
+                notes = notes.replace(
+                    regex,
+                    `${exercise}: ${this.progressProtocols[sIndex].inputs[pIndex][iIndex]}`
                 );
-            });
-            const START_WEEK = this.currentWeek;
-            for (
-                let weekCount = this.currentWeek + 1;
-                weekCount <= this.progressInputs.target;
-                weekCount++
-            ) {
-                PROGRESS_SESSIONS.forEach(async (session) => {
-                    try {
-                        await this.$store.dispatch("addSession", {
-                            client_id: parseInt(this.$route.params.client_id),
-                            data: {
-                                programme_id: parseInt(this.$route.params.id),
-                                name: session.name,
-                                date: this.addDays(
-                                    session.date,
-                                    this.progressInputs.daysBetween *
-                                        (weekCount - START_WEEK)
-                                ),
-                                notes: this.progressProcess(
-                                    session.id,
-                                    session.notes,
-                                    weekCount - START_WEEK
-                                ),
-                                week_id: weekCount,
-                            },
-                        });
-                    } catch (e) {
-                        this.$store.dispatch("resolveError", e);
-                    }
-                });
             }
-            this.$store.dispatch("closeModal");
-            this.$store.commit("SET_DATA", {
-                attr: "currentWeek",
-                data: this.progressInputs.target,
-            });
-            this.$store.commit("SET_DATA", {
-                attr: "selectedIds",
-                data: [],
-            });
-            this.progressInputs.target = this.plan.duration;
-            this.progressInputs.daysBetween = 7;
-            this.$ga.event("Session", "progress");
-            this.$store.dispatch("openResponsePopUp", {
-                title: "Sessions have been progressed",
-                description:
-                    "Please go through them to make sure that you're happy with it",
-            });
-            this.$store.dispatch("setLoading", false);
-        },
-    },
-};
+        );
+        return notes;
+    }
+
+    /** Initiates the changes and POST it to the database. */
+    __complete() {
+        appModule.setLoading(true);
+
+        let iIndex = 0;
+        for (
+            let week_id = this.currentWeek + 1;
+            week_id <= this.target;
+            week_id++
+        ) {
+            try {
+                this.progressProtocols.forEach(
+                    ({ id: programme_id, name, date, notes }, sIndex) => {
+                        planModule.addSession({
+                            programme_id,
+                            name,
+                            date: this.addDays(
+                                date,
+                                this.daysBetween * (iIndex + 1)
+                            ),
+                            week_id,
+                            notes: this.__process(notes, sIndex, iIndex),
+                        });
+                    }
+                );
+            } catch (e) {
+                utilsModule.resolveError(e as string);
+            }
+            iIndex += 1;
+        }
+        utilsModule.closeModal();
+        planModule.setCurrentWeek(this.target);
+        utilsModule.deselectAll();
+        this.$ga.event("Session", "progress");
+        utilsModule.responsePopUpRef?.open({
+            title: "Sessions have been progressed",
+            text: "Please go through them to make sure that you're happy with it",
+        });
+        appModule.stopLoaders();
+    }
+}
 </script>

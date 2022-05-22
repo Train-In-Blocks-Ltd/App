@@ -27,7 +27,7 @@
             <icon
                 v-else
                 svg="user"
-                :icon-size="80"
+                :size="80"
                 class="p-4 border-3 border-gray-800 dark:border-white rounded-full mr-4"
             />
             <div class="mt-4 sm:mt-0">
@@ -35,13 +35,13 @@
                     {{ client.name }}
                 </txt>
                 <div v-if="client.email" class="flex items-center">
-                    <icon svg="mail" :icon-size="22" class="mr-2" />
+                    <icon svg="mail" :size="22" class="mr-2" />
                     <txt>
                         {{ client.email }}
                     </txt>
                 </div>
                 <div v-if="client.number" class="flex items-center">
-                    <icon svg="smartphone" :icon-size="22" class="mr-2" />
+                    <icon svg="smartphone" :size="22" class="mr-2" />
                     <txt>
                         {{ client.number }}
                     </txt>
@@ -81,34 +81,42 @@
     </card-wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appModule from "../../store/app.module";
+import bookingsModule from "../../store/bookings.module";
+import { Booking, Client } from "../../common/types";
+import { Component, Prop, Mixins } from "vue-property-decorator";
+import MainMixins from "../../main.mixins";
 
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "./CardWrapper.vue"
     );
 const Checkbox = () =>
     import(
-        /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "./Checkbox"
+        /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "./Checkbox.vue"
     );
 
-export default {
+@Component({
     components: {
         CardWrapper,
         Checkbox,
     },
-    props: {
-        client: Object,
-        clientIndex: Number,
-        archive: Boolean,
-    },
-    data() {
-        return {
-            nextBooking: undefined,
-        };
-    },
-    computed: mapState(["bookings", "isDemo"]),
+})
+export default class ClientLink extends Mixins(MainMixins) {
+    @Prop(Object) readonly client!: Client;
+    @Prop(Number) readonly clientIndex!: number;
+    @Prop(Boolean) readonly archive!: boolean;
+
+    nextBooking: Booking | undefined = undefined;
+
+    get isDemo() {
+        return appModule.isDemo;
+    }
+    get bookings() {
+        return bookingsModule.bookings;
+    }
+
     created() {
         if (this.bookings) {
             const clientBookings = this.bookings.filter(
@@ -116,6 +124,6 @@ export default {
             );
             if (clientBookings) this.nextBooking = clientBookings[0];
         }
-    },
-};
+    }
+}
 </script>

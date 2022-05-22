@@ -4,7 +4,7 @@
         <div class="skeleton-item" />
         <div class="skeleton-item" />
     </div>
-    <div v-else class="grid gap-8 mb-8">
+    <div v-else-if="!loading && clients.length > 0" class="grid gap-8 mb-8">
         <!-- Perform case insensitive search -->
         <router-link
             v-for="(client, index) in clients"
@@ -22,20 +22,36 @@
             <client-link :client="client" />
         </router-link>
     </div>
+    <txt v-else type="large-body" grey>
+        No clients added yet, use the button on the top-right of your screen.
+    </txt>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appModule from "../../../../store/app.module";
+import clientsModule from "../../../../store/clients.module";
+import { Component, Vue } from "vue-property-decorator";
+import utils from "../../../../store/utils.module";
 
 const ClientLink = () =>
     import(
-        /* webpackChunkName: "components.clientLink", webpackPreload: true  */ "@/components/generic/ClientLink"
+        /* webpackChunkName: "components.clientLink", webpackPreload: true  */ "../../../../components/generic/ClientLink.vue"
     );
 
-export default {
+@Component({
     components: {
         ClientLink,
     },
-    computed: mapState(["clients", "search", "loading"]),
-};
+})
+export default class ClientList extends Vue {
+    get loading() {
+        return appModule.loading;
+    }
+    get search() {
+        return utils.search;
+    }
+    get clients() {
+        return clientsModule.clients;
+    }
+}
 </script>

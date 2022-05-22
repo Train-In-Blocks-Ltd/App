@@ -1,58 +1,56 @@
 <template>
     <wrapper v-if="clientDetails" id="client">
         <!-- Client header -->
-        <client-header />
+        <client-header v-if="!loading" />
 
         <!-- Session view container -->
         <transition
             enter-active-class="fadeIn fill_mode_both delay"
             leave-active-class="fadeOut fill_mode_both"
         >
-            <router-view :key="$route.fullPath" />
+            <router-view v-if="loaded" :key="$route.fullPath" />
         </transition>
     </wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appModule from "../../../../store/app.module";
+import clientModule from "../../../../store/client.module.";
 
 const ClientHeader = () =>
     import(
-        /* webpackChunkName: "components.clientHeader", webpackPrefetch: true  */ "./components/ClientHeader"
+        /* webpackChunkName: "components.clientHeader", webpackPrefetch: true  */ "./components/ClientHeader.vue"
     );
 
-export default {
-    metaInfo() {
+@Component({
+    metaInfo(this: Client) {
         return {
-            title: this.loading ? "Loading..." : this.clientDetails.name,
+            title: this.loading ? "Loading..." : this.clientDetails?.name,
         };
     },
     components: {
         ClientHeader,
     },
-    data() {
-        return {
-            showOptions: false,
-            showToolkit: false,
-            sessions: false,
-        };
-    },
-    computed: mapState(["loading", "clients", "clientDetails"]),
+})
+export default class Client extends Vue {
+    showOptions: boolean = false;
+    showToolkit: boolean = false;
+    sessions: boolean = false;
+    loaded: boolean = false;
+
+    get loading() {
+        return appModule.loading;
+    }
+    get clientDetails() {
+        return clientModule.clientDetails;
+    }
+
     async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
-        await this.$parent.setup();
-        const CLIENT = this.clients.find(
-            (client) =>
-                client.client_id === parseInt(this.$route.params.client_id)
-        );
-        await this.$store.dispatch("getPlans", CLIENT.client_id);
-        this.$store.commit("SET_DATA", {
-            attr: "clientDetails",
-            data: CLIENT,
-        });
-        this.$store.dispatch("setLoading", false);
-    },
-};
+        this.loaded = false;
+        clientModule.setCurrentClient(parseInt(this.$route.params.client_id));
+        await clientModule.getPlans(parseInt(this.$route.params.client_id));
+        this.loaded = true;
+    }
+}
 </script>

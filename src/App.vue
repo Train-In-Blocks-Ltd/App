@@ -109,8 +109,10 @@ body {
 <template>
     <div id="app" :class="{ authenticated: authenticated }">
         <modal v-if="authenticated" />
-        <response-pop-up v-if="authenticated" />
-        <confirm-pop-up v-if="authenticated" />
+        <response-pop-up ref="responsePopUp" />
+        <confirm-pop-up ref="confirmPopUp" />
+        <upload-pop-up ref="uploadPopUp" />
+        <txt-input-pop-up ref="txtInputPopUp" />
         <nav-bar v-if="authenticated" class="fadeIn" />
         <main class="pb-16 sm:pb-0 md:ml-24" :class="{ 'm-0': !authenticated }">
             <top-banner v-if="authenticated" />
@@ -118,41 +120,57 @@ body {
                 enter-active-class="fadeIn fill_mode_both delay"
                 leave-active-class="fadeOut fill_mode_both"
             >
-                <router-view :key="$route.fullPath" />
+                <router-view v-if="loaded" :key="$route.fullPath" />
             </transition>
         </main>
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Mixins, Ref, Watch } from "vue-property-decorator";
+import { baseAPI, getClientUserData } from "./api";
+import appModule from "./store/app.module";
+import accountModule from "./store/account.module";
+import utilsModule from "./store/utils.module";
+import clientsModule from "./store/clients.module";
+import templatesModule from "./store/templates.module";
+import bookingsModule from "./store/bookings.module";
+import portfolioModule from "./store/portfolio.module";
+import clientUserModule from "./store/clientUser.module";
+import { getTrainerUserData } from "./api";
+import {
+    ConfirmPopUpRef,
+    DarkmodeType,
+    ResponsePopUpRef,
+    TIBUserClaims,
+    TxtInputPopUpRef,
+    UploadPopUpRef,
+} from "./common/types";
+
+//* Needed to import like this to use refs
+import ConfirmPopUp from "./components/extensive/ConfirmPopUp/index.vue";
+import ResponsePopUp from "./components/extensive/ResponsePopUp/index.vue";
+import UploadPopUp from "./components/generic/UploadPopUp.vue";
+import TxtInputPopUp from "./components/generic/TxtInputPopUp.vue";
+import MainMixins from "./main.mixins";
 
 const NavBar = () =>
     import(
-        /* webpackChunkName: "components.navBar", webpackPreload: true  */ "@/components/extensive/NavBar"
+        /* webpackChunkName: "components.navBar", webpackPreload: true  */ "./components/extensive/NavBar/index.vue"
     );
 const Modal = () =>
     import(
-        /* webpackChunkName: "components.modal", webpackPreload: true  */ "@/components/extensive/Modal"
-    );
-const ResponsePopUp = () =>
-    import(
-        /* webpackChunkName: "components.responsePopUp", webpackPreload: true  */ "@/components/extensive/ResponsePopUp"
-    );
-const ConfirmPopUp = () =>
-    import(
-        /* webpackChunkName: "components.confirmPopUp", webpackPreload: true  */ "@/components/extensive/ConfirmPopUp"
+        /* webpackChunkName: "components.modal", webpackPreload: true  */ "./components/extensive/Modal/index.vue"
     );
 const TopBanner = () =>
     import(
-        /* webpackChunkName: "components.topBanner", webpackPreload: true  */ "@/components/generic/TopBanner"
+        /* webpackChunkName: "components.topBanner", webpackPreload: true  */ "./components/generic/TopBanner.vue"
     );
 
-export default {
+@Component({
     metaInfo() {
         return {
             title: "Home",
-            // all titles will be injected into this template
             titleTemplate: "%s | Train In Blocks",
         };
     },
@@ -161,34 +179,62 @@ export default {
         Modal,
         ResponsePopUp,
         ConfirmPopUp,
+        UploadPopUp,
+        TxtInputPopUp,
         TopBanner,
     },
-    computed: mapState([
-        "authenticated",
-        "clientUserLoaded",
-        "loading",
-        "claims",
-        "clients",
-        "connected",
-        "instanceReady",
-    ]),
-    watch: {
-        $route(to, from) {
-            this.isAuthenticated();
-        },
-        async connected() {
-            if (this.connected === true) {
-                await this.setup();
-            }
-        },
-    },
-    created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
-        this.isAuthenticated();
-    },
+})
+export default class App extends Mixins(MainMixins) {
+    get authenticated() {
+        return appModule.authenticated;
+    }
+    get clientUserLoaded() {
+        return appModule.clientUserLoaded;
+    }
+    get loading() {
+        return appModule.loading;
+    }
+    get claims() {
+        return accountModule.claims;
+    }
+    get connected() {
+        return appModule.connected;
+    }
+
+    loaded: boolean = false;
+
+    // Pop-up refs
+    @Ref("responsePopUp") readonly responsePopUpRef!: ResponsePopUpRef;
+    @Ref("confirmPopUp") readonly confirmPopUpRef!: ConfirmPopUpRef;
+    @Ref("uploadPopUp") readonly uploadPopUpRef!: UploadPopUpRef;
+    @Ref("txtInputPopUp") readonly txtInputPopUpRef!: TxtInputPopUpRef;
+
+    @Watch("connected")
+    onConnectedChange() {
+        if (this.connected) this.setup();
+    }
+    @Watch("$route")
+    async onRouteChange() {
+        appModule.setAuthenticated(await this.$auth.isAuthenticated());
+    }
+    @Watch("authenticated")
+    onAuthenticated() {
+        if (this.authenticated) this.setup();
+    }
+
+    async created() {
+        appModule.setLoading(true);
+        appModule.setAuthenticated(await this.$auth.isAuthenticated());
+        if (process.env.NODE_ENV !== "production") await this.setup();
+    }
+
     async mounted() {
+        // Sets refs after app mount
+        utilsModule.setResponsePopUpRef(this.responsePopUpRef);
+        utilsModule.setConfirmPopUpRef(this.confirmPopUpRef);
+        utilsModule.setUploadPopUpRef(this.uploadPopUpRef);
+        utilsModule.setTxtInputPopUpRef(this.txtInputPopUpRef);
+
         // Sets the body to have dark mode.
         document.body.setAttribute(
             "class",
@@ -218,69 +264,48 @@ export default {
                 });
         }
         window.addEventListener("beforeunload", (e) => {
-            if (this.dontLeave) {
+            if (appModule.dontLeave) {
                 e.preventDefault();
                 e.returnValue =
                     "Your changes might not be saved, are you sure you want to leave?";
             }
         });
-        const SELF = this;
         window.addEventListener("beforeinstallprompt", (e) => {
             // Prevent the mini-infobar from appearing on mobile
             e.preventDefault();
 
             // Stash the event so it can be triggered later.
-            SELF.$store.commit("SET_DATA_DEEP", {
-                attrParent: "pwa",
-                attrChild: "deferredPrompt",
-                data: e,
-            });
+            appModule.setPWADeferredPrompt(e);
 
             // Update UI notify the user they can install the PWA
-            SELF.$store.commit("SET_DATA_DEEP", {
-                attrParent: "pwa",
-                attrChild: "canInstall",
-                data: true,
-            });
+            appModule.setPWACanInstall(true);
         });
         if ("getInstalledRelatedApps" in navigator) {
+            // @ts-expect-error
             const RELATED_APPS = await navigator.getInstalledRelatedApps();
-            if (RELATED_APPS.length > 0) {
-                this.$store.commit("SET_DATA_DEEP", {
-                    attrParent: "pwa",
-                    attrChild: "installed",
-                    data: true,
-                });
-            }
+            if (RELATED_APPS.length > 0) appModule.PWAInstalled();
         }
-        if (navigator.standalone) {
-            this.$store.commit("SET_DATA_DEEP", {
-                attrParent: "pwa",
-                attrChild: "displayMode",
-                data: "standalone-ios",
-            });
-        }
-        if (window.matchMedia("(display-mode: standalone)").matches) {
-            this.$store.commit("SET_DATA_DEEP", {
-                attrParent: "pwa",
-                attrChild: "displayMode",
-                data: "standalone",
-            });
-        }
-        this.$axios.interceptors.request.use(
+        // @ts-expect-error
+        if (navigator.standalone) appModule.setPWADisplayMode("standalone-ios");
+
+        if (window.matchMedia("(display-mode: standalone)").matches)
+            appModule.setPWADisplayMode("standalone");
+
+        baseAPI.interceptors.request.use(
             (config) => {
                 if (
-                    SELF.claims.email === "demo@traininblocks.com" &&
+                    this.claims?.email === "demo@traininblocks.com" &&
                     config.method !== "get"
                 ) {
-                    this.$store.dispatch("openResponsePopUp", {
-                        description:
-                            "You are using the demo account. Your changes cannot be saved.",
+                    utilsModule.responsePopUpRef?.open({
+                        title: "Action blocked",
+                        text: "You are using the demo account. Your changes cannot be saved.",
                         persist: true,
                         backdrop: true,
                     });
-                    SELF.$store.dispatch("setLoading", false);
-                    throw new SELF.$axios.Cancel(
+                    appModule.setLoading(false);
+                    // @ts-expect-error
+                    throw new baseAPI.Cancel(
                         "You are using the demo account. Your changes won't be saved"
                     );
                 }
@@ -290,217 +315,105 @@ export default {
                 return Promise.reject(error);
             }
         );
-    },
-    methods: {
-        /**
-         * Gives darkmode theme to the app.
-         */
-        darkmode(mode) {
-            const MATCHED_MEDIA =
-                window.matchMedia("(prefers-color-scheme)") || false;
-            if (mode === "dark") document.documentElement.classList.add("dark");
-            else if (
-                mode === "system" &&
-                (MATCHED_MEDIA === false
-                    ? false
-                    : MATCHED_MEDIA.media !== "not all")
-            ) {
-                this.darkmode(
-                    window.matchMedia("(prefers-color-scheme: dark)").matches
-                        ? "dark"
-                        : "light"
-                );
-                window
-                    .matchMedia("(prefers-color-scheme: dark)")
-                    .addListener((e) => {
-                        this.darkmode(e.matches ? "dark" : "light");
-                    });
-            } else document.documentElement.classList.remove("dark");
-        },
+    }
 
-        /**
-         * Checks if the user is authenticated and sets the Vuex state accordingly.
-         */
-        async isAuthenticated() {
-            this.$store.commit("SET_DATA", {
-                attr: "authenticated",
-                data: await this.$auth.isAuthenticated(),
+    /* --------------------------------- Methods -------------------------------- */
+
+    /** Initiates all the crucial setup for the app. */
+    async setup() {
+        this.loaded = false;
+        // Set claims
+        const claims = (
+            this.authenticated ? await this.$auth.getUser() : {}
+        ) as TIBUserClaims;
+        accountModule.setClaims(claims);
+
+        // Sets demo flag
+        appModule.setIsDemo(claims.email === "demo@traininblocks.com");
+
+        // Sets trainer flag
+        appModule.setIsTrainer(
+            claims.user_type === "Trainer" || claims.user_type === "Admin"
+        );
+
+        if (claims.ga === undefined || claims.ga === null)
+            accountModule.setClaims({
+                ...claims,
+                ga: true,
             });
-        },
 
-        /**
-         * Initiates all the crucial setup for the app.
-         * @param {boolean} force - Whether this process is forced.
-         */
-        async setup(force) {
-            force = force || false;
-            if (!this.instanceReady || force) {
-                // Set claims
-                this.$store.commit("SET_DATA", {
-                    attr: "claims",
-                    data: await this.$auth.getUser(),
-                });
+        if (claims.theme === undefined || claims.theme === null)
+            accountModule.setClaims({
+                ...claims,
+                theme: "system",
+            });
 
-                // Sets demo flag
-                if (this.claims.email === "demo@traininblocks.com")
-                    this.$store.commit("SET_DATA", {
-                        attr: "isDemo",
-                        data: true,
-                    });
+        // Sets theme
+        this.darkmode(claims.theme);
 
-                if (
-                    this.claims.user_type === "Trainer" ||
-                    this.claims.user_type === "Admin"
-                ) {
-                    this.$store.commit("SET_DATA", {
-                        attr: "isTrainer",
-                        data: true,
-                    });
-                }
-                if (this.claims) {
-                    if (!this.claims.ga || !this.claims) {
-                        this.$store.commit("SET_DATA", {
-                            attr: "ga",
-                            data: true,
-                        });
-                    }
-                    if (!this.claims.theme || !this.claims) {
-                        this.$store.commit("SET_DATA", {
-                            attr: "theme",
-                            data: "system",
-                        });
-                    }
+        // Set analytics and theme
+        claims.ga !== false ? this.$ga.enable() : this.$ga.disable();
 
-                    // Set analytics and theme
-                    this.claims.ga !== false
-                        ? this.$ga.enable()
-                        : this.$ga.disable();
+        if (localStorage.getItem("darkmode"))
+            this.darkmode(localStorage.getItem("darkmode") as DarkmodeType);
 
-                    if (localStorage.getItem("darkmode"))
-                        this.darkmode(localStorage.getItem("darkmode"));
+        // Set EULA
+        if (
+            (!claims.policy || appModule.policyVersion !== claims.policy[2]) &&
+            claims.email !== "demo@traininblocks.com" &&
+            this.authenticated
+        ) {
+            utilsModule.openModal({
+                name: "eula",
+                persist: true,
+            });
+        }
 
-                    // Set EULA
-                    if (
-                        (!this.claims.policy ||
-                            this.$store.state.policyVersion !==
-                                this.claims.policy[2]) &&
-                        this.claims.email !== "demo@traininblocks.com" &&
-                        this.authenticated
-                    ) {
-                        this.$store.dispatch("openModal", {
-                            name: "eula",
-                            persist: true,
-                        });
-                    }
-                }
+        // Set auth header
+        baseAPI.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
 
-                // Set auth header
-                this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
+        // Set connection
+        appModule.setConnected(navigator.onLine);
+        window.addEventListener("offline", () => {
+            appModule.setConnected(false);
+        });
+        window.addEventListener("online", () => {
+            appModule.setConnected(true);
+        });
 
-                // Set connection
-                this.$store.commit("SET_DATA", {
-                    attr: "connected",
-                    data: navigator.onLine,
-                });
-                const SELF = this;
-                window.addEventListener("offline", function (event) {
-                    SELF.$store.commit("SET_DATA", {
-                        attr: "connected",
-                        data: false,
-                    });
-                });
-                window.addEventListener("online", function (event) {
-                    SELF.$store.commit("SET_DATA", {
-                        attr: "connected",
-                        data: true,
-                    });
-                });
+        // Check build
+        if (localStorage.getItem("versionBuild") !== appModule.versionBuild)
+            appModule.setNewBuild(true);
 
-                // Check build
-                if (
-                    localStorage.getItem("versionBuild") !==
-                    this.$store.state.versionBuild
-                ) {
-                    this.$store.commit("SET_DATA", {
-                        attr: "newBuild",
-                        data: true,
-                    });
-                }
+        // Get data if not client
+        try {
+            if (["Trainer", "Admin"].includes(claims.user_type)) {
+                const {
+                    sortedClients,
+                    sortedArchiveClients,
+                    sortedBookings,
+                    templates,
+                    portfolio,
+                } = await getTrainerUserData(claims.sub);
+                clientsModule.setClients(sortedClients);
+                clientsModule.setArchivedClients(sortedArchiveClients);
+                bookingsModule.setBookings(sortedBookings);
+                templatesModule.setTemplates(templates);
 
-                // Get data if not client
-                if (
-                    this.claims.user_type === "Admin" ||
-                    this.claims.user_type === "Trainer"
-                ) {
-                    try {
-                        await this.$store.dispatch("getHighLevelData");
-                    } catch (e) {
-                        this.$store.dispatch("resolveError", e);
-                    }
-                }
-
-                // Stops setup from running more than once
-                this.$store.commit("SET_DATA", {
-                    attr: "instanceReady",
-                    data: true,
-                });
+                if (!!portfolio) portfolioModule.setPortfolio(portfolio);
             }
-        },
-
-        /**
-         * Saves the user's claims to Okta.
-         */
-        async saveClaims() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                await this.$store.dispatch("saveClaims");
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
+            if (["Client", "Admin"].includes(claims.user_type)) {
+                const clientUserData = await getClientUserData(
+                    claims.client_id_db
+                );
+                clientUserModule.setClientUser(clientUserData);
             }
-        },
+        } catch (e) {
+            utilsModule.resolveError(e as string);
+        }
 
-        /**
-         * Gets all the data for setup on the client-side
-         */
-        async getClientSideData() {
-            if (!this.clientUserLoaded) {
-                try {
-                    await this.$store.dispatch("getClientSideInfo");
-                    await this.$store.dispatch("getClientSidePlans");
-                    this.$store.commit("SET_DATA", {
-                        attr: "clientUserLoaded",
-                        data: true,
-                    });
-                } catch (e) {
-                    this.$store.dispatch("resolveError", e);
-                }
-            }
-        },
-
-        /**
-         * Updates a client-side session.
-         * @param {integer} planId - The id of the plan.
-         * @param {integer} sessionId - The id of the session to update.
-         */
-        async updateClientSideSession(planId, sessionId) {
-            try {
-                await this.$store.dispatch("updateClientSideSession", {
-                    planId,
-                    sessionId,
-                });
-                this.$ga.event("Session", "update");
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Session updated",
-                    description: "Your changes have been saved",
-                });
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-    },
-};
+        this.loaded = true;
+        appModule.stopLoaders();
+    }
+}
 </script>

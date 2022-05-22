@@ -13,12 +13,13 @@
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        noHover: Boolean,
-        noBorder: Boolean,
-        hasShadow: Boolean,
-    },
-};
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+
+@Component
+export default class CardWrapper extends Vue {
+    @Prop(Boolean) readonly noHover!: boolean;
+    @Prop(Boolean) readonly noBorder!: boolean;
+    @Prop(Boolean) readonly hasShadow!: boolean;
+}
 </script>

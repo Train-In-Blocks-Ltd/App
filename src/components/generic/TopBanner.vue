@@ -18,18 +18,24 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appModule from "../../store/app.module";
+import accountModule from "../../store/account.module";
 
-export default {
-    computed: {
-        ...mapState(["authenticated", "connected", "claims"]),
-        isDemo() {
-            return (
-                this.claims.email === "demo@traininblocks.com" &&
-                this.authenticated
-            );
-        },
-    },
-};
+@Component
+export default class TopBanner extends Vue {
+    get authenticated() {
+        return appModule.authenticated;
+    }
+    get claims() {
+        return accountModule.claims;
+    }
+    get connected() {
+        return appModule.connected;
+    }
+    get isDemo() {
+        return appModule.isDemo;
+    }
+}
 </script>

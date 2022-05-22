@@ -3,34 +3,22 @@
         <div class="skeleton-item-lg" />
     </div>
     <div v-else class="flex flex-col sm:flex-row justify-between mb-8">
-        <txt type="title" isMain>Clients</txt>
+        <txt type="title" main>Clients</txt>
         <div
             class="flex items-center justify-between sm:justify-start w-full sm:w-auto mt-4 sm:mt-0"
         >
             <div class="flex items-center">
                 <icon-button
                     svg="user-plus"
-                    :on-click="
-                        () =>
-                            $store.dispatch('openModal', {
-                                name: 'new-client',
-                                size: 'xs',
-                            })
-                    "
-                    :icon-size="28"
+                    :on-click="handleOpenNewClient"
+                    :size="28"
                     aria-label="New client"
                     title="New client"
                 />
                 <icon-button
                     svg="bookmark"
-                    :on-click="
-                        () =>
-                            $store.dispatch('openModal', {
-                                name: 'whats-new',
-                                size: 'lg',
-                            })
-                    "
-                    :icon-size="28"
+                    :on-click="handleOpenWhatsNew"
+                    :size="28"
                     aria-label="What's new"
                     title="What's new"
                     class="ml-4"
@@ -38,13 +26,8 @@
                 <icon-button
                     v-if="pwa.displayMode === 'browser tab'"
                     svg="download"
-                    :on-click="
-                        () =>
-                            $store.dispatch('openModal', {
-                                name: 'install-pwa',
-                            })
-                    "
-                    :icon-size="28"
+                    :on-click="handleOpenInstall"
+                    :size="28"
                     aria-label="Install"
                     title="Install"
                     class="ml-4"
@@ -57,35 +40,59 @@
                 placeholder="Find a client"
                 aria-label="Find a client"
                 :value="search"
-                @output="
-                    (data) =>
-                        $store.commit('SET_DATA', {
-                            attr: 'search',
-                            data,
-                        })
-                "
+                @output="handleSearch"
             />
         </div>
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appModule from "../../../../store/app.module";
+import utilsModule from "../../../../store/utils.module";
+import { Component, Vue } from "vue-property-decorator";
 
-export default {
+@Component({
     computed: {
-        ...mapState(["pwa", "loading"]),
         search: {
             get() {
-                return this.$store.state.search;
+                return utilsModule.search;
             },
             set(value) {
-                this.$store.commit("SET_DATA", {
-                    attr: "search",
-                    data: value,
-                });
+                utilsModule.setSearch(value);
             },
         },
     },
-};
+})
+export default class HomeHeader extends Vue {
+    get pwa() {
+        return appModule.pwa;
+    }
+    get loading() {
+        return appModule.loading;
+    }
+
+    handleSearch(value: string) {
+        utilsModule.setSearch(value);
+    }
+
+    handleOpenNewClient() {
+        utilsModule.openModal({
+            name: "new-client",
+            size: "xs",
+        });
+    }
+
+    handleOpenWhatsNew() {
+        utilsModule.openModal({
+            name: "whats-new",
+            size: "lg",
+        });
+    }
+
+    handleOpenInstall() {
+        utilsModule.openModal({
+            name: "install-pwa",
+        });
+    }
+}
 </script>
