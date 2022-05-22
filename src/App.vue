@@ -297,9 +297,9 @@ export default class App extends Mixins(MainMixins) {
                     this.claims?.email === "demo@traininblocks.com" &&
                     config.method !== "get"
                 ) {
-                    this.$store.dispatch("openResponsePopUp", {
-                        description:
-                            "You are using the demo account. Your changes cannot be saved.",
+                    utilsModule.responsePopUpRef?.open({
+                        title: "Action blocked",
+                        text: "You are using the demo account. Your changes cannot be saved.",
                         persist: true,
                         backdrop: true,
                     });
@@ -337,7 +337,6 @@ export default class App extends Mixins(MainMixins) {
         );
 
         if (claims) {
-            console.log(claims.theme);
             if (!claims.ga || !claims)
                 accountModule.setClaims({
                     ...claims,
@@ -418,24 +417,6 @@ export default class App extends Mixins(MainMixins) {
 
         this.loaded = true;
         appModule.stopLoaders();
-    }
-
-    /** Updates a client-side session. */
-    async updateClientSideSession(planId: number, sessionId: number) {
-        try {
-            await this.$store.dispatch("updateClientSideSession", {
-                planId,
-                sessionId,
-            });
-            this.$ga.event("Session", "update");
-            this.$store.dispatch("openResponsePopUp", {
-                title: "Session updated",
-                description: "Your changes have been saved",
-            });
-            appModule.setLoading(false);
-        } catch (e) {
-            utilsModule.resolveError(e as string);
-        }
     }
 }
 </script>

@@ -46,7 +46,6 @@
         v-if="!authenticated"
         class="p-8 md:p-0 w-full max-w-xl pb-16 md:pr-24 m-auto"
     >
-        <splash v-if="!splashed" />
         <icon svg="full-logo" :size="150" />
         <a
             class="demo-details"
@@ -101,6 +100,7 @@ const Splash = () =>
     import(
         /* webpackChunkName: "components.splash", webpackPreload: true  */ "../../../components/generic/Splash.vue"
     );
+
 const ResetPassword = () =>
     import(
         /* webpackChunkName: "components.resetPassword", webpackPreload: true  */ "./components/ResetPassword.vue"
@@ -162,7 +162,6 @@ const oktaSignIn = new OktaSignIn({
 })
 export default class Login extends Vue {
     showDemo: boolean = false;
-    splashed: boolean = false;
     open: boolean = false;
 
     get authenticated() {
@@ -176,23 +175,15 @@ export default class Login extends Vue {
     }
 
     async mounted() {
-        let OktaSignIn: any;
-        await import(
-            // @ts-expect-error
-            /* webpackChunkName: "okta.signin", webpackPreload: true  */ "@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js"
-        ).then((module) => {
-            OktaSignIn = module.default;
-        });
-        this.splashed = true;
+        appModule.setSplashed(true);
         this.$nextTick(function () {
-            const self = this;
             oktaSignIn
                 .showSignInToGetTokens({
                     el: "#okta-signin-container",
                     scopes,
                 })
                 .then(async (tokens: any) => {
-                    self.splashed = false;
+                    appModule.setSplashed(false);
                     await this.$auth.handleLoginRedirect(tokens);
                 })
                 .catch((e: any) => {

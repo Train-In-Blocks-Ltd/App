@@ -141,6 +141,9 @@ export default class NavBar extends Vue {
     get isTrainer() {
         return appModule.isTrainer;
     }
+    get versionBuild() {
+        return appModule.versionBuild;
+    }
 
     hardRefresh() {
         location.reload();
@@ -158,10 +161,7 @@ export default class NavBar extends Vue {
             appModule.setAuthenticated(await this.$auth.isAuthenticated());
             localStorage.clear();
             sessionStorage.clear();
-            localStorage.setItem(
-                "versionBuild",
-                this.$store.state.versionBuild
-            );
+            localStorage.setItem("versionBuild", this.versionBuild);
             const COOKIES = document.cookie.split(";");
             for (let i = 0; i < COOKIES.length; i++) {
                 const COOKIE = COOKIES[i];
