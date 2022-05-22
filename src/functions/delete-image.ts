@@ -1,7 +1,6 @@
 import axios from "axios";
-import smtpTransport from "nodemailer-smtp-transport";
-import nodemailer from "nodemailer";
 import qs from "querystring";
+import { v2 as cloudinary } from "cloudinary";
 import { Handler } from "@netlify/functions";
 
 const CUSTOM_ENV =
@@ -9,19 +8,14 @@ const CUSTOM_ENV =
         ? require("./helpers/prod.env")
         : require("./helpers/dev.env");
 const headers = require("./helpers/headers");
-const transporter = nodemailer.createTransport(
-    smtpTransport({
-        service: "gmail",
-        host: "smtp-relay.gmail.com",
-        secure: true,
-        auth: {
-            user: CUSTOM_ENV.GOOGLE_WORKSPACE.USERNAME,
-            pass: CUSTOM_ENV.GOOGLE_WORKSPACE.PASSWORD,
-        },
-    })
-);
 
-export const handler: Handler = async (event) => {
+cloudinary.config({
+    cloud_name: CUSTOM_ENV.CLOUDINARY.CLOUD_NAME,
+    api_key: CUSTOM_ENV.CLOUDINARY.API_KEY,
+    api_secret: CUSTOM_ENV.CLOUDINARY.API_SECRET,
+});
+
+const handler: Handler = async (event) => {
     if (event.headers.authorization) {
         const accessToken = event.headers.authorization.split(" ");
         const response = await axios.post(
@@ -45,20 +39,13 @@ export const handler: Handler = async (event) => {
             };
         } else if (event.body && response.data.active === true) {
             try {
-                const data = JSON.parse(event.body);
-                // options
-                const mailOptions = {
-                    from: "Train In Blocks <hello@traininblocks.com>",
-                    to: data.to, // from req.body.to
-                    subject: data.subject, // from req.body.subject
-                    text: data.text,
-                    html: data.html, // from req.body.message
-                };
-                await transporter.sendMail(mailOptions);
+                const { file } = await JSON.parse(event.body);
+                const res = await cloudinary.uploader.destroy(
+                    file.match(/([^/]+)(?=\.\w+$)/g)
+                );
                 return {
                     statusCode: 200,
-                    headers,
-                    body: "Email sent successfully",
+                    body: JSON.stringify(res),
                 };
             } catch (e) {
                 return {

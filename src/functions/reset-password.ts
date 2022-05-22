@@ -78,18 +78,11 @@ export const handler: Handler = async (event) => {
                     body: JSON.stringify(e),
                 };
             }
-        } else {
-            return {
-                statusCode: 401,
-                headers,
-                body: "401 - Unauthorized",
-            };
         }
-    } else {
-        return {
-            statusCode: 401,
-            headers,
-            body: "401 - Unauthorized",
-        };
     }
+    return {
+        statusCode: 401,
+        headers,
+        body: "401 - Unauthorized",
+    };
 };
