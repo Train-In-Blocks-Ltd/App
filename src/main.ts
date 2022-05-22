@@ -30,8 +30,6 @@ import { baseAPI } from "./api";
 // Loading bar
 loadProgressBar({}, baseAPI);
 
-Vue.prototype.$axios = axios;
-
 Vue.use(VueAnalytics, {
     id: "UA-167770206-2",
     router,
