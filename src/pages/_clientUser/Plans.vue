@@ -184,7 +184,7 @@ import appModule from "../../store/app.module";
 import clientUserModule from "../../store/clientUser.module";
 import utilsModule from "../../store/utils.module";
 import MainMixins from "../../main.mixins";
-import { EditorState, Session } from "../../store/types";
+import { EditorState, Session } from "../../common/types";
 
 const WeekCalendar = () =>
     import(

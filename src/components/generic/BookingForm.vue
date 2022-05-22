@@ -50,7 +50,7 @@ import accountModule from "../../store/account.module";
 import utilsModule from "../../store/utils.module";
 import bookingsModule from "../../store/bookings.module";
 import clientUserModule from "../../store/clientUser.module";
-import { Booking } from "../../store/types";
+import { Booking } from "../../common/types";
 
 @Component
 export default class BookingForm extends Mixins(MainMixins) {

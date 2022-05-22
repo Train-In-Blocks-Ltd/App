@@ -5,7 +5,7 @@ import {
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import { Template } from "./types";
+import { Template } from "../common/types";
 import { baseAPI } from "../api";
 import accountModule from "./account.module";
 

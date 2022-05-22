@@ -1,5 +1,5 @@
 const ics = function (uidDomain, prodId) {
-  'use strict'
+  
 
   if (typeof uidDomain === 'undefined') { uidDomain = 'default' }
   if (typeof prodId === 'undefined') { prodId = 'Calendar' }

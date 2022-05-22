@@ -4,7 +4,7 @@ import {
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import { PWADisplayMode, PWASettings } from "./types";
+import { PWADisplayMode, PWASettings } from "../common/types";
 import store from ".";
 
 @Module({

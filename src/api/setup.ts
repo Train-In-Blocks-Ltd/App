@@ -6,7 +6,7 @@ import {
     Portfolio,
     Session,
     Template,
-} from "../store/types";
+} from "../common/types";
 
 export type TrainerUserData = {
     sortedClients: Client[];

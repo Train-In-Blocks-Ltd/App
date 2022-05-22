@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import { Booking as BookingType, BookingStatus } from "../../store/types";
+import { Booking as BookingType, BookingStatus } from "../../common/types";
 import { Component, Prop, Mixins } from "vue-property-decorator";
 import accountModule from "../../store/account.module";
 import appModule from "../../store/app.module";

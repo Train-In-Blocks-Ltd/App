@@ -146,7 +146,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import appModule from "../../../../../../../store/app.module";
 import utilsModule from "../../../../../../../store/utils.module";
 import planModule from "../../../../../../../store/plan.module";
-import { Protocol } from "../../../../../../../store/types";
+import { Protocol } from "../../../../../../../common/types";
 import MainMixins from "../../../../../../../main.mixins";
 
 const CardWrapper = () =>

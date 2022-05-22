@@ -67,7 +67,7 @@ import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../../../../store/app.module";
 import bookingsModule from "../../../../../../store/bookings.module";
 import utilsModule from "../../../../../../store/utils.module";
-import { Booking } from "../../../../../../store/types";
+import { Booking } from "../../../../../../common/types";
 
 const Booking = () =>
     import(

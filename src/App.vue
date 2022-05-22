@@ -145,7 +145,7 @@ import {
     TIBUserClaims,
     TxtInputPopUpRef,
     UploadPopUpRef,
-} from "./store/types";
+} from "./common/types";
 
 //* Needed to import like this to use refs
 import ConfirmPopUp from "./components/extensive/ConfirmPopUp/index.vue";

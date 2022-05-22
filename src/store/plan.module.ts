@@ -5,7 +5,7 @@ import {
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import { Plan, Session } from "./types";
+import { Plan, Session } from "../common/types";
 import { baseAPI } from "../api";
 import clientModule from "./client.module.";
 import utilsModule from "./utils.module";

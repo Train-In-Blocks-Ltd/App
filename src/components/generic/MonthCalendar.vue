@@ -105,7 +105,7 @@
 
 <script lang="ts">
 import { Component, Prop, Mixins } from "vue-property-decorator";
-import { EventRow } from "../../store/types";
+import { EventRow } from "../../common/types";
 import { MONTHS } from "../../common/helpers";
 import MainMixins from "../../main.mixins";
 

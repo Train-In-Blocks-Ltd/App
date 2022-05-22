@@ -68,7 +68,7 @@
 import appModule from "../../../store/app.module";
 import utilsModule from "../../../store/utils.module";
 import clientsModule from "../../../store/clients.module";
-import { MultiselectOption } from "../../../store/types";
+import { MultiselectOption } from "../../../common/types";
 import { Component, Vue } from "vue-property-decorator";
 
 const ClientLink = () =>

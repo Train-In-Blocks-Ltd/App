@@ -52,7 +52,7 @@
 import appModule from "../../../store/app.module";
 import accountModule from "../../../store/account.module";
 import utilsModule from "../../../store/utils.module";
-import { NavLinkType } from "../../../store/types";
+import { NavLinkType } from "../../../common/types";
 import { Component, Vue } from "vue-property-decorator";
 
 const NavLink = () =>

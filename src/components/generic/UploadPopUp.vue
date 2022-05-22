@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { UploadPopUpParams } from "../../store/types";
+import { UploadPopUpParams } from "../../common/types";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import Compressor from "compressorjs";
 import { baseAPI } from "../../api";

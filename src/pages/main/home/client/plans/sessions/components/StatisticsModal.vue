@@ -94,7 +94,7 @@ import {
     DropdownItem,
     Protocol,
     VisualiseData,
-} from "../../../../../../../store/types";
+} from "../../../../../../../common/types";
 import planModule from "../../../../../../../store/plan.module";
 import MainMixins from "../../../../../../../main.mixins";
 import { getLoad, getReps, getSets } from "../../../../../../../common/helpers";

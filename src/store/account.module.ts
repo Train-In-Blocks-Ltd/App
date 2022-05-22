@@ -5,7 +5,7 @@ import {
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import { Coupon, DarkmodeType, TIBUserClaims } from "./types";
+import { Coupon, DarkmodeType, TIBUserClaims } from "../common/types";
 import { baseAPI } from "../api";
 import emailBuilder from "../components/js/email";
 

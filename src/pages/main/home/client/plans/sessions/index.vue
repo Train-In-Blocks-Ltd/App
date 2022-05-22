@@ -335,7 +335,7 @@ import planModule from "../../../../../../store/plan.module";
 import utilsModule from "../../../../../../store/utils.module";
 import clientModule from "../../../../../../store/client.module.";
 import { NavigationGuardNext, Route } from "vue-router";
-import { EditorState, MultiselectOption } from "../../../../../../store/types";
+import { EditorState, MultiselectOption } from "../../../../../../common/types";
 import MainMixins from "../../../../../../main.mixins";
 
 const Checkbox = () =>

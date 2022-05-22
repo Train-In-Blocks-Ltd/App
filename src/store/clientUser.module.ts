@@ -5,7 +5,7 @@ import {
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import { Booking, Plan, Portfolio, Session } from "./types";
+import { Booking, Plan, Portfolio, Session } from "../common/types";
 import { baseAPI, ClientUserData } from "../api";
 import emailBuilder from "../components/js/email";
 import accountModule from "./account.module";

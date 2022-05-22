@@ -134,7 +134,7 @@
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import { NavigationGuardNext, Route } from "vue-router";
-import { EditorState, Plan, Session } from "../../store/types";
+import { EditorState, Plan, Session } from "../../common/types";
 import appModule from "../../store/app.module";
 import clientUserModule from "../../store/clientUser.module";
 import utilsModule from "../../store/utils.module";

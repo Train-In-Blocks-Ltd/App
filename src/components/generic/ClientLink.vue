@@ -84,7 +84,7 @@
 <script lang="ts">
 import appModule from "../../store/app.module";
 import bookingsModule from "../../store/bookings.module";
-import { Booking, Client } from "../../store/types";
+import { Booking, Client } from "../../common/types";
 import { Component, Prop, Mixins } from "vue-property-decorator";
 import MainMixins from "../../main.mixins";
 

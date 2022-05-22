@@ -1,5 +1,5 @@
 import { Component, Vue } from "vue-property-decorator";
-import { Booking, Protocol } from "./store/types";
+import { Booking, Protocol } from "./common/types";
 
 @Component
 export default class MainMixins extends Vue {

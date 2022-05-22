@@ -156,7 +156,7 @@ import {
     DropdownItem,
     PolicyLink,
     TIBUserClaims,
-} from "../../../store/types";
+} from "../../../common/types";
 import { baseAPI } from "../../../api";
 
 const VersionLabel = () =>

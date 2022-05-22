@@ -7,7 +7,7 @@ import {
     VuexModule,
 } from "vuex-module-decorators";
 import store from ".";
-import { Client, Plan, Session } from "./types";
+import { Client, Plan, Session } from "../common/types";
 import utilsModule from "./utils.module";
 
 @Module({

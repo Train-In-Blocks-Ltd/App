@@ -14,7 +14,7 @@ import {
     ResponsePopUpRef,
     TxtInputPopUpRef,
     UploadPopUpRef,
-} from "./types";
+} from "../common/types";
 import { Editor } from "@tiptap/core";
 
 type ModalParams =
