@@ -11,7 +11,7 @@ const CUSTOM_ENV =
 const stripe = new Stripe(CUSTOM_ENV.STRIPE_SECRET_KEY, {
     apiVersion: "2020-08-27",
 });
-const headers = require("./helpers/headers");
+const headers = require("././helpers/headers");
 
 let response;
 
@@ -39,20 +39,31 @@ export const handler: Handler = async (event) => {
             };
         } else if (event.body && response.data.active === true) {
             try {
-                response = await stripe.billingPortal.sessions.create({
-                    customer: JSON.parse(event.body).id,
-                    return_url:
-                        event.multiValueHeaders.Referer &&
-                        event.multiValueHeaders.Referer[0] ===
-                            "https://app.traininblocks.com/account"
-                            ? "https://app.traininblocks.com/account"
-                            : "https://dev.traininblocks.com/account",
-                });
-                return {
-                    statusCode: 200,
-                    headers,
-                    body: response.url,
-                };
+                if (JSON.parse(event.body).email) {
+                    const coupon = await stripe.promotionCodes.create({
+                        coupon: "Referee-20",
+                        code: JSON.parse(event.body)
+                            .email.toUpperCase()
+                            .replace(/[\W_]+/g, ""),
+                        metadata: {
+                            referrer: JSON.parse(event.body).email,
+                        },
+                        restrictions: {
+                            first_time_transaction: true,
+                        },
+                    });
+                    return {
+                        statusCode: 200,
+                        headers,
+                        body: JSON.stringify(coupon),
+                    };
+                } else {
+                    return {
+                        statusCode: 400,
+                        headers,
+                        body: "Please provide email address",
+                    };
+                }
             } catch (e) {
                 return {
                     statusCode: 500,
