@@ -225,7 +225,7 @@ export default class App extends Mixins(MainMixins) {
     async created() {
         appModule.setLoading(true);
         appModule.setAuthenticated(await this.$auth.isAuthenticated());
-        if (process.env.NODE_ENV !== "production") await this.setup();
+        await this.setup();
     }
 
     async mounted() {
