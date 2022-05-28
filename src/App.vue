@@ -225,6 +225,9 @@ export default class App extends Mixins(MainMixins) {
     async created() {
         appModule.setLoading(true);
         appModule.setAuthenticated(await this.$auth.isAuthenticated());
+        this.darkmode(
+            (localStorage.getItem("darkmode") as DarkmodeType) ?? "system"
+        );
         await this.setup();
     }
 
@@ -350,6 +353,8 @@ export default class App extends Mixins(MainMixins) {
 
         // Sets theme
         this.darkmode(claims.theme);
+        if (!localStorage.getItem("darkmode"))
+            localStorage.setItem("darkmode", claims.theme);
 
         // Set analytics and theme
         claims.ga !== false ? this.$ga.enable() : this.$ga.disable();
