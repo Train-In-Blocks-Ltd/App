@@ -317,8 +317,9 @@ export default class ClientPlans extends Mixins(MainMixins) {
     }
 
     /** Toggles the complete state of the session. */
-    handleToggleComplete(session: Session) {
-        clientUserModule.updateSession({
+    async handleToggleComplete(session: Session) {
+        appModule.setDisableButton(true);
+        await clientUserModule.updateSession({
             ...session,
             checked: !!session.checked ? 0 : 1,
         });
