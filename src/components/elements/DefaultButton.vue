@@ -50,26 +50,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { mapState } from "vuex";
+import { Component, Vue, Prop } from "vue-property-decorator";
+import appModule from "../../store/app.module";
 
-export default Vue.extend({
-    props: {
-        theme: {
-            type: String,
-            default: "normal",
-        },
-        onClick: {
-            type: [Function, Promise],
-            default: () => {},
-        },
-        onClickPrevent: {
-            type: [Function, Promise],
-            default: () => {},
-        },
-        isDisabled: Boolean,
-        prevent: Boolean,
-    },
-    computed: mapState(["disableButtons"]),
-});
+@Component
+export default class DefaultButton extends Vue {
+    @Prop(String) readonly theme!: string;
+    @Prop([Function, Promise]) readonly onClick!: () => void;
+    @Prop([Function, Promise]) readonly onClickPrevent!: () => void;
+    @Prop(Boolean) readonly isDisabled!: boolean;
+    @Prop(Boolean) readonly prevent!: boolean;
+
+    get disableButtons() {
+        return appModule.disableButtons;
+    }
+}
 </script>
