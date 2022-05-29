@@ -353,8 +353,11 @@ export default class App extends Mixins(MainMixins) {
 
         // Sets theme
         this.darkmode(claims.theme);
-        if (!localStorage.getItem("darkmode"))
-            localStorage.setItem("darkmode", claims.theme);
+        if (
+            Object.keys(claims).length > 0 &&
+            localStorage.getItem("darkmode") !== claims.theme
+        )
+            localStorage.setItem("darkmode", claims.theme ?? "system");
 
         // Set analytics and theme
         claims.ga !== false ? this.$ga.enable() : this.$ga.disable();
