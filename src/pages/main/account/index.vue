@@ -365,12 +365,8 @@ export default class Account extends Mixins(MainMixins) {
                     email: this.claims?.email,
                 }
             );
-            const foundCoupon = response.data.data.find(
-                (coupon: Coupon) =>
-                    coupon.code ===
-                    this.claims?.email?.toUpperCase().replace(/[\W_]+/g, "")
-            );
-            if (foundCoupon && foundCoupon.active) {
+            const foundCoupon = response.data.data[0];
+            if (foundCoupon) {
                 accountModule.setCoupon({
                     checked: true,
                     code:
