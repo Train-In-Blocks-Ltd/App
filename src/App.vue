@@ -225,6 +225,15 @@ export default class App extends Mixins(MainMixins) {
     async created() {
         appModule.setLoading(true);
         appModule.setAuthenticated(await this.$auth.isAuthenticated());
+        const claims = await this.$auth.getUser();
+        function darkmodeTheme () {
+            const theme = localStorage.getItem("darkmode") ?? claims.theme;
+            if (!!theme) return theme;
+            return "system";
+        }
+        this.darkmode(
+            (darkmodeTheme() as DarkmodeType)
+        );
         await this.setup();
     }
 
@@ -350,6 +359,11 @@ export default class App extends Mixins(MainMixins) {
 
         // Sets theme
         this.darkmode(claims.theme);
+        if (
+            Object.keys(claims).length > 0 &&
+            localStorage.getItem("darkmode") !== claims.theme
+        )
+            localStorage.setItem("darkmode", claims.theme ?? "system");
 
         // Set analytics and theme
         claims.ga !== false ? this.$ga.enable() : this.$ga.disable();
