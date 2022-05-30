@@ -44,7 +44,11 @@ export const ics = () => {
             rrule?: any
         ) {
             // I'm not in the mood to make these optional... So they are all required
-            if (!!subject || !!description || !!location || !!begin || !!stop) {
+            if (typeof subject === 'undefined' ||
+                typeof description === 'undefined' ||
+                typeof location === 'undefined' ||
+                typeof begin === 'undefined' ||
+                typeof stop === 'undefined') {
                 return false;
             }
 
