@@ -1,4 +1,3 @@
-
 const { merge } = require("webpack-merge");
 const frontEndEnv = require("../../../config/prod.env");
 

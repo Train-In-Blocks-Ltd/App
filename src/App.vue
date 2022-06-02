@@ -226,14 +226,12 @@ export default class App extends Mixins(MainMixins) {
         appModule.setLoading(true);
         appModule.setAuthenticated(await this.$auth.isAuthenticated());
         const claims = await this.$auth.getUser();
-        function darkmodeTheme () {
+        function darkmodeTheme() {
             const theme = localStorage.getItem("darkmode") ?? claims.theme;
             if (!!theme) return theme;
             return "system";
         }
-        this.darkmode(
-            (darkmodeTheme() as DarkmodeType)
-        );
+        this.darkmode(darkmodeTheme() as DarkmodeType);
         await this.setup();
     }
 

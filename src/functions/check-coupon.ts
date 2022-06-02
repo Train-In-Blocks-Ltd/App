@@ -40,8 +40,10 @@ export const handler: Handler = async (event) => {
                 if (JSON.parse(event.body).email) {
                     const coupons = await stripe.promotionCodes.list({
                         active: true,
-                        code: JSON.parse(event.body).email.toUpperCase()
-                            .replace(/[\W_]+/g, "") ?? ""
+                        code:
+                            JSON.parse(event.body)
+                                .email.toUpperCase()
+                                .replace(/[\W_]+/g, "") ?? "",
                     });
                     return {
                         statusCode: 200,
