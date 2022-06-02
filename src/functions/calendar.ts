@@ -101,7 +101,7 @@ export const handler: Handler = async (event) => {
                                     date.getDate()
                                 );
                                 cal.addEvent(
-                                    "Train In Blocks Meeting with" +
+                                    "Train In Blocks Meeting with " +
                                         data.data[0].find(
                                             (client: Client) =>
                                                 client.client_id ===

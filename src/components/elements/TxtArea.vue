@@ -15,7 +15,7 @@
             :pattern="pattern"
             :required="required"
             :rows="rows"
-            class="w-full px-2 py-3 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white border-2 border-gray-400 dark:border-gray-400 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
+            class="w-full h-40 px-2 py-3 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white border-2 border-gray-400 dark:border-gray-400 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
             @input="handleInput"
         />
         <txt v-if="info" type="tiny" class="mt-1" :class="infoClass">{{

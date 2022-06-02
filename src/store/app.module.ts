@@ -57,7 +57,12 @@ class AppModule extends VuexModule {
     }
     @MutationAction
     async stopLoaders() {
-        return { loading: false, dontLeave: false, silentLoading: false };
+        return {
+            loading: false,
+            dontLeave: false,
+            silentLoading: false,
+            disableButtons: false,
+        };
     }
     @MutationAction
     async setLoading(loading: boolean) {
