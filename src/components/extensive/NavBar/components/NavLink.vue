@@ -28,7 +28,11 @@
         :target="name === 'Help' && '_blank'"
         :title="name"
         :aria-label="name"
-        @click="onClick()"
+        @click="
+            () => {
+                if (onClick) onClick();
+            }
+        "
         :class="{ 'md:hidden': name === 'Refresh' }"
         class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all"
     >
