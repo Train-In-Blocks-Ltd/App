@@ -44,7 +44,7 @@
 <template>
     <div
         v-if="!authenticated"
-        class="p-8 md:p-0 w-full max-w-xl pb-16 md:pr-24 m-auto"
+        class="p-8 md:p-0 w-full max-w-xl md:pr-24 m-auto"
     >
         <splash v-if="splash" />
         <icon svg="full-logo" :size="150" />

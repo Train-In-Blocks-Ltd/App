@@ -114,7 +114,7 @@ body {
         <upload-pop-up ref="uploadPopUp" />
         <txt-input-pop-up ref="txtInputPopUp" />
         <nav-bar v-if="authenticated" class="fadeIn" />
-        <main class="pb-16 sm:pb-0 md:ml-24" :class="{ 'm-0': !authenticated }">
+        <main class="pb-16 sm:pb-0 md:ml-24" :class="{ 'm-0 h-full flex pb-0': !authenticated }">
             <top-banner v-if="authenticated" />
             <transition
                 enter-active-class="fadeIn fill_mode_both delay"
@@ -225,13 +225,20 @@ export default class App extends Mixins(MainMixins) {
     async created() {
         appModule.setLoading(true);
         appModule.setAuthenticated(await this.$auth.isAuthenticated());
-        const claims = await this.$auth.getUser();
-        function darkmodeTheme() {
-            const theme = localStorage.getItem("darkmode") ?? claims.theme;
-            if (!!theme) return theme;
-            return "system";
+
+        // Only gets theme if authenticated as it requires access token
+        if (this.authenticated) {
+            const claims = await this.$auth.getUser();
+            this.darkmode(
+                // IIFE: Gets the theme from local storage
+                (() => {
+                    const theme =
+                        localStorage.getItem("darkmode") ?? claims.theme;
+                    if (!!theme) return theme;
+                    return "system";
+                })()
+            );
         }
-        this.darkmode(darkmodeTheme() as DarkmodeType);
         await this.setup();
     }
 
