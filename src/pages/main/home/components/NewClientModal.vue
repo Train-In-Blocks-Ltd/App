@@ -35,6 +35,8 @@
                     ? 'Invalid email'
                     : email !== confirm
                     ? 'Email does\'t match'
+                    : emailAlreadyUsed
+                    ? 'A client is already using this email, please use another one.'
                     : ''
             "
             @output="(data) => (confirm = data)"
@@ -53,7 +55,7 @@
         <default-button
             type="submit"
             aria-label="Save"
-            :is-disabled="!valid && !validEmail"
+            :is-disabled="!valid || !validEmail || emailAlreadyUsed"
         >
             Save
         </default-button>
@@ -89,6 +91,12 @@ export default class NewClientModal extends Vue {
     }
     get validEmail() {
         return this.email.match(EMAIL_REGEX);
+    }
+    get emailAlreadyUsed() {
+        const existingEmails = clientsModule.clients
+            .map((c) => c.email)
+            .join("|");
+        return !!new RegExp(existingEmails, "i").test(this.email);
     }
 
     createClient() {
