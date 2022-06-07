@@ -11,8 +11,8 @@
                 'w-full md:w-3/4 lg:w-2/5 max-h-screen md:max-h-4/5 h-screen md:h-auto':
                     modalSize === 'xs',
             }"
-            noHover
-            noBorder
+            no-hover
+            no-border
         >
             <secondary-header :title="title()">
                 <template v-slot:right>
