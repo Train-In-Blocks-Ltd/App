@@ -1,7 +1,9 @@
 import store from ".";
 import {
+    Action,
     getModule,
     Module,
+    Mutation,
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
@@ -133,7 +135,11 @@ class PlanModule extends VuexModule {
         };
     }
 
-    @MutationAction
+    @Mutation
+    SET_PLAN(plan: Plan) {
+        this.plan = plan;
+    }
+    @Action({ commit: "SET_PLAN" })
     async updateSession(session: Session) {
         const plan = this.plan;
         if (!plan) return;
@@ -143,9 +149,7 @@ class PlanModule extends VuexModule {
             s.id === session.id ? session : s
         );
 
-        return {
-            plan,
-        };
+        return plan;
     }
 
     @MutationAction
