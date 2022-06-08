@@ -18,7 +18,7 @@
         class="flex h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all"
     >
         <icon :svg="svg" :size="24" />
-        <txt class="ml-3 hidden group-hover:block animate-fade-in">{{
+        <txt class="ml-3 hidden md:group-hover:block animate-fade-in">{{
             name
         }}</txt>
     </router-link>
