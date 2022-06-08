@@ -15,9 +15,12 @@
         :title="name"
         :aria-label="name"
         :class="{ 'md:hidden': name === 'Refresh' }"
-        class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all"
+        class="flex h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all"
     >
         <icon :svg="svg" :size="24" />
+        <txt class="ml-3 hidden group-hover:block animate-fade-in">{{
+            name
+        }}</txt>
     </router-link>
     <a
         v-else-if="
@@ -34,9 +37,12 @@
             }
         "
         :class="{ 'md:hidden': name === 'Refresh' }"
-        class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all"
+        class="flex h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all"
     >
         <icon :svg="svg" :size="24" />
+        <txt class="ml-3 hidden md:group-hover:block animate-fade-in">{{
+            name
+        }}</txt>
     </a>
 </template>
 

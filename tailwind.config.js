@@ -3,6 +3,19 @@ module.exports = {
     purge: ["./public/**/*.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
     theme: {
         extend: {
+            keyframes: {
+                fade: {
+                    "0%": {
+                        opacity: "0%",
+                    },
+                    "100%": {
+                        opacity: "100%",
+                    },
+                },
+            },
+            animation: {
+                "fade-in": "fade .3s ease-in forwards",
+            },
             minHeight: {
                 28: "112px",
             },
@@ -30,6 +43,13 @@ module.exports = {
             zIndex: {
                 60: 60,
             },
+        },
+    },
+    variants: {
+        extend: {
+            inset: ["group-hover"],
+            display: ["group-hover"],
+            translate: ["group-hover"],
         },
     },
     plugins: [],

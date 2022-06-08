@@ -14,11 +14,14 @@
     </div>
     <nav
         v-else
-        class="fixed bottom-0 md:top-0 left-0 flex md:flex-col items-center justify-evenly md:justify-end w-full md:w-24 h-16 md:h-full py-6 rounded-r-xl z-10 shadow-lg bg-white dark:bg-gray-600"
+        class="group fixed bottom-0 md:top-0 left-0 flex md:flex-col justify-evenly md:justify-end h-16 md:h-full w-full md:w-auto py-2 md:p-6 z-10"
     >
+        <div
+            class="h-full w-full md:w-48 absolute top-0 left-0 transform md:-translate-x-24 group-hover:translate-x-0 transition-all duration-300 ease-in-out shadow-lg bg-white dark:bg-gray-600 rounded-t-xl md:rounded-t-none md:rounded-r-xl"
+        />
         <!-- Logo -->
         <div
-            class="hidden md:block mb-auto hover:opacity-60 transition-opacity"
+            class="hidden md:block mb-auto hover:opacity-60 transition-opacity z-10"
         >
             <router-link
                 title="Home"
@@ -39,6 +42,7 @@
             :svg="nav.svg"
             :forUser="nav.forUser"
             :on-click="nav.onClick"
+            class="z-10"
         />
     </nav>
 </template>
