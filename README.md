@@ -2,7 +2,15 @@
 
 Repo for the Train In Blocks App.
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/15bb0c86-8028-4fac-88a2-87c773801c9a/deploy-status)](https://app.netlify.com/sites/train-in-blocks/deploys)
+[![Linter](https://github.com/Train-In-Blocks-Ltd/App/actions/workflows/lint.yml/badge.svg)](https://github.com/Train-In-Blocks-Ltd/App/actions/workflows/lint.yml)
+
+**Production**
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/15bb0c86-8028-4fac-88a2-87c773801c9a/deploy-status)](https://app.netlify.com/sites/app-train-in-blocks/deploys)
+
+**Staging**
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/d991d6ef-a182-4486-abb5-4dbee2d8a62c/deploy-status)](https://app.netlify.com/sites/happy-swanson-edf0fd/deploys)
 
 ## Getting Started
 
@@ -46,7 +54,7 @@ netlify deploy
 
 ## Browser support
 
-We support the latest 2 versions of all major browsers.
+We support the latest 20 versions of all major browsers.
 
 We do not support IE.
 

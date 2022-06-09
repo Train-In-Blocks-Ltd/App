@@ -1,433 +1,268 @@
-<style lang="scss">
-.show_html {
-  div,
-  p {
-    margin: .6rem 0
-  }
-  img {
-    border-radius: 10px;
-    max-width: 80%;
-    margin: 1rem 0
-  }
-  a {
-    color: var(--link)
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-.container--sessions {
-  margin: 2rem 0;
-  .wrapper--session {
-    border: 3px solid var(--base);
-    border-radius: 10px;
-    padding: 2rem;
-    margin: 2rem 0
-  }
-}
-.client_portfolio__notes {
-  margin: 2rem 0
-}
-hr {
-  margin: 2rem 0
-}
-.complete_button {
-  margin-top: 2rem
-}
-
-/* Products */
-.products_section {
-  margin: 4rem 0;
-  .products {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 2rem;
-    margin-top: 2rem;
-    .product {
-      display: grid;
-      grid-gap: 1rem;
-      border: 3px solid var(--base);
-      border-radius: 10px;
-      padding: 2rem;
-      .header {
-        display: flex;
-        justify-content: space-between
-      }
-      .type {
-        text-transform: capitalize
-      }
-      > button {
-        display: none
-      }
-    }
-  }
-}
-
-@media (max-width: 992px) {
-  .products_section {
-    .products {
-      grid-template-columns: 1fr
-    }
-  }
-}
-@media (max-width: 576px) {
-  .container--sessions .wrapper--session {
-    padding: .8rem
-  }
-  .products_section {
-    .products {
-      .product {
-        padding: 1rem;
-        .header {
-          button {
-            display: none
-          }
-        }
-        > button {
-          display: block;
-          margin-top: 1rem
-        }
-      }
-    }
-  }
-}
-</style>
-
 <template>
-  <div id="home" class="view_container">
-    <div v-if="portfolio">
-      <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen || isProfileOpen }" class="section_overlay" />
-      <div v-if="isProfileOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
-        <client-profile />
-      </div>
-      <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
-        <div class="client_home__portfolio">
-          <inline-svg
-            class="close_icon cursor"
-            :src="require('../../assets/svg/close.svg')"
-            aria-label="Close"
-            @click="isPortfolioOpen = false, willBodyScroll(true)"
-          />
-          <h2>
-            {{ portfolio.business_name }}
-          </h2>
-          <h3 class="grey">
-            {{ portfolio.trainer_name }}
-          </h3>
-          <skeleton
-            v-if="loading"
-            :type="'session'"
-          />
-          <div
-            v-else
-            class="client_portfolio__notes"
-            v-html="updateHTML(portfolio.notes, true)"
-          />
-        </div>
-      </div>
-      <div v-if="isInstallOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
-        <install-app />
-      </div>
-      <div
-        v-if="!isProfileOpen"
-        aria-label="Profile"
-        class="tab_option tab_option_small"
-        @click="isProfileOpen = true, willBodyScroll(false)"
-      >
-        <inline-svg :src="require('../../assets/svg/client-profile.svg')" aria-label="Profile" />
-        <p class="text">
-          Profile
-        </p>
-      </div>
-      <div
-        v-if="!isPortfolioOpen && portfolio && portfolio.notes !== '<p></p>'"
-        aria-label="Information"
-        class="tab_option tab_option_large icon_open_middle"
-        @click="isPortfolioOpen = true, willBodyScroll(false)"
-      >
-        <inline-svg :src="require('../../assets/svg/info.svg')" aria-label="Information" />
-        <p class="text">
-          Information
-        </p>
-      </div>
-      <div
-        v-if="!isInstallOpen && pwa.displayMode === 'browser tab'"
-        :class="{ icon_open_bottom: portfolio && portfolio.notes !== '<p></p>' }"
-        class="tab_option icon_open_middle tab_option_small"
-        aria-label="Install Train In Blocks"
-        @click="isInstallOpen = true, willBodyScroll(false)"
-      >
-        <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install Train In Blocks" />
-        <p class="text">
-          Install
-        </p>
-      </div>
-    </div>
-    <div id="client_home">
-      <div class="client_home__today">
-        <div class="client_home__today__header">
-          <h2>
-            Today
-          </h2>
-        </div>
-        <skeleton v-if="loading" :type="'session'" />
-        <div v-else-if="clientUser.sessionsToday" class="container--sessions">
-          <div
-            v-for="(session, sessionIndex) in clientUser.sessionsToday"
-            :id="`session-${session.id}`"
-            :key="sessionIndex"
-            class="wrapper--session"
-          >
-            <div :id="session.name" class="session_header client-side">
-              <div>
-                <span class="text--name"><b>{{ session.name }}</b></span><br>
-                <span class="text--tiny">{{ day(session.date) }}</span>
-                <span class="text--tiny">{{ session.date }}</span>
-              </div>
+    <wrapper id="client-home">
+        <!-- Today's sessions section -->
+        <div class="flex justify-between">
+            <txt type="title">Today</txt>
+            <div class="flex">
+                <icon-button
+                    v-if="pwa.displayMode === 'browser tab'"
+                    svg="download"
+                    :on-click="handleOpenInstall"
+                    :size="28"
+                    class="mr-4"
+                    aria-label="Install"
+                    title="Install"
+                />
+                <icon-button
+                    svg="info"
+                    :size="32"
+                    class="mr-4"
+                    :on-click="handleOpenInfo"
+                    aria-label="Your trainer"
+                    title="Your trainer"
+                />
+                <icon-button
+                    svg="user"
+                    :size="32"
+                    :on-click="handleOpenProfile"
+                    aria-label="Your profile"
+                    title="Your profile"
+                />
             </div>
-            <div class="show_html fadeIn" v-html="updateHTML(session.notes, true)" />
-            <div :key="check">
-              <button
-                v-if="session.checked === 1 && !feedbackId"
-                class="complete_button green_button"
-                @click="complete(session.programme_id, session.id, session.checked)"
-              >
-                Completed
-              </button>
-              <button
-                v-if="session.checked === 0 && !feedbackId"
-                class="complete_button red_button"
-                @click="complete(session.programme_id, session.id, session.checked)"
-              >
-                Click to complete
-              </button>
-            </div>
-            <div v-if="session.checked === 1">
-              <hr>
-              <h3>
-                Feedback
-              </h3>
-              <rich-editor
-                v-model="session.feedback"
-                :item-id="session.id"
-                :editing="feedbackId"
-                :empty-placeholder="'What would you like to share with your trainer?'"
-                :force-stop="forceStop"
-                @on-edit-change="resolveFeedbackEditor"
-              />
-            </div>
-          </div>
         </div>
-        <p
-          v-else
-          class="text--holder text--small grey"
-        >
-          Nothing planned for today
-        </p>
-      </div>
-      <div class="spacer" />
-      <div class="client_home__plans">
-        <h2>
-          Plans
-        </h2>
-        <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
-        <periodise v-else-if="clientUser.plans" :is-trainer="false" :plans.sync="clientUser.plans" />
-        <p
-          v-else
-          class="text--holder text--small grey"
-        >
-          No plans yet, please contact your trainer or coach for more information
-        </p>
-      </div>
-      <!--
-      <div class="products_section">
-        <h2>
-          Services
-        </h2>
-        <skeleton v-if="loading" :type="'product'" />
-        <div v-else class="products">
-          <div
-            v-for="(product, productIndex) in clientUser.products"
-            :key="`product_${productIndex}`"
-            class="product fadeIn"
-          >
-            <div class="header">
-              <h3>
-                {{ product.name }}
-              </h3>
-              <button @click.prevent="checkout(product.id)">
-                Purchase
-              </button>
-            </div>
-            <p>
-              <b class="type">{{ product.type }}</b> payment of <b>{{ `${product.price} ${product.currency}` }}</b>
-            </p>
-            <p>
-              {{ product.notes }}
-            </p>
-            <button @click.prevent="checkout(product.id)">
-              Purchase
-            </button>
-          </div>
+
+        <!-- Sessions section -->
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 mt-8">
+            <div class="skeleton-item w-1/3" />
+            <div class="skeleton-item w-2/3" />
+            <div class="skeleton-item w-5/12" />
+            <div class="skeleton-item w-1/2" />
+            <div class="skeleton-item w-1/4" />
         </div>
-      </div>
-      -->
-    </div>
-  </div>
+        <div v-else-if="getTodaySessions(plans).length" class="grid gap-8 mt-8">
+            <!-- Session -->
+            <card-wrapper
+                v-for="(session, sessionIndex) in getTodaySessions(plans)"
+                :id="`session-${session.id}`"
+                :key="sessionIndex"
+                class="p-4 sm:p-8"
+                no-hover
+            >
+                <!-- Preview state header -->
+                <div>
+                    <txt bold>{{ session.name }}</txt>
+                    <txt type="tiny"
+                        >{{ day(session.date) }} {{ session.date }}</txt
+                    >
+                </div>
+
+                <!-- Session Content -->
+                <div
+                    class="show_html"
+                    v-html="updateHTML(session.notes, true)"
+                />
+
+                <!-- Toggle complete button -->
+                <default-button
+                    v-if="!feedbackId"
+                    :theme="session.checked === 1 ? 'green' : 'red'"
+                    :on-click="() => handleToggleComplete(session)"
+                    :aria-label="
+                        session.checked === 1
+                            ? 'Completed'
+                            : 'Click to complete'
+                    "
+                    class="mt-4"
+                >
+                    {{
+                        session.checked === 1
+                            ? "Completed"
+                            : "Click to complete"
+                    }}
+                </default-button>
+
+                <!-- Feedback section -->
+                <div v-if="session.checked === 1">
+                    <divider class="mt-8 mb-6" />
+                    <txt type="subtitle">Feedback</txt>
+                    <rich-editor
+                        v-model="session.feedback"
+                        :item-id="session.id"
+                        :editing="feedbackId"
+                        :placeholder="'What would you like to share with your trainer?'"
+                        :force-stop="forceStop"
+                        @on-edit-change="resolveFeedbackEditor"
+                    />
+                </div>
+            </card-wrapper>
+        </div>
+
+        <!-- Placeholder -->
+        <txt v-else type="large-body" class="mt-4" grey>
+            Nothing planned for today
+        </txt>
+
+        <!-- Plans section -->
+        <div class="mt-16">
+            <txt type="title" class="mb-8">Plans</txt>
+            <div v-if="loading" class="grid sm:grid-cols-2 gap-4">
+                <div class="skeleton-box animate-pulse p-4">
+                    <div class="skeleton-item w-1/3" />
+                    <div class="skeleton-item w-3/4" />
+                </div>
+                <div class="skeleton-box animate-pulse p-4">
+                    <div class="skeleton-item w-1/3" />
+                    <div class="skeleton-item w-3/4" />
+                </div>
+            </div>
+            <div v-else-if="plans" class="grid sm:grid-cols-2 gap-4">
+                <plan-card
+                    v-for="(plan, index) in plans"
+                    :key="`plan-${index}`"
+                    :plan="plan"
+                    :link="`/clientUser/plan/${plan.id}`"
+                />
+            </div>
+            <txt v-else type="large-body" grey>
+                No plans yet, please contact your trainer or coach for more
+                information
+            </txt>
+        </div>
+    </wrapper>
 </template>
 
-<script>
-import { mapState } from 'vuex'
-const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
-const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../../components/InstallPWA')
-const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPrefetch: true  */ '../../components/Periodise')
-const ClientProfile = () => import(/* webpackChunkName: "components.clientProfile", webpackPrefetch: true  */ '../../components/ClientProfile')
-// const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
+<script lang="ts">
+import { Component, Mixins } from "vue-property-decorator";
+import { NavigationGuardNext, Route } from "vue-router";
+import { EditorState, Plan, Session } from "../../common/types";
+import appModule from "../../store/app.module";
+import clientUserModule from "../../store/clientUser.module";
+import utilsModule from "../../store/utils.module";
+import MainMixins from "../../main.mixins";
 
-export default {
-  components: {
-    RichEditor,
-    InstallApp,
-    Periodise,
-    ClientProfile
-  },
-  async beforeRouteLeave (to, from, next) {
-    if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: false
-      })
-      next()
-    }
-  },
-  data () {
-    return {
+const PlanCard = () =>
+    import(
+        /* webpackChunkName: "components.planCard", webpackPreload: true  */ "../../components/generic/PlanCard.vue"
+    );
+const CardWrapper = () =>
+    import(
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "../../components/generic/CardWrapper.vue"
+    );
 
-      // TAB
-
-      isPortfolioOpen: false,
-      isInstallOpen: false,
-      isProfileOpen: false,
-
-      // EDIT
-
-      forceStop: 0,
-      feedbackId: null,
-      tempEditorStore: null,
-
-      // SYSTEM
-
-      check: null,
-      showing_current_session: 0
-    }
-  },
-  computed: mapState([
-    'clientUserLoaded',
-    'loading',
-    'dontLeave',
-    'clientUser',
-    'claims',
-    'portfolio',
-    'pwa'
-  ]),
-  async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
-    this.willBodyScroll(true)
-    await this.$parent.setup()
-    await this.$parent.getClientSideData()
-    this.$store.dispatch('endLoading')
-  },
-  methods: {
-
-    // -----------------------------
-    // General
-    // -----------------------------
-
-    /**
-     * Resolves the state of the feeback editor.
-     * @param {string} state - The returned state of the editor.
-     * @param {integer} id - The id of the session.
-     */
-    resolveFeedbackEditor (state, id) {
-      let plan
-      let session
-      this.clientUser.plans.forEach((planItem) => {
-        if (planItem.sessions) {
-          planItem.sessions.forEach((sessionItem) => {
-            if (sessionItem.id === id) {
-              plan = planItem
-              session = sessionItem
-            }
-          })
-        }
-      })
-      switch (state) {
-        case 'edit':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
-          this.feedbackId = id
-          this.forceStop += 1
-          this.tempEditorStore = session.feedback
-          break
-        case 'save':
-          this.feedbackId = null
-          this.$parent.updateClientSideSession(plan.id, session.id)
-          break
-        case 'cancel':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: false
-          })
-          this.feedbackId = null
-          session.feedback = this.tempEditorStore
-          break
-      }
+@Component({
+    components: {
+        PlanCard,
+        CardWrapper,
     },
+})
+export default class ClientHome extends Mixins(MainMixins) {
+    forceStop: number = 0;
+    feedbackId: number | null = null;
+    tempEditorStore: string | null = null;
+    showing_current_session: number = 0;
 
-    /**
-     * Toggles the complete state of the session.
-     * @param {integer} planId - The id of the plan.
-     * @param {integer} sessionId - The id of the session.
-     * @param {integer} currentChecked - The new state of the session.
-     */
-    complete (planId, sessionId, currentChecked) {
-      this.$store.commit('updateClientUserPlanSingleSession', {
-        planId,
-        sessionId,
-        attr: 'checked',
-        data: !currentChecked ? 1 : 0
-      })
-      this.check = !currentChecked ? 1 : 0
-      this.$parent.updateClientSideSession(planId, sessionId)
-      this.$store.dispatch('endLoading')
+    get pwa() {
+        return appModule.pwa;
+    }
+    get loading() {
+        return appModule.loading;
+    }
+    get dontLeave() {
+        return appModule.dontLeave;
+    }
+    get portfolio() {
+        return clientUserModule.portfolio;
+    }
+    get plans() {
+        return clientUserModule.plans;
+    }
+    set plans(value) {
+        clientUserModule.setPlans(value);
+    }
+    get claims() {
+        return;
     }
 
-    /*
-    async checkout (productId) {
-      try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        const RESPONSE = await this.$axios.post('/.netlify/functions/checkout', {
-          productId,
-          ptId: this.clientUser.pt_id,
-          email: this.claims.email
-        })
-        // eslint-disable-next-line no-undef
-        const stripe = await Stripe(CUSTOM_ENV.STRIPE_PUBLIC_KEY)
-        stripe.redirectToCheckout({ sessionId: RESPONSE.data })
-        this.$store.dispatch('endLoading')
-      } catch (e) {
-        this.$parent.resolveError(e)
-      }
+    async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
+        if (
+            this.dontLeave
+                ? await utilsModule.confirmPopUpRef?.open({
+                      title: "Your changes might not be saved",
+                      text: "Are you sure you want to leave?",
+                  })
+                : true
+        ) {
+            appModule.setDontLeave(false);
+            next();
+        }
     }
-    */
-  }
+
+    getTodaySessions(plans: Plan[]) {
+        const allSessions: Session[] = [];
+        plans.forEach((p) => {
+            if (!!p.sessions) allSessions.push(...p.sessions);
+        });
+        return allSessions
+            .filter((s) => this.today() === s.date)
+            .sort(
+                (a, b) =>
+                    new Date(a.date).getTime() - new Date(b.date).getTime()
+            );
+    }
+
+    /** Resolves the state of the feedback editor. */
+    resolveFeedbackEditor(state: EditorState, id: number) {
+        const session = this.getTodaySessions(this.plans).find(
+            (s) => s.id === id
+        );
+        if (!session) return;
+        switch (state) {
+            case "edit":
+                appModule.setDontLeave(true);
+                this.feedbackId = id;
+                this.forceStop += 1;
+                this.tempEditorStore = session.feedback;
+                break;
+            case "save":
+                this.feedbackId = null;
+                clientUserModule.updateSession(session);
+                break;
+            case "cancel":
+                appModule.setDontLeave(false);
+                this.feedbackId = null;
+                session.feedback = this.tempEditorStore;
+                break;
+        }
+    }
+
+    handleOpenInstall() {
+        utilsModule.openModal({
+            name: "install-pwa",
+        });
+    }
+
+    handleOpenInfo() {
+        if (this.portfolio?.notes)
+            utilsModule.openModal({
+                name: "info",
+                previewHTML: this.portfolio.notes,
+            });
+    }
+
+    handleOpenProfile() {
+        utilsModule.openModal({
+            name: "client-user-profile",
+        });
+    }
+
+    /** Toggles the complete state of the session. */
+    async handleToggleComplete(session: Session) {
+        appModule.setDisableButton(true);
+        await clientUserModule.updateSession({
+            ...session,
+            checked: !!session.checked ? 0 : 1,
+        });
+        appModule.stopLoaders();
+    }
 }
 </script>

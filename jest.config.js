@@ -1,6 +1,6 @@
 const config = {
-  verbose: true,
-  coveragePathIgnorePatterns: ['/components/js']
-}
+    verbose: true,
+    coveragePathIgnorePatterns: ["/components/js"],
+};
 
-module.exports = config
+module.exports = config;

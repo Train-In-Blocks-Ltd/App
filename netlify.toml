@@ -1,7 +1,7 @@
 [build]
   command = "yarn build"
   publish = "dist"
-  functions = "functions"
+  functions = "src/functions"
 
 [dev]
   framework = "#custom"
@@ -10,8 +10,20 @@
   targetPort = 8081
 
 [[redirects]]
-  from = "https =//app-train-in-blocks.netlify.app/*"
-  to = "https =//app.traininblocks.com/ =splat"
+  from = "https://app-train-in-blocks.netlify.app/*"
+  to = "https://app.traininblocks.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://happy-swanson-edf0fd.netlify.app/*"
+  to = "https://staging.traininblocks.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://dev.traininblocks.com/*"
+  to = "https://staging.traininblocks.com/:splat"
   status = 301
   force = true
 
