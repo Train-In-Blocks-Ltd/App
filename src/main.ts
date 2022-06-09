@@ -6,6 +6,7 @@ import VueMeta from "vue-meta";
 import * as Sentry from "@sentry/vue";
 import { BrowserTracing } from "@sentry/tracing";
 
+
 import { InlineSvgPlugin } from "vue-inline-svg";
 
 import Txt from "./components/elements/Txt.vue";
