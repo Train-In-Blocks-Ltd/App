@@ -48,7 +48,8 @@
     >
         <splash v-if="splash" />
         <icon svg="full-logo" class="fill-current" :size="150" />
-        <a
+        <!-- Demo details -->
+        <!-- <a
             class="demo-details"
             href="javascript:void(0)"
             :aria-label="showDemo ? 'Hide' : 'Show demo account details'"
@@ -61,7 +62,7 @@
         <div v-if="showDemo" class="demo_details">
             <div class="info">demo@traininblocks.com</div>
             <div class="info">testingaccount123</div>
-        </div>
+        </div> -->
         <div id="okta-signin-container" />
         <div class="grid gap-4 mt-8">
             <txt class="flex items-center">
