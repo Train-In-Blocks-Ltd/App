@@ -117,8 +117,8 @@
         "last 20 versions and not ie <= 11 and > 0.2% and not dead and not op_mini all"
     ],
     "engines": {
-        "node": ">= 10.0.0",
-        "npm": ">= 7.0.0"
+        "node": ">= 16.0.0",
+        "npm": ">= 8.5.0"
     },
     "resolutions": {
         "prosemirror-model": "1.14.3"
