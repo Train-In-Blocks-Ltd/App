@@ -141,7 +141,6 @@ export default class WeekCalendar extends Mixins(MainMixins) {
         };
         this.currentMonth = MONTHS[month - 1];
         this.currentYear = year.toString();
-        console.log(this.currentMonday, this.currentMonth, this.currentYear);
 
         const week: WeekRow[] = [this.currentMonday];
         for (let i = 1; i < 7; i++) {
