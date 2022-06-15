@@ -12,7 +12,7 @@
             :aria-label="ariaLabel"
             :required="required"
             @change="handleChange"
-            class="w-full px-2 py-3 mt-1 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white border-2 border-gray-400 dark:border-gray-400 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
+            class="appearance-none w-full px-2 py-3 mt-1 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white border-2 border-gray-400 dark:border-gray-400 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
         >
             <option
                 v-for="(item, index) in items"
