@@ -39,6 +39,9 @@
 .auth-footer {
     @apply hidden;
 }
+.okta-form-infobox-error.infobox.infobox-error {
+    @apply text-red-700;
+}
 </style>
 
 <template>
