@@ -111,7 +111,7 @@ class BookingsModule extends VuexModule {
         datetime,
     }: Pick<Booking, "client_id" | "id" | "datetime">) {
         await baseAPI.delete(`https://api.traininblocks.com/v2/bookings/${id}`);
-        if (new Date(datetime) > new Date()) {
+        if (new Date(datetime.replace(/-/g, "/")) > new Date()) {
             await baseAPI.post("/.netlify/functions/send-email", {
                 to: clientsModule.clients.find(
                     (client) => client.client_id === client_id

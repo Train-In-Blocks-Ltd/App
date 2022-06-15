@@ -68,7 +68,7 @@
                 >
                     <!-- Day label -->
                     <txt grey>
-                        {{ new Date(day.date).getDate() }}
+                        {{ new Date(day.date.replace(/-/g, "/")).getDate() }}
                     </txt>
 
                     <!-- Event -->

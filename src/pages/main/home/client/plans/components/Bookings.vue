@@ -88,7 +88,11 @@ export default class Bookings extends Vue {
     get bookings() {
         return (
             bookingsModule.bookings
-                .filter((booking) => new Date(booking.datetime) > new Date())
+                .filter(
+                    (booking) =>
+                        new Date(booking.datetime.replace(/-/g, "/")) >
+                        new Date()
+                )
                 .filter(
                     (booking) =>
                         booking.client_id ===

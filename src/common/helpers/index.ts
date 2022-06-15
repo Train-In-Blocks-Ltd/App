@@ -58,7 +58,7 @@ export const EMAIL_REGEX =
 
 /** Adds specified days to the date provided. */
 export const addDays = (datetime: string, days: number) => {
-    const d = new Date(datetime);
+    const d = new Date(datetime.replace(/-/g, "/"));
     d.setDate(d.getDate() + days);
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, "0");

@@ -470,7 +470,8 @@ export default class Session extends Mixins(MainMixins) {
         return planModule.plan?.sessions
             ?.sort(
                 (a, b) =>
-                    new Date(a.date).getTime() - new Date(b.date).getTime()
+                    new Date(a.date.replace(/-/g, "/")).getTime() -
+                    new Date(b.date.replace(/-/g, "/")).getTime()
             )
             .map(({ name, date, week_id, id }) => {
                 return {
@@ -636,7 +637,9 @@ export default class Session extends Mixins(MainMixins) {
     print() {
         const NOTES_ARR: string[] = [];
         this.plan?.sessions?.sort(
-            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+            (a, b) =>
+                new Date(a.date.replace(/-/g, "/")).getTime() -
+                new Date(b.date.replace(/-/g, "/")).getTime()
         );
         this.plan?.sessions?.forEach((session) => {
             if (this.selectedIds.includes(session.id)) {

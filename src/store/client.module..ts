@@ -102,8 +102,12 @@ class ClientModule extends VuexModule {
                             .filter((s) => s.programme_id === p.id)
                             .sort(
                                 (a, b) =>
-                                    new Date(a.date).getTime() -
-                                    new Date(b.date).getTime()
+                                    new Date(
+                                        a.date.replace(/-/g, "/")
+                                    ).getTime() -
+                                    new Date(
+                                        b.date.replace(/-/g, "/")
+                                    ).getTime()
                             ),
                     };
                 }),
