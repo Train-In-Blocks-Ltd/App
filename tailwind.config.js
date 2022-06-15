@@ -30,6 +30,12 @@ module.exports = {
                     600: "#484848",
                     800: "#282828",
                 },
+                red: {
+                    700: "#B91C1C",
+                },
+                green: {
+                    700: "#047857",
+                },
                 skeleton: {
                     "light-fore": "#F2F2F2",
                     "light-back": "#E4E4E4",
