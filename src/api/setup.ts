@@ -48,7 +48,8 @@ export const getTrainerUserData = async (
     );
     const sortedBookings = response.data[4].sort(
         (a: Booking, b: Booking) =>
-            new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+            new Date(a.datetime.replace(/-/g, "/")).getTime() -
+            new Date(b.datetime.replace(/-/g, "/")).getTime()
     );
     const templates = response.data[2] as Template[];
     const portfolio = response.data[3][0] as Portfolio | undefined;
@@ -79,7 +80,8 @@ export const getClientUserData = async (
     const profile_image = response.data[2][0].profile_image;
     const bookings = response.data[3].sort(
         (a: Booking, b: Booking) =>
-            new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+            new Date(a.datetime.replace(/-/g, "/")).getTime() -
+            new Date(b.datetime.replace(/-/g, "/")).getTime()
     );
     const plans: Plan[] = plansResponse.data[0];
     const allSessions: Session[] = plansResponse.data[1];
@@ -96,7 +98,8 @@ export const getClientUserData = async (
                 .filter((s) => s.programme_id === p.id)
                 .sort(
                     (a, b) =>
-                        new Date(a.date).getTime() - new Date(b.date).getTime()
+                        new Date(a.date.replace(/-/g, "/")).getTime() -
+                        new Date(b.date.replace(/-/g, "/")).getTime()
                 );
             return {
                 ...p,

@@ -206,7 +206,8 @@ export default class ClientHome extends Mixins(MainMixins) {
             .filter((s) => this.today() === s.date)
             .sort(
                 (a, b) =>
-                    new Date(a.date).getTime() - new Date(b.date).getTime()
+                    new Date(a.date.replace(/-/g, "/")).getTime() -
+                    new Date(b.date.replace(/-/g, "/")).getTime()
             );
     }
 

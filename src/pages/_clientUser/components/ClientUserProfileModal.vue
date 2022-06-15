@@ -119,7 +119,9 @@ export default class ClientUserProfileModal extends Vue {
         return clientUserModule.bookings;
     }
     get upcoming() {
-        return this.bookings.filter((b) => new Date(b.datetime) > new Date());
+        return this.bookings.filter(
+            (b) => new Date(b.datetime.replace(/-/g, "/")) > new Date()
+        );
     }
 
     /** Adds a user profile image. */

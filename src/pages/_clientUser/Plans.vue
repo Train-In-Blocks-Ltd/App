@@ -251,7 +251,8 @@ export default class ClientPlans extends Mixins(MainMixins) {
         return this.plan?.sessions
             ?.sort(
                 (a, b) =>
-                    new Date(a.date).getTime() - new Date(b.date).getTime()
+                    new Date(a.date.replace(/-/g, "/")).getTime() -
+                    new Date(b.date.replace(/-/g, "/")).getTime()
             )
             .map(({ name, date, week_id, id }) => {
                 return {

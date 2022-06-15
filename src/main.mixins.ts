@@ -105,12 +105,12 @@ export default class MainMixins extends Vue {
     /** Takes in the date and returns the day of the week. */
     day(date: string) {
         const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        return days[new Date(date).getDay()];
+        return days[new Date(date.replace(/-/g, "/")).getDay()];
     }
 
     /** Checks if the booking is in the past. */
     isInThePast(booking: Booking) {
-        return new Date(booking.datetime) < new Date();
+        return new Date(booking.datetime.replace(/-/g, "/")) < new Date();
     }
 
     /** Gives darkmode theme to the app. */
