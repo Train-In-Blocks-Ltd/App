@@ -1,5 +1,5 @@
 <template>
-    <label-wrapper :title="title" no-hover>
+    <label-wrapper :title="`${currentMonth} ${currentYear}`" no-hover>
         <!-- Calendar controls -->
         <div class="flex items-center justify-between my-8">
             <icon-button
@@ -113,6 +113,8 @@ export default class WeekCalendar extends Mixins(MainMixins) {
     ) => void;
 
     currentMonday: WeekRow | null = null;
+    currentMonth: string = "";
+    currentYear: string = "";
     weekDiff: number = 0;
 
     /** Determines the day based on the date provided. */
@@ -137,6 +139,9 @@ export default class WeekCalendar extends Mixins(MainMixins) {
             dateSplit: [year, month, date],
             events: [],
         };
+        this.currentMonth = MONTHS[month - 1];
+        this.currentYear = year.toString();
+
         const week: WeekRow[] = [this.currentMonday];
         for (let i = 1; i < 7; i++) {
             week.push({
@@ -155,13 +160,6 @@ export default class WeekCalendar extends Mixins(MainMixins) {
         });
 
         return week;
-    }
-    get title() {
-        if (!this.currentMonday) return;
-        const d = new Date(this.currentMonday.date);
-        const month = MONTHS[d.getMonth()];
-        const year = d.getFullYear();
-        return `${month} ${year}`;
     }
 }
 </script>
