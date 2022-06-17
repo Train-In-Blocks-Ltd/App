@@ -3,26 +3,36 @@
         <label v-if="label" :for="name" :class="labelClass">
             {{ label }}
         </label>
-        <select
-            :id="inputId"
-            :name="name"
-            :value="value"
-            :class="inputClass"
-            :placeholder="placeholder"
-            :aria-label="ariaLabel"
-            :required="required"
-            @change="handleChange"
-            class="appearance-none w-full px-2 py-3 mt-1 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white border-2 border-gray-400 dark:border-gray-400 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
+        <div
+            class="relative h-12 px-2 py-3 mt-1 border-2 border-gray-400 dark:border-gray-400 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
         >
-            <option
-                v-for="(item, index) in items"
-                :key="`option-${index}`"
-                :value="item.value"
-                class="bg-white dark:bg-gray-800"
+            <icon
+                svg="chevron-down"
+                :size="24"
+                class="absolute right-2 top-3"
+                style="z-index: -1"
+            />
+            <select
+                :id="inputId"
+                :name="name"
+                :value="value"
+                :class="inputClass"
+                :placeholder="placeholder"
+                :aria-label="ariaLabel"
+                :required="required"
+                @change="handleChange"
+                class="appearance-none w-full h-full px-2 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white cursor-pointer absolute left-0 top-0"
             >
-                <txt>{{ item.label }}</txt>
-            </option>
-        </select>
+                <option
+                    v-for="(item, index) in items"
+                    :key="`option-${index}`"
+                    :value="item.value"
+                    class="bg-white dark:bg-gray-800"
+                >
+                    <txt>{{ item.label }}</txt>
+                </option>
+            </select>
+        </div>
         <txt v-if="info" type="tiny" class="mt-1" :class="infoClass">{{
             info
         }}</txt>
