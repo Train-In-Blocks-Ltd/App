@@ -4,7 +4,7 @@
             {{ label }}
         </label>
         <div
-            class="relative px-2 py-3 mt-1 border-2 border-gray-400 dark:border-gray-400 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
+            class="relative h-12 px-2 py-3 mt-1 border-2 border-gray-400 dark:border-gray-400 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
         >
             <icon
                 svg="chevron-down"
@@ -21,7 +21,7 @@
                 :aria-label="ariaLabel"
                 :required="required"
                 @change="handleChange"
-                class="appearance-none w-full font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white cursor-pointer"
+                class="appearance-none w-full h-full px-2 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white cursor-pointer absolute left-0 top-0"
             >
                 <option
                     v-for="(item, index) in items"
