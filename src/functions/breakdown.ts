@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Handler, schedule } from "@netlify/functions";
-import { Client } from "src/common/types";
+import { Booking, Client, Plan, Session, Template } from "src/common/types";
 import { emailBuilder } from "src/common/helpers/email";
 const smtpTransport = require("nodemailer-smtp-transport");
 const nodemailer = require("nodemailer");
@@ -59,34 +59,35 @@ const breakdownHandler: Handler = async () => {
                 );
 
                 // Sort out the PT's data into each category
-                const clients = ptData.data[0];
-                const archivedClients = ptData.data[1];
-                const templates = ptData.data[2];
-                const bookings = ptData.data[4];
+                const clients: Client[] = ptData.data[0];
+                const archivedClients: Client[] = ptData.data[1];
+                const templates: Template[] = ptData.data[2];
+                const bookings: Booking[] = ptData.data[4];
 
-                // Set the variables that we're reporting back to the user
                 let clientsUpdatedThisWeek = 0;
                 let clientsCreatedThisWeek = 0;
-                let clientsArchivedThisWeek = 0;
+
                 let templatesUpdatedThisWeek = 0;
                 let templatesCreatedThisWeek = 0;
+
                 let plansUpdatedThisWeek = 0;
                 let plansCreatedThisWeek = 0;
+
                 let sessionsUpdatedThisWeek = 0;
                 let sessionsCreatedThisWeek = 0;
-                let upcomingBookings = 0;
 
                 // Loop through clients
-                for (const client in clients) {
-                    if (new Date(clients[client].created_at) >= thisWeek) {
-                        clientsCreatedThisWeek++;
-                    } else if (
-                        new Date(clients[client].updated_at) >= thisWeek
-                    ) {
-                        clientsUpdatedThisWeek++;
+                for (const client of clients) {
+                    if (client.created_at && client.updated_at) {
+                        if (new Date(client.created_at) >= thisWeek) {
+                            clientsCreatedThisWeek++;
+                        } else if (new Date(client.updated_at) >= thisWeek) {
+                            clientsUpdatedThisWeek++;
+                        }
                     }
+
                     const plansData = await axios.get(
-                        `https://api.traininblocks.com/v2/plans/${clients[client].client_id}`,
+                        `https://api.traininblocks.com/v2/plans/${client.client_id}`,
                         {
                             headers: {
                                 Accept: "application/json",
@@ -95,60 +96,56 @@ const breakdownHandler: Handler = async () => {
                             },
                         }
                     );
-                    const plans = plansData.data[0];
-                    const sessions = plansData.data[1];
-                    for (const plan in plans) {
-                        if (new Date(plans[plan].created_at) >= thisWeek) {
+                    const plans: Plan[] = plansData.data[0];
+                    const sessions: Session[] = plansData.data[1];
+
+                    // Count plans created/updated
+                    for (const plan of plans) {
+                        if (!plan.created_at || !plan.updated_at) continue;
+
+                        if (new Date(plan.created_at) >= thisWeek) {
                             plansCreatedThisWeek++;
-                        } else if (
-                            new Date(plans[plan].updated_at) >= thisWeek
-                        ) {
+                        } else if (new Date(plan.updated_at) >= thisWeek) {
                             plansUpdatedThisWeek++;
                         }
                     }
-                    for (const session in sessions) {
-                        if (
-                            new Date(sessions[session].created_at) >= thisWeek
-                        ) {
+
+                    // Count sessions created/updated
+                    for (const session of sessions) {
+                        if (!session.created_at || !session.updated_at)
+                            continue;
+
+                        if (new Date(session.created_at) >= thisWeek) {
                             sessionsCreatedThisWeek++;
-                        } else if (
-                            new Date(sessions[session].updated_at) >= thisWeek
-                        ) {
+                        } else if (new Date(session.updated_at) >= thisWeek) {
                             sessionsUpdatedThisWeek++;
                         }
                     }
                 }
 
-                // Loop through archivedClients
-                for (const client in archivedClients) {
-                    if (
-                        new Date(archivedClients[client].updated_at) >= thisWeek
-                    ) {
-                        clientsArchivedThisWeek++;
-                    }
-                }
+                // Count clients archived
+                const clientsArchivedThisWeek = archivedClients.filter((c) => {
+                    if (!c.updated_at) return false;
+                    return new Date(c.updated_at) >= thisWeek;
+                }).length;
 
-                // Loop through templates
-                for (const template in templates) {
-                    if (new Date(templates[template].created_at) >= thisWeek) {
+                // Count templates created/updated
+                for (const template of templates) {
+                    if (!template.created_at || !template.updated_at) continue;
+
+                    if (new Date(template.created_at) >= thisWeek) {
                         templatesCreatedThisWeek++;
-                    } else if (
-                        new Date(templates[template].updated_at) >= thisWeek
-                    ) {
+                    } else if (new Date(template.updated_at) >= thisWeek) {
                         templatesUpdatedThisWeek++;
                     }
                 }
 
-                // Loop through bookings
-                for (const booking in bookings) {
-                    // If the client was created this week
-                    if (
-                        new Date(bookings[booking].datetime) <= nextWeek &&
-                        new Date(bookings[booking].datetime) >= new Date()
-                    ) {
-                        upcomingBookings++;
-                    }
-                }
+                // Count upcoming bookings
+                const upcomingBookings = bookings.filter(
+                    (b) =>
+                        new Date(b.datetime) <= nextWeek &&
+                        new Date(b.datetime) >= new Date()
+                ).length;
 
                 let body = "";
 
