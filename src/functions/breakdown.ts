@@ -1,9 +1,9 @@
 import axios from "axios";
 import { Handler, schedule } from "@netlify/functions";
 import { Client } from "src/common/types";
-import { emailBuilder } from 'src/common/helpers/email';
-const smtpTransport = require('nodemailer-smtp-transport')
-const nodemailer = require('nodemailer')
+import { emailBuilder } from "src/common/helpers/email";
+const smtpTransport = require("nodemailer-smtp-transport");
+const nodemailer = require("nodemailer");
 
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
@@ -22,8 +22,8 @@ const transporter = nodemailer.createTransport(smtpTransport({
     }
 }))
 
-const thisWeek = new Date(new Date().setDate(new Date().getDate() - 7))
-const nextWeek = new Date(new Date().setDate(new Date().getDate() + 7))
+const thisWeek = new Date(new Date().setDate(new Date().getDate() - 7));
+const nextWeek = new Date(new Date().setDate(new Date().getDate() + 7));
 
 const breakdownHandler: Handler = async () => {
     try {
@@ -43,7 +43,10 @@ const breakdownHandler: Handler = async () => {
         // Loop through Personal Trainer users
         for (const PT in PTs.data) {
             // If the PT is active (and they've opted in to weekly breakdown emails)
-            if (PTs.data[PT].status === 'ACTIVE' && PTs.data[PT].profile.weeklyBreakdown !== false) {
+            if (
+                PTs.data[PT].status === "ACTIVE" &&
+                PTs.data[PT].profile.weeklyBreakdown !== false
+            ) {
                 const ptData = await axios.get(
                     `https://api.traininblocks.com/v2/${PTs.data[PT].id}`,
                     {
@@ -56,29 +59,31 @@ const breakdownHandler: Handler = async () => {
                 );
 
                 // Sort out the PT's data into each category
-                const clients = ptData.data[0]
-                const archivedClients = ptData.data[1]
-                const templates = ptData.data[2]
-                const bookings = ptData.data[4]
+                const clients = ptData.data[0];
+                const archivedClients = ptData.data[1];
+                const templates = ptData.data[2];
+                const bookings = ptData.data[4];
 
                 // Set the variables that we're reporting back to the user
-                let clientsUpdatedThisWeek = 0
-                let clientsCreatedThisWeek = 0
-                let clientsArchivedThisWeek = 0
-                let templatesUpdatedThisWeek = 0
-                let templatesCreatedThisWeek = 0
-                let plansUpdatedThisWeek = 0
-                let plansCreatedThisWeek = 0
-                let sessionsUpdatedThisWeek = 0
-                let sessionsCreatedThisWeek = 0
-                let upcomingBookings = 0
+                let clientsUpdatedThisWeek = 0;
+                let clientsCreatedThisWeek = 0;
+                let clientsArchivedThisWeek = 0;
+                let templatesUpdatedThisWeek = 0;
+                let templatesCreatedThisWeek = 0;
+                let plansUpdatedThisWeek = 0;
+                let plansCreatedThisWeek = 0;
+                let sessionsUpdatedThisWeek = 0;
+                let sessionsCreatedThisWeek = 0;
+                let upcomingBookings = 0;
 
                 // Loop through clients
                 for (const client in clients) {
                     if (new Date(clients[client].created_at) >= thisWeek) {
-                        clientsCreatedThisWeek++
-                    } else if (new Date(clients[client].updated_at) >= thisWeek) {
-                        clientsUpdatedThisWeek++
+                        clientsCreatedThisWeek++;
+                    } else if (
+                        new Date(clients[client].updated_at) >= thisWeek
+                    ) {
+                        clientsUpdatedThisWeek++;
                     }
                     const plansData = await axios.get(
                         `https://api.traininblocks.com/v2/plans/${clients[client].client_id}`,
@@ -90,129 +95,182 @@ const breakdownHandler: Handler = async () => {
                             },
                         }
                     );
-                    const plans = plansData.data[0]
-                    const sessions = plansData.data[1]
+                    const plans = plansData.data[0];
+                    const sessions = plansData.data[1];
                     for (const plan in plans) {
                         if (new Date(plans[plan].created_at) >= thisWeek) {
-                            plansCreatedThisWeek++
-                        } else if (new Date(plans[plan].updated_at) >= thisWeek) {
-                            plansUpdatedThisWeek++
+                            plansCreatedThisWeek++;
+                        } else if (
+                            new Date(plans[plan].updated_at) >= thisWeek
+                        ) {
+                            plansUpdatedThisWeek++;
                         }
                     }
                     for (const session in sessions) {
-                        if (new Date(sessions[session].created_at) >= thisWeek) {
-                            sessionsCreatedThisWeek++
-                        } else if (new Date(sessions[session].updated_at) >= thisWeek) {
-                            sessionsUpdatedThisWeek++
+                        if (
+                            new Date(sessions[session].created_at) >= thisWeek
+                        ) {
+                            sessionsCreatedThisWeek++;
+                        } else if (
+                            new Date(sessions[session].updated_at) >= thisWeek
+                        ) {
+                            sessionsUpdatedThisWeek++;
                         }
                     }
                 }
 
                 // Loop through archivedClients
                 for (const client in archivedClients) {
-                    if (new Date(archivedClients[client].updated_at) >= thisWeek) {
-                        clientsArchivedThisWeek++
+                    if (
+                        new Date(archivedClients[client].updated_at) >= thisWeek
+                    ) {
+                        clientsArchivedThisWeek++;
                     }
                 }
 
                 // Loop through templates
                 for (const template in templates) {
                     if (new Date(templates[template].created_at) >= thisWeek) {
-                        templatesCreatedThisWeek++
-                    } else if (new Date(templates[template].updated_at) >= thisWeek) {
-                        templatesUpdatedThisWeek++
+                        templatesCreatedThisWeek++;
+                    } else if (
+                        new Date(templates[template].updated_at) >= thisWeek
+                    ) {
+                        templatesUpdatedThisWeek++;
                     }
                 }
 
                 // Loop through bookings
                 for (const booking in bookings) {
                     // If the client was created this week
-                    if (new Date(bookings[booking].datetime) <= nextWeek && new Date(bookings[booking].datetime) >= new Date()) {
-                        upcomingBookings++
+                    if (
+                        new Date(bookings[booking].datetime) <= nextWeek &&
+                        new Date(bookings[booking].datetime) >= new Date()
+                    ) {
+                        upcomingBookings++;
                     }
                 }
 
-                let body = ''
+                let body = "";
 
                 if (clientsCreatedThisWeek === 1) {
-                    body = body + `<p>You created ${clientsCreatedThisWeek} client.</p>`
+                    body =
+                        body +
+                        `<p>You created ${clientsCreatedThisWeek} client.</p>`;
                 }
                 if (clientsUpdatedThisWeek === 1) {
-                    body = body + `<p>You updated ${clientsUpdatedThisWeek} client.</p>`
+                    body =
+                        body +
+                        `<p>You updated ${clientsUpdatedThisWeek} client.</p>`;
                 }
                 if (clientsArchivedThisWeek === 1) {
-                    body = body + `<p>You archived ${clientsArchivedThisWeek} client.</p>`
+                    body =
+                        body +
+                        `<p>You archived ${clientsArchivedThisWeek} client.</p>`;
                 }
                 if (templatesCreatedThisWeek === 1) {
-                    body = body + `<p>You created ${templatesCreatedThisWeek} template.</p>`
+                    body =
+                        body +
+                        `<p>You created ${templatesCreatedThisWeek} template.</p>`;
                 }
                 if (templatesUpdatedThisWeek === 1) {
-                    body = body + `<p>You updated ${templatesUpdatedThisWeek} template.</p>`
+                    body =
+                        body +
+                        `<p>You updated ${templatesUpdatedThisWeek} template.</p>`;
                 }
                 if (plansCreatedThisWeek === 1) {
-                    body = body + `<p>You created ${plansCreatedThisWeek} plan.</p>`
+                    body =
+                        body +
+                        `<p>You created ${plansCreatedThisWeek} plan.</p>`;
                 }
                 if (plansUpdatedThisWeek === 1) {
-                    body = body + `<p>You updated ${plansUpdatedThisWeek} plan.</p>`
+                    body =
+                        body +
+                        `<p>You updated ${plansUpdatedThisWeek} plan.</p>`;
                 }
                 if (sessionsCreatedThisWeek === 1) {
-                    body = body + `<p>You created ${sessionsCreatedThisWeek} session.</p>`
+                    body =
+                        body +
+                        `<p>You created ${sessionsCreatedThisWeek} session.</p>`;
                 }
                 if (sessionsUpdatedThisWeek === 1) {
-                    body = body + `<p>You updated ${sessionsUpdatedThisWeek} session.</p>`
+                    body =
+                        body +
+                        `<p>You updated ${sessionsUpdatedThisWeek} session.</p>`;
                 }
                 if (upcomingBookings === 1) {
-                    body = body + `<p>Keep up the great work!</p><h2>Let us help kickstart your week</h2><p>You have ${upcomingBookings} upcoming booking.</p>`
+                    body =
+                        body +
+                        `<p>Keep up the great work!</p><h2>Let us help kickstart your week</h2><p>You have ${upcomingBookings} upcoming booking.</p>`;
                 }
                 if (clientsCreatedThisWeek > 1) {
-                    body = body + `<p>You created ${clientsCreatedThisWeek} clients.</p>`
+                    body =
+                        body +
+                        `<p>You created ${clientsCreatedThisWeek} clients.</p>`;
                 }
                 if (clientsUpdatedThisWeek > 1) {
-                    body = body + `<p>You updated ${clientsUpdatedThisWeek} clients.</p>`
+                    body =
+                        body +
+                        `<p>You updated ${clientsUpdatedThisWeek} clients.</p>`;
                 }
                 if (clientsArchivedThisWeek > 1) {
-                    body = body + `<p>You archived ${clientsArchivedThisWeek} clients.</p>`
+                    body =
+                        body +
+                        `<p>You archived ${clientsArchivedThisWeek} clients.</p>`;
                 }
                 if (templatesCreatedThisWeek > 1) {
-                    body = body + `<p>You created ${templatesCreatedThisWeek} templates.</p>`
+                    body =
+                        body +
+                        `<p>You created ${templatesCreatedThisWeek} templates.</p>`;
                 }
                 if (templatesUpdatedThisWeek > 1) {
-                    body = body + `<p>You updated ${templatesUpdatedThisWeek} templates.</p>`
+                    body =
+                        body +
+                        `<p>You updated ${templatesUpdatedThisWeek} templates.</p>`;
                 }
                 if (plansCreatedThisWeek > 1) {
-                    body = body + `<p>You created ${plansCreatedThisWeek} plans.</p>`
+                    body =
+                        body +
+                        `<p>You created ${plansCreatedThisWeek} plans.</p>`;
                 }
                 if (plansUpdatedThisWeek > 1) {
-                    body = body + `<p>You updated ${plansUpdatedThisWeek} plans.</p>`
+                    body =
+                        body +
+                        `<p>You updated ${plansUpdatedThisWeek} plans.</p>`;
                 }
                 if (sessionsCreatedThisWeek > 1) {
-                    body = body + `<p>You created ${sessionsCreatedThisWeek} sessions.</p>`
+                    body =
+                        body +
+                        `<p>You created ${sessionsCreatedThisWeek} sessions.</p>`;
                 }
                 if (sessionsUpdatedThisWeek > 1) {
-                    body = body + `<p>You updated ${sessionsUpdatedThisWeek} sessions.</p>`
+                    body =
+                        body +
+                        `<p>You updated ${sessionsUpdatedThisWeek} sessions.</p>`;
                 }
                 if (upcomingBookings > 1) {
-                    body = body + `<p>Keep up the great work!</p><h2>Let us help kickstart your week</h2><p>You have ${upcomingBookings} upcoming bookings.</p>`
+                    body =
+                        body +
+                        `<p>Keep up the great work!</p><h2>Let us help kickstart your week</h2><p>You have ${upcomingBookings} upcoming bookings.</p>`;
                 }
-                if (body !== '') {
+                if (body !== "") {
                     // Send an email to the PT
                     const mailOptions = {
-                    from: 'Train In Blocks <hello@traininblocks.com>',
-                    to: 'joe@joebailey.xyz', //PTs.data[PT].email
-                    ...emailBuilder('weekly-breakdown', {body})
-                    }
-                    await transporter.sendMail(mailOptions)
+                        from: "Train In Blocks <hello@traininblocks.com>",
+                        to: "joe@joebailey.xyz", //PTs.data[PT].email
+                        ...emailBuilder("weekly-breakdown", { body }),
+                    };
+                    await transporter.sendMail(mailOptions);
                 }
-            };
-        };
+            }
+        }
         return {
             statusCode: 200,
         };
     } catch (e) {
-        console.error(e)
+        console.error(e);
         return {
-            statusCode: 500
-        }
+            statusCode: 500,
+        };
     }
 };
 
