@@ -797,13 +797,16 @@ export default class Session extends Mixins(MainMixins) {
     async createSingleSession() {
         try {
             appModule.setDontLeave(true);
-            await planModule.addSession({
-                programme_id: parseInt(this.$route.params.id),
-                name: "Untitled",
-                date: this.today(),
-                week_id: this.currentWeek,
-                notes: "",
-            });
+            await planModule.addSession(
+                {
+                    programme_id: parseInt(this.$route.params.id),
+                    name: "Untitled",
+                    date: this.today(),
+                    week_id: this.currentWeek,
+                    notes: "",
+                },
+                "new"
+            );
             this.$ga.event("Session", "new");
             utilsModule.responsePopUpRef?.open({
                 title: "New session added",
