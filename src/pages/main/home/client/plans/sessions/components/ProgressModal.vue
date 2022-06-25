@@ -155,7 +155,7 @@ const CardWrapper = () =>
     );
 
 type ProgressProtocol = {
-    id: number;
+    programme_id: number;
     name: string;
     date: string;
     notes: string;
@@ -193,21 +193,23 @@ export default class ProgressModal extends Mixins(MainMixins) {
 
         if (!sessions) return;
 
-        this.progressProtocols = sessions.map(({ id, name, date, notes }) => {
-            const protocols = this.pullProtocols(name, notes, date);
-            return {
-                id,
-                name,
-                date,
-                notes,
-                protocols,
-                inputs: new Array(protocols.length)
-                    .fill("")
-                    .map(() =>
-                        new Array(this.target - this.currentWeek).fill("")
-                    ),
-            };
-        });
+        this.progressProtocols = sessions.map(
+            ({ programme_id, name, date, notes }) => {
+                const protocols = this.pullProtocols(name, notes, date);
+                return {
+                    programme_id,
+                    name,
+                    date,
+                    notes,
+                    protocols,
+                    inputs: new Array(protocols.length)
+                        .fill("")
+                        .map(() =>
+                            new Array(this.target - this.currentWeek).fill("")
+                        ),
+                };
+            }
+        );
     }
 
     /** Processes the required changes to sessions before posting it to the database. */
@@ -236,17 +238,20 @@ export default class ProgressModal extends Mixins(MainMixins) {
         ) {
             try {
                 this.progressProtocols.forEach(
-                    ({ id: programme_id, name, date, notes }, sIndex) => {
-                        planModule.addSession({
-                            programme_id,
-                            name,
-                            date: this.addDays(
-                                date,
-                                this.daysBetween * (iIndex + 1)
-                            ),
-                            week_id,
-                            notes: this.__process(notes, sIndex, iIndex),
-                        });
+                    async ({ programme_id, name, date, notes }, sIndex) => {
+                        await planModule.addSession(
+                            {
+                                programme_id,
+                                name,
+                                date: this.addDays(
+                                    date,
+                                    this.daysBetween * (iIndex + 1)
+                                ),
+                                week_id,
+                                notes: this.__process(notes, sIndex, iIndex),
+                            },
+                            "progress"
+                        );
                     }
                 );
             } catch (e) {

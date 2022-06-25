@@ -91,7 +91,8 @@ class PlanModule extends VuexModule {
         session: Pick<
             Session,
             "programme_id" | "name" | "date" | "week_id" | "notes"
-        >
+        >,
+        type: "new" | "progress"
     ) {
         const response = await baseAPI.post(
             "https://api.traininblocks.com/v2/sessions",
@@ -99,13 +100,16 @@ class PlanModule extends VuexModule {
         );
         const newSessionId = response.data[0]["LAST_INSERT_ID()"];
         const plan = this.plan;
+        const newSessionFields = {
+            notes: "",
+            name: "Untitled",
+        };
         plan?.sessions?.push({
             ...session,
             id: newSessionId,
             feedback: null,
             checked: 0,
-            notes: "",
-            name: "Untitled",
+            ...(type === "new" ? newSessionFields : {}),
         });
 
         return {};
