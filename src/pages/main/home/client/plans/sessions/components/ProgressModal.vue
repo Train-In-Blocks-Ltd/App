@@ -196,17 +196,18 @@ export default class ProgressModal extends Mixins(MainMixins) {
         this.progressProtocols = sessions.map(
             ({ programme_id, name, date, notes }) => {
                 const protocols = this.pullProtocols(name, notes, date);
+                const inputs: any[][] = [];
+                const duration = this.target - this.currentWeek;
+                protocols.forEach((p) => {
+                    inputs.push(new Array(duration).fill(p.protocol));
+                });
                 return {
                     programme_id,
                     name,
                     date,
                     notes,
                     protocols,
-                    inputs: new Array(protocols.length)
-                        .fill("")
-                        .map(() =>
-                            new Array(this.target - this.currentWeek).fill("")
-                        ),
+                    inputs,
                 };
             }
         );
