@@ -22,7 +22,7 @@
                 :min="currentWeek + 1"
                 :max="plan.duration"
                 :value="target"
-                @output="(data) => (target = data)"
+                @output="(data) => (target = Number(data))"
                 required
             />
             <txt-input
