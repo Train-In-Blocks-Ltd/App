@@ -7,8 +7,8 @@ import { Handler } from "@netlify/functions";
 
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
-        ? require("./helpers/prod.env")
-        : require("./helpers/dev.env");
+        ? require("../../config/prod.env")
+        : require("../../config/dev.env");
 
 const transporter = nodemailer.createTransport(
     smtpTransport({
@@ -16,8 +16,8 @@ const transporter = nodemailer.createTransport(
         host: "smtp-relay.gmail.com",
         secure: true,
         auth: {
-            user: CUSTOM_ENV.GOOGLE_WORKSPACE.USERNAME,
-            pass: CUSTOM_ENV.GOOGLE_WORKSPACE.PASSWORD,
+            user: process.env.GOOGLE_WORKSPACE_USERNAME,
+            pass: process.env.GOOGLE_WORKSPACE_PASSWORD,
         },
     })
 );
@@ -39,7 +39,7 @@ export const handler: Handler = async (event) => {
                         headers: {
                             Accept: "application/json",
                             "Content-Type": "application/json",
-                            Authorization: CUSTOM_ENV.OKTA.AUTH_KEY,
+                            Authorization: process.env.OKTA_AUTH_KEY,
                         },
                     }
                 );
@@ -52,7 +52,7 @@ export const handler: Handler = async (event) => {
                             headers: {
                                 Accept: "application/json",
                                 "Content-Type": "application/json",
-                                Authorization: CUSTOM_ENV.OKTA.AUTH_KEY,
+                                Authorization: process.env.OKTA_AUTH_KEY,
                             },
                         }
                     );

@@ -5,10 +5,14 @@ import { Handler } from "@netlify/functions";
 
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
-        ? require("./helpers/prod.env")
-        : require("./helpers/dev.env");
+        ? require("../../config/prod.env")
+        : require("../../config/dev.env");
 
-const stripe = new Stripe(CUSTOM_ENV.STRIPE_SECRET_KEY, {
+if (!process.env.STRIPE_SECRET_KEY) {
+    throw "API Keys not set";
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
     apiVersion: "2020-08-27",
 });
 const headers = require("././helpers/headers");

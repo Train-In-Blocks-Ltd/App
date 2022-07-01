@@ -5,10 +5,10 @@ import { Client } from "../common/types";
 
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
-        ? require("./helpers/prod.env")
-        : require("./helpers/dev.env");
+        ? require("../../config/prod.env")
+        : require("../../config/dev.env");
 
-const authHeader = CUSTOM_ENV.OKTA.AUTH_KEY;
+const authHeader = process.env.OKTA_AUTH_KEY;
 const headers = require("././helpers/headers");
 
 // @ts-expect-error
@@ -50,7 +50,7 @@ export const handler: Handler = async (event) => {
                                 headers: {
                                     Accept: "application/json",
                                     "Content-Type": "application/json",
-                                    Authorization: CUSTOM_ENV.TIB_API,
+                                    Authorization: process.env.TIB_API,
                                 },
                             }
                         );
@@ -86,7 +86,7 @@ export const handler: Handler = async (event) => {
                                 headers: {
                                     Accept: "application/json",
                                     "Content-Type": "application/json",
-                                    Authorization: CUSTOM_ENV.TIB_API,
+                                    Authorization: process.env.TIB_API,
                                 },
                             }
                         );
@@ -102,11 +102,11 @@ export const handler: Handler = async (event) => {
                                 );
                                 cal.addEvent(
                                     "Train In Blocks Meeting with " +
-                                        data.data[0].find(
-                                            (client: Client) =>
-                                                client.client_id ===
-                                                booking.client_id
-                                        ).name,
+                                    data.data[0].find(
+                                        (client: Client) =>
+                                            client.client_id ===
+                                            booking.client_id
+                                    ).name,
                                     booking.notes,
                                     "",
                                     date,

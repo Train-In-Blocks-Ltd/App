@@ -267,7 +267,7 @@ function baseEmail(data: { title: string; html: string }) {
           <table id="header" role="presentation" width="100%">
             <tr>
               <td>
-                <img align='left' alt='' src='https://dev.traininblocks.com/emailLogo.png' width='118.44' style='max-width: 890px;padding-bottom: 0px;vertical-align: bottom;display: inline !important;border-radius: 0%;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;' class='mcnImage'>
+                <img align='left' alt='' src='https://traininblocks.com/emailLogo.png' width='118.44' style='max-width: 890px;padding-bottom: 0px;vertical-align: bottom;display: inline !important;border-radius: 0%;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;' class='mcnImage'>
               </td>
             </tr>
           </table>

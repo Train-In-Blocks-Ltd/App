@@ -2,10 +2,10 @@ const qs = require("querystring");
 const axios = require("axios");
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
-        ? require("../helpers/prod.env")
-        : require("../helpers/dev.env");
+        ? require(".../../../config/prod.env")
+        : require(".../../../config/dev.env");
 /* eslint-disable-next-line */
-const stripe = require("stripe")(CUSTOM_ENV.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const headers = require("../helpers/headers");
 
 let response;
@@ -59,16 +59,16 @@ exports.handler = async function handler(event, context, callback) {
                     account: account.id,
                     refresh_url:
                         event.multiValueHeaders.Referer &&
-                        event.multiValueHeaders.Referer[0] ===
+                            event.multiValueHeaders.Referer[0] ===
                             "https://app.traininblocks.com/portfolio"
                             ? "https://app.traininblocks.com/portfolio"
-                            : "https://dev.traininblocks.com/portfolio",
+                            : "https://staging.traininblocks.com/portfolio",
                     return_url:
                         event.multiValueHeaders.Referer &&
-                        event.multiValueHeaders.Referer[0] ===
+                            event.multiValueHeaders.Referer[0] ===
                             "https://app.traininblocks.com/portfolio"
                             ? "https://app.traininblocks.com/portfolio"
-                            : "https://dev.traininblocks.com/portfolio",
+                            : "https://staging.traininblocks.com/portfolio",
                     type: "account_onboarding",
                 });
                 return callback(null, {

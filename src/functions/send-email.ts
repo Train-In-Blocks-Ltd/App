@@ -6,8 +6,8 @@ import { Handler } from "@netlify/functions";
 
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
-        ? require("./helpers/prod.env")
-        : require("./helpers/dev.env");
+        ? require("../../config/prod.env")
+        : require("../../config/dev.env");
 const headers = require("./helpers/headers");
 const transporter = nodemailer.createTransport(
     smtpTransport({
@@ -15,8 +15,8 @@ const transporter = nodemailer.createTransport(
         host: "smtp-relay.gmail.com",
         secure: true,
         auth: {
-            user: CUSTOM_ENV.GOOGLE_WORKSPACE.USERNAME,
-            pass: CUSTOM_ENV.GOOGLE_WORKSPACE.PASSWORD,
+            user: process.env.GOOGLE_WORKSPACE_USERNAME,
+            pass: process.env.GOOGLE_WORKSPACE_PASSWORD,
         },
     })
 );

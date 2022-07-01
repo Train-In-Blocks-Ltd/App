@@ -19,13 +19,22 @@ We use Yarn. Please make sure you have the latest version of NPM and Yarn instal
 ### Install packages
 
 ```bash
-yarn install
+# install netlify cli
+$ npm i -g netlify-cli
 
-npm install netlify-cli -g
+# Set up netlify
+$ netlify login
+# OR
+$ netlify switch
 
-netlify login
+# Link local repo with netlify site
+$ netlify link
 
-netlify link
+# install dependencies
+$ yarn install
+
+# serve at localhost:8888
+$ netlify dev
 ```
 
 ### Start developing

@@ -2,10 +2,10 @@ const qs = require("querystring");
 const axios = require("axios");
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
-        ? require("../helpers/prod.env")
-        : require("../helpers/dev.env");
+        ? require(".../../../config/prod.env")
+        : require(".../../../config/dev.env");
 /* eslint-disable-next-line */
-const stripe = require("stripe")(CUSTOM_ENV.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const headers = require("../helpers/headers");
 let response;
 
@@ -40,29 +40,26 @@ exports.handler = async function handler(event, context, callback) {
                 ) {
                     // Get Connected Account Id
                     const Okta = await axios.get(
-                        `${
-                            CUSTOM_ENV.OKTA.ISSUER
-                        }/api/v1/users/?filter=id+eq+"${
-                            JSON.parse(event.body).ptId
+                        `${CUSTOM_ENV.OKTA.ISSUER
+                        }/api/v1/users/?filter=id+eq+"${JSON.parse(event.body).ptId
                         }"&limit=1`,
                         {
                             headers: {
                                 Accept: "application/json",
                                 "Content-Type": "application/json",
-                                Authorization: CUSTOM_ENV.OKTA.AUTH_KEY,
+                                Authorization: process.env.OKTA_AUTH_KEY,
                             },
                         }
                     );
                     // Search db for productId
                     const db = await axios.get(
-                        `https://api.traininblocks.com/v2/${
-                            JSON.parse(event.body).ptId
+                        `https://api.traininblocks.com/v2/${JSON.parse(event.body).ptId
                         }`,
                         {
                             headers: {
                                 Accept: "application/json",
                                 "Content-Type": "application/json",
-                                Authorization: CUSTOM_ENV.TIB_API,
+                                Authorization: process.env.TIB_API,
                             },
                         }
                     );
@@ -105,16 +102,16 @@ exports.handler = async function handler(event, context, callback) {
                                 mode: "payment",
                                 success_url:
                                     event.multiValueHeaders.Referer &&
-                                    event.multiValueHeaders.Referer[0] ===
+                                        event.multiValueHeaders.Referer[0] ===
                                         "https://app.traininblocks.com/clientUser"
                                         ? "https://app.traininblocks.com/clientUser"
-                                        : "https://dev.traininblocks.com/clientUser",
+                                        : "https://staging.traininblocks.com/clientUser",
                                 cancel_url:
                                     event.multiValueHeaders.Referer &&
-                                    event.multiValueHeaders.Referer[0] ===
+                                        event.multiValueHeaders.Referer[0] ===
                                         "https://app.traininblocks.com/clientUser"
                                         ? "https://app.traininblocks.com/clientUser"
-                                        : "https://dev.traininblocks.com/clientUser",
+                                        : "https://staging.traininblocks.com/clientUser",
                             },
                             {
                                 stripeAccount:
@@ -149,16 +146,16 @@ exports.handler = async function handler(event, context, callback) {
                                 mode: "subscription",
                                 success_url:
                                     event.multiValueHeaders.Referer &&
-                                    event.multiValueHeaders.Referer[0] ===
+                                        event.multiValueHeaders.Referer[0] ===
                                         "https://app.traininblocks.com/clientUser"
                                         ? "https://app.traininblocks.com/clientUser"
-                                        : "https://dev.traininblocks.com/clientUser",
+                                        : "https://staging.traininblocks.com/clientUser",
                                 cancel_url:
                                     event.multiValueHeaders.Referer &&
-                                    event.multiValueHeaders.Referer[0] ===
+                                        event.multiValueHeaders.Referer[0] ===
                                         "https://app.traininblocks.com/clientUser"
                                         ? "https://app.traininblocks.com/clientUser"
-                                        : "https://dev.traininblocks.com/clientUser",
+                                        : "https://staging.traininblocks.com/clientUser",
                             },
                             {
                                 stripeAccount:

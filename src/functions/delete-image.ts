@@ -5,14 +5,14 @@ import { Handler } from "@netlify/functions";
 
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
-        ? require("./helpers/prod.env")
-        : require("./helpers/dev.env");
+        ? require("../../config/prod.env")
+        : require("../../config/dev.env");
 const headers = require("./helpers/headers");
 
 cloudinary.config({
-    cloud_name: CUSTOM_ENV.CLOUDINARY.CLOUD_NAME,
-    api_key: CUSTOM_ENV.CLOUDINARY.API_KEY,
-    api_secret: CUSTOM_ENV.CLOUDINARY.API_SECRET,
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 export const handler: Handler = async (event) => {

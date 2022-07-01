@@ -16,13 +16,7 @@
   force = true
 
 [[redirects]]
-  from = "https://happy-swanson-edf0fd.netlify.app/*"
-  to = "https://staging.traininblocks.com/:splat"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "https://dev.traininblocks.com/*"
+  from = "https://staging--app-train-in-blocks.netlify.app/*"
   to = "https://staging.traininblocks.com/:splat"
   status = 301
   force = true

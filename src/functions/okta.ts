@@ -4,8 +4,8 @@ import { Handler } from "@netlify/functions";
 
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
-        ? require("./helpers/prod.env")
-        : require("./helpers/dev.env");
+        ? require("../../config/prod.env")
+        : require("../../config/dev.env");
 const headers = require("./helpers/headers");
 
 export const handler: Handler = async (event) => {
@@ -41,7 +41,7 @@ export const handler: Handler = async (event) => {
                             headers: {
                                 Accept: "application/json",
                                 "Content-Type": "application/json",
-                                Authorization: CUSTOM_ENV.OKTA.AUTH_KEY,
+                                Authorization: process.env.OKTA_AUTH_KEY,
                             },
                         }
                     );
@@ -72,7 +72,7 @@ export const handler: Handler = async (event) => {
                             headers: {
                                 Accept: "application/json",
                                 "Content-Type": "application/json",
-                                Authorization: CUSTOM_ENV.OKTA.AUTH_KEY,
+                                Authorization: process.env.OKTA_AUTH_KEY,
                             },
                         }
                     );
