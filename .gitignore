@@ -17,6 +17,8 @@ selenium-debug.log
 
 *.key
 *.crt
+.env.development
+.env
 
 # Local Netlify folder
 .netlify

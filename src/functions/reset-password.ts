@@ -43,34 +43,42 @@ export const handler: Handler = async (event) => {
                         },
                     }
                 );
-                const id = oktaOne.data[0].id;
-                const oktaTwo = await axios.post(
-                    `${CUSTOM_ENV.OKTA.ISSUER}/api/v1/users/${id}/lifecycle/reset_password?sendEmail=false`,
-                    {},
-                    {
-                        headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
-                            Authorization: CUSTOM_ENV.OKTA.AUTH_KEY,
-                        },
-                    }
-                );
-                // options
-                const LINK = oktaTwo.data.resetPasswordUrl.replace(
-                    CUSTOM_ENV.OKTA.ISSUER,
-                    "https://auth.traininblocks.com"
-                );
-                const mailOptions = {
-                    from: "Train In Blocks <hello@traininblocks.com>",
-                    to: data.email,
-                    ...emailBuilder("password-reset", { link: LINK }),
-                };
-                await transporter.sendMail(mailOptions);
-                return {
-                    statusCode: 200,
-                    headers,
-                    body: "Email sent successfully",
-                };
+                if (oktaOne.data.length > 0) {
+                    const id = oktaOne.data[0].id;
+                    const oktaTwo = await axios.post(
+                        `${CUSTOM_ENV.OKTA.ISSUER}/api/v1/users/${id}/lifecycle/reset_password?sendEmail=false`,
+                        {},
+                        {
+                            headers: {
+                                Accept: "application/json",
+                                "Content-Type": "application/json",
+                                Authorization: CUSTOM_ENV.OKTA.AUTH_KEY,
+                            },
+                        }
+                    );
+                    // options
+                    const LINK = oktaTwo.data.resetPasswordUrl.replace(
+                        CUSTOM_ENV.OKTA.ISSUER,
+                        "https://auth.traininblocks.com"
+                    );
+                    const mailOptions = {
+                        from: "Train In Blocks <hello@traininblocks.com>",
+                        to: data.email,
+                        ...emailBuilder("password-reset", { link: LINK }),
+                    };
+                    await transporter.sendMail(mailOptions);
+                    return {
+                        statusCode: 200,
+                        headers,
+                        body: "Email sent successfully",
+                    };
+                } else {
+                    return {
+                        statusCode: 500,
+                        headers,
+                        body: 'That email doesn\'t appear to be associated with an account.',
+                    };
+                }
             } catch (e) {
                 return {
                     statusCode: 500,
