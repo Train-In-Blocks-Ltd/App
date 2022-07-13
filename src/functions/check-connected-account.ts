@@ -1,19 +1,27 @@
-const qs = require("querystring");
-const axios = require("axios");
+import axios from "axios";
+import qs from "querystring";
+import Stripe from "stripe";
+import { Handler } from "@netlify/functions"; 
+
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
-        ? require(".../../../config/prod.env")
-        : require(".../../../config/dev.env");
-/* eslint-disable-next-line */
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const headers = require("../helpers/headers");
+        ? require("../../config/prod.env")
+        : require("../../config/dev.env");
 
-let response;
+if (!process.env.STRIPE_SECRET_KEY) {
+    throw "API Keys not set";
+}
 
-exports.handler = async function handler(event, context, callback) {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: "2020-08-27",
+});
+
+const headers = require("./helpers/headers");
+
+export const handler: Handler = async (event) => {
     if (event.headers.authorization) {
         const accessToken = event.headers.authorization.split(" ");
-        response = await axios.post(
+        const response = await axios.post(
             `${CUSTOM_ENV.OKTA.ISSUER}/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
             qs.stringify({
                 token: accessToken[1],
@@ -27,11 +35,11 @@ exports.handler = async function handler(event, context, callback) {
             }
         );
         if (event.httpMethod === "OPTIONS") {
-            return callback(null, {
+            return {
                 statusCode: 200,
                 headers,
                 body: "",
-            });
+            };
         } else if (event.body && response.data.active === true) {
             try {
                 if (JSON.parse(event.body).connectedAccountId) {
@@ -42,44 +50,44 @@ exports.handler = async function handler(event, context, callback) {
                         account.id !== "acct_1GLXT9BYbiJubfJM" &&
                         account.charges_enabled
                     ) {
-                        return callback(null, {
+                        return {
                             statusCode: 200,
                             headers,
                             body: "true",
-                        });
+                        };
                     } else {
-                        return callback(null, {
+                        return {
                             statusCode: 200,
                             headers,
                             body: "false",
-                        });
+                        };
                     }
                 } else {
-                    return callback(null, {
+                    return {
                         statusCode: 200,
                         headers,
                         body: "false",
-                    });
+                    };
                 }
             } catch (e) {
-                return callback(null, {
+                return {
                     statusCode: 500,
                     headers,
-                    body: JSON.stringify(e, response),
-                });
+                    body: JSON.stringify(e),
+                };
             }
         } else {
-            return callback(null, {
+            return {
                 statusCode: 401,
                 headers,
                 body: "401 - Unauthorized",
-            });
+            };
         }
     } else {
-        return callback(null, {
+        return {
             statusCode: 401,
             headers,
             body: "401 - Unauthorized",
-        });
+        };
     }
 };

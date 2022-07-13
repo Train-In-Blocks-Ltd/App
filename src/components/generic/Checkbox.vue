@@ -1,5 +1,5 @@
 <style lang="scss" scoped>
-.check svg {
+  .check svg {
     position: relative;
     z-index: 1;
     fill: none;
@@ -7,28 +7,27 @@
     stroke-linejoin: round;
     stroke-width: 1.5;
     transform: translate3d(0, 0, 0);
-    transition: all 0.2s ease;
+    transition: all .2s ease;
     path {
-        stroke-dasharray: 60;
-        stroke-dashoffset: 0;
+      stroke-dasharray: 60;
+      stroke-dashoffset: 0
     }
     polyline {
-        stroke-dasharray: 22;
-        stroke-dashoffset: 66;
+      stroke-dasharray: 22;
+      stroke-dashoffset: 66
     }
-}
-
-.checked_box:checked + .check svg {
+  }
+  .checked_box:checked + .check svg {
     path {
-        stroke-dashoffset: 60;
-        transition: all 0.3s linear;
+      stroke-dashoffset: 60;
+      transition: all .3s linear
     }
     polyline {
-        stroke-dashoffset: 42;
-        transition: all 0.2s linear;
-        transition-delay: 0.15s;
+      stroke-dashoffset: 42;
+      transition: all .2s linear;
+      transition-delay: .15s
     }
-}
+  }
 </style>
 
 <template>

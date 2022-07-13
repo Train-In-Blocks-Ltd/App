@@ -19,6 +19,8 @@ class PortfolioModule extends VuexModule implements Portfolio {
     notes: string = "";
     pt_id: string = "";
     trainer_name: string = "";
+    hasCheckedStripeConnect: Boolean = false;
+    isStripeConnected: Boolean = false;
 
     @MutationAction
     async setPortfolio({
@@ -50,6 +52,18 @@ class PortfolioModule extends VuexModule implements Portfolio {
     async setNotes(notes: string) {
         return {
             notes,
+        };
+    }
+    @MutationAction
+    async setHasCheckedStripeConnect(hasCheckedStripeConnect: Boolean) {
+        return {
+            hasCheckedStripeConnect,
+        };
+    }
+    @MutationAction
+    async setIsStripeConnected(isStripeConnected: Boolean) {
+        return {
+            isStripeConnected,
         };
     }
 

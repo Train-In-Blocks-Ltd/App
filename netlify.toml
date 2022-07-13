@@ -1,42 +1,43 @@
 [build]
-  command = "yarn build"
-  publish = "dist"
-  functions = "src/functions"
+command = "yarn build"
+publish = "dist"
+functions = "src/functions"
 
 [dev]
-  framework = "#custom"
-  command = "yarn webpack:start"
-  port = 8080
-  targetPort = 8081
+framework = "#custom"
+command = "yarn webpack:start"
+port = 8080
+targetPort = 8081
+environment = { STRIPE_SECRET_KEY = 'sk_test_0INBfg1OBTSo6LGQXspiol8a00lqVj8EFF' }
 
 [[redirects]]
-  from = "https://app-train-in-blocks.netlify.app/*"
-  to = "https://app.traininblocks.com/:splat"
-  status = 301
-  force = true
+from = "https://app-train-in-blocks.netlify.app/*"
+to = "https://app.traininblocks.com/:splat"
+status = 301
+force = true
 
 [[redirects]]
-  from = "https://staging--app-train-in-blocks.netlify.app/*"
-  to = "https://staging.traininblocks.com/:splat"
-  status = 301
-  force = true
+from = "https://staging--app-train-in-blocks.netlify.app/*"
+to = "https://staging.traininblocks.com/:splat"
+status = 301
+force = true
 
 [[redirects]]
-  from = "/index.html" 
-  to = "/"
-  status = 301
-  force = true
+from = "/index.html"
+to = "/"
+status = 301
+force = true
 
 [[redirects]]
-  from = "/*"
-  to = "/"
-  status = 200
-  
+from = "/*"
+to = "/"
+status = 200
+
 [[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    X-XSS-Protection = "1; mode=block"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "upgrade-insecure-requests"
+for = "/*"
+[headers.values]
+X-Frame-Options = "SAMEORIGIN"
+X-XSS-Protection = "1; mode=block"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "strict-origin-when-cross-origin"
+Content-Security-Policy = "upgrade-insecure-requests"

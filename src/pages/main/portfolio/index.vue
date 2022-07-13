@@ -52,10 +52,13 @@
                 @on-edit-change="resolve_portfolio_editor"
             />
         </label-wrapper>
+        <div>test</div>
+        <products />
     </wrapper>
 </template>
 
 <script lang="ts">
+import axios from "axios";
 import { Component, Vue } from "vue-property-decorator";
 import appModule from "../../../store/app.module";
 import accountModule from "../../../store/account.module";
@@ -68,6 +71,10 @@ const LabelWrapper = () =>
     import(
         /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../../components/generic/LabelWrapper.vue"
     );
+const Products = () =>
+    import(
+        /* webpackChunkName: "components.products", webpackPreload: true  */ "../../../components/generic/Products.vue"
+    );
 
 @Component({
     metaInfo() {
@@ -77,11 +84,13 @@ const LabelWrapper = () =>
     },
     components: {
         LabelWrapper,
+        Products,
     },
 })
 export default class Portfolio extends Vue {
     tempEditorStore: string | null = null;
-    editingPortfolio: boolean = false;
+    editingPortfolio: Boolean = false;
+    hasCheckedStripeConnect: Boolean = false;
 
     get claims() {
         return accountModule.claims;
@@ -97,6 +106,10 @@ export default class Portfolio extends Vue {
     }
     get pt_id() {
         return portfolioModule.pt_id;
+    }
+
+    async created () {
+        await this.checkStripeConnect()
     }
 
     // Form data
@@ -177,6 +190,48 @@ export default class Portfolio extends Vue {
             appModule.stopLoaders();
         } catch (e) {
             utilsModule.resolveError(e as string);
+        }
+    }
+
+    // -----------------------------
+    // Stripe connect
+    // -----------------------------
+    async stripeConnect () {
+        if (this.claims) {
+            try {
+                appModule.setDontLeave(true);
+                const RESPONSE = await axios.post('/.netlify/functions/create-connected-account', {
+                    email: this.claims.email,
+                    connectedAccountId: this.claims.connectedAccountId
+                })
+                this.hasCheckedStripeConnect = await RESPONSE.data.connectedAccountId;
+                appModule.stopLoaders();
+                window.location.href = RESPONSE.data.url;
+            } catch (e) {
+                utilsModule.resolveError(e as string);
+            }
+        }
+    }
+
+    async checkStripeConnect () {
+        if (this.claims) {
+            appModule.setSilentLoading(true);
+            if (!this.hasCheckedStripeConnect) {
+                const RESPONSE_STRIPE = await axios.post('/.netlify/functions/check-connected-account', {
+                    connectedAccountId: this.claims.connectedAccountId
+                },
+                {
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: process.env.TIB_API,
+                    },
+                })
+
+                await portfolioModule.setIsStripeConnected(this.claims.email === 'demo@traininblocks.com' || await RESPONSE_STRIPE.data)
+                await portfolioModule.setHasCheckedStripeConnect(true)
+                appModule.stopLoaders();
+            }
         }
     }
 }
