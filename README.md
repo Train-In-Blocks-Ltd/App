@@ -8,10 +8,6 @@ Repo for the Train In Blocks App.
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/15bb0c86-8028-4fac-88a2-87c773801c9a/deploy-status)](https://app.netlify.com/sites/app-train-in-blocks/deploys)
 
-**Staging**
-
-[![Netlify Status](https://api.netlify.com/api/v1/badges/d991d6ef-a182-4486-abb5-4dbee2d8a62c/deploy-status)](https://app.netlify.com/sites/happy-swanson-edf0fd/deploys)
-
 ## Getting Started
 
 We use Yarn. Please make sure you have the latest version of NPM and Yarn installed globally. Vue UI can help with development when installed globally.

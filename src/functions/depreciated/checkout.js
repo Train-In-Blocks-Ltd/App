@@ -1,11 +1,18 @@
 const qs = require("querystring");
 const axios = require("axios");
+
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
         ? require(".../../../config/prod.env")
         : require(".../../../config/dev.env");
+
+if (!process.env.STRIPE_SECRET_KEY) {
+    throw "API Keys not set";
+}
 /* eslint-disable-next-line */
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: "2020-08-27",
+});
 const headers = require("../helpers/headers");
 let response;
 
@@ -80,6 +87,7 @@ exports.handler = async function handler(event, context, callback) {
                             {
                                 payment_method_types: ["card"],
                                 customer_email: JSON.parse(event.body).email,
+                                receipt_email: JSON.parse(event.body).email,
                                 allow_promotion_codes: true,
                                 line_items: [
                                     {
@@ -123,6 +131,7 @@ exports.handler = async function handler(event, context, callback) {
                             {
                                 payment_method_types: ["card"],
                                 customer_email: JSON.parse(event.body).email,
+                                receipt_email: JSON.parse(event.body).email,
                                 allow_promotion_codes: true,
                                 line_items: [
                                     {
