@@ -136,6 +136,15 @@
                             class="ml-4"
                         />
                     </label>
+                    <label class="flex items-center">
+                        Send a Weekly Breakdown email:
+                        <input
+                            v-model="claims.weeklyBreakdown"
+                            type="checkbox"
+                            @change="handleWeeklyBreakdown"
+                            class="ml-4"
+                        />
+                    </label>
                 </div>
             </div>
         </div>
@@ -305,6 +314,15 @@ export default class Account extends Mixins(MainMixins) {
         await accountModule.updateClaims({
             ...this.claims,
             ga: this.claims.ga,
+        });
+    }
+
+    /** Toggles weekly breakdown emails. */
+    async handleWeeklyBreakdown() {
+        if (!this.claims) return;
+        await accountModule.updateClaims({
+            ...this.claims,
+            weeklyBreakdown: this.claims.weeklyBreakdown,
         });
     }
 

@@ -4,6 +4,7 @@ export type DarkmodeType = "light" | "dark" | "system";
 
 export type TIBUserClaims = UserClaims & {
     ga: boolean;
+    weeklyBreakdown: boolean;
     theme: DarkmodeType;
     policy: any[];
     user_type: "Admin" | "Client" | "Trainer";

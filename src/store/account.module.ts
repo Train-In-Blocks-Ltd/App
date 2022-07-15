@@ -34,7 +34,7 @@ class AccountModule extends VuexModule {
     }
     @MutationAction
     async updateClaims(claims: TIBUserClaims) {
-        const { ga, theme, policy, calendar } = claims;
+        const { ga, theme, policy, calendar, weeklyBreakdown } = claims;
         await baseAPI.post("/.netlify/functions/okta", {
             type: "POST",
             body: {
@@ -43,6 +43,7 @@ class AccountModule extends VuexModule {
                     theme,
                     policy,
                     calendar,
+                    weeklyBreakdown
                 },
             },
             url: `${this.claims?.sub}`,
