@@ -244,16 +244,16 @@ const breakdownHandler: Handler = async () => {
                         body +
                         `<p>You updated ${sessionsUpdatedThisWeek} sessions.</p>`;
                 }
-                if (upcomingBookings > 1) {
-                    body =
-                        body +
-                        `<p>Keep up the great work!</p><h2>Let us help kickstart your week</h2><p>You have ${upcomingBookings} upcoming bookings.</p>`;
-                }
                 if (body !== "") {
+                    if (upcomingBookings > 1) {
+                        body =
+                            body +
+                            `<p>Keep up the great work!</p><h2>Let us help kickstart your week</h2><p>You have ${upcomingBookings} upcoming bookings.</p>`;
+                    }
                     // Send an email to the PT
                     const mailOptions = {
                         from: "Train In Blocks <hello@traininblocks.com>",
-                        to: "joe@joebailey.xyz", //PTs.data[PT].email
+                        to: "joe@joebailey.xyz", // PTs.data[PT].email
                         ...emailBuilder("weekly-breakdown", { body }),
                     };
                     await transporter.sendMail(mailOptions);
