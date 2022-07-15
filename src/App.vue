@@ -365,6 +365,12 @@ export default class App extends Mixins(MainMixins) {
                 theme: "system",
             });
 
+        if (claims.weeklyBreakdown === undefined || claims.theme === null)
+            accountModule.setClaims({
+                ...claims,
+                weeklyBreakdown: true,
+            });
+
         // Sets theme
         this.darkmode(claims.theme);
         if (
