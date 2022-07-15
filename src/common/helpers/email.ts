@@ -43,7 +43,7 @@ const titles: Record<EmailType, any> = {
     "activate-account": "Activate your account",
     "password-changed": "Password changed",
     "password-reset": "Password reset",
-    "weekly-breakdown": "Here's a breakdown of what you did this week",
+    "weekly-breakdown": "Here's a breakdown of what you did last week",
     "client-account-reactivated": "Welcome back",
     "client-account-deactivated": "Account deactivated",
     "client-feedback": "Your client has given some feedback",
@@ -133,7 +133,8 @@ const bodyHtml = (type: EmailType, data?: EmailData) => {
         <a href="${data?.link}" target="_blank" class="link-button">Reset Password</a>
       </p>`;
         case "weekly-breakdown":
-            return `<table>${data?.body}</table>`;
+            return `${data?.body}
+              <a href="https://app.traininblocks.com" target="_blank" class="link-button">Login Now</a>`;
         case "client-account-reactivated":
             return `<p>Your trainer has re-activated your account.<br>You just need to click the link below to get started!
         <br>
@@ -283,7 +284,8 @@ function baseEmail(data: { title: string; html: string }) {
                 </div>
                 <p>
                   All the best,<br><br><strong>The Train In Blocks Team</strong>
-                </p>  
+                </p>
+                ${data.title === 'Here\'s a breakdown of what you did last week' ? '<p style="font-size: .75rem">You can turn off these emails in your <a href="https://app.traininblocks.com/account" target="_blank">account settings</a>.</p>' : ''}
               </td>
             </tr>
           </table>
