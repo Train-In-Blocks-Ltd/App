@@ -7,8 +7,8 @@ const nodemailer = require("nodemailer");
 
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
-        ? require("./helpers/prod.env")
-        : require("./helpers/dev.env");
+        ? require("../../config/prod.env")
+        : require("../../config/dev.env");
 
 const authHeader = process.env.OKTA_AUTH_KEY;
 
@@ -29,8 +29,9 @@ const breakdownHandler: Handler = async () => {
     try {
         // Search okta users for active trainers
         const PTs = await axios.get(
-            `${CUSTOM_ENV.OKTA.ISSUER}/api/v1/groups/00gf92ryyjhkuM5ua4x6/users`,
-            // `${CUSTOM_ENV.OKTA.ISSUER}/api/v1/groups/00gf92iyuemKhsTcV4x6/users`,
+            process.env.NODE_ENV === "production"
+                ? `${CUSTOM_ENV.OKTA.ISSUER}/api/v1/groups/00gf92iyuemKhsTcV4x6/users`
+                : `${CUSTOM_ENV.OKTA.ISSUER}/api/v1/groups/00gf92ryyjhkuM5ua4x6/users`,
             {
                 headers: {
                     Accept: "application/json",
@@ -45,7 +46,7 @@ const breakdownHandler: Handler = async () => {
             // If the PT is active (and they've opted in to weekly breakdown emails)
             if (
                 PTs.data[PT].status === "ACTIVE" &&
-                PTs.data[PT].profile.weeklyBreakdown !== false
+                (PTs.data[PT].profile.weeklyBreakdown === true || PTs.data[PT].profile.weeklyBreakdown === undefined)
             ) {
                 const ptData = await axios.get(
                     `https://api.traininblocks.com/v2/${PTs.data[PT].id}`,
@@ -75,6 +76,9 @@ const breakdownHandler: Handler = async () => {
 
                 let sessionsUpdatedThisWeek = 0;
                 let sessionsCreatedThisWeek = 0;
+
+                let bookingsUpdatedThisWeek = 0;
+                let bookingsCreatedThisWeek = 0;
 
                 // Loop through clients
                 for (const client of clients) {
@@ -121,6 +125,18 @@ const breakdownHandler: Handler = async () => {
                             sessionsUpdatedThisWeek++;
                         }
                     }
+
+                    // Count bookings created/updated
+                    for (const booking of bookings) {
+                        if (!booking.created_at || !booking.updated_at)
+                            continue;
+
+                        if (new Date(booking.created_at) >= thisWeek) {
+                            bookingsCreatedThisWeek++;
+                        } else if (new Date(booking.updated_at) >= thisWeek) {
+                            bookingsUpdatedThisWeek++;
+                        }
+                    }
                 }
 
                 // Count clients archived
@@ -153,99 +169,108 @@ const breakdownHandler: Handler = async () => {
                     body =
                         body +
                         `<p>You created ${clientsCreatedThisWeek} client.</p>`;
+                } else if (clientsCreatedThisWeek > 1) {
+                    body =
+                        body +
+                        `<p>You created ${clientsCreatedThisWeek} clients.</p>`;
                 }
                 if (clientsUpdatedThisWeek === 1) {
                     body =
                         body +
                         `<p>You updated ${clientsUpdatedThisWeek} client.</p>`;
                 }
+                else if (clientsUpdatedThisWeek > 1) {
+                    body =
+                        body +
+                        `<p>You updated ${clientsUpdatedThisWeek} clients.</p>`;
+                }
                 if (clientsArchivedThisWeek === 1) {
                     body =
                         body +
                         `<p>You archived ${clientsArchivedThisWeek} client.</p>`;
+                } else if (clientsArchivedThisWeek > 1) {
+                    body =
+                        body +
+                        `<p>You archived ${clientsArchivedThisWeek} clients.</p>`;
                 }
                 if (templatesCreatedThisWeek === 1) {
                     body =
                         body +
                         `<p>You created ${templatesCreatedThisWeek} template.</p>`;
+                } else if (templatesCreatedThisWeek > 1) {
+                    body =
+                        body +
+                        `<p>You created ${templatesCreatedThisWeek} templates.</p>`;
                 }
                 if (templatesUpdatedThisWeek === 1) {
                     body =
                         body +
                         `<p>You updated ${templatesUpdatedThisWeek} template.</p>`;
+                } else if (templatesUpdatedThisWeek > 1) {
+                    body =
+                        body +
+                        `<p>You updated ${templatesUpdatedThisWeek} templates.</p>`;
                 }
                 if (plansCreatedThisWeek === 1) {
                     body =
                         body +
                         `<p>You created ${plansCreatedThisWeek} plan.</p>`;
+                } else if (plansCreatedThisWeek > 1) {
+                    body =
+                        body +
+                        `<p>You created ${plansCreatedThisWeek} plans.</p>`;
                 }
                 if (plansUpdatedThisWeek === 1) {
                     body =
                         body +
                         `<p>You updated ${plansUpdatedThisWeek} plan.</p>`;
+                } else if (plansUpdatedThisWeek > 1) {
+                    body =
+                        body +
+                        `<p>You updated ${plansUpdatedThisWeek} plans.</p>`;
                 }
                 if (sessionsCreatedThisWeek === 1) {
                     body =
                         body +
                         `<p>You created ${sessionsCreatedThisWeek} session.</p>`;
+                } else if (sessionsCreatedThisWeek > 1) {
+                    body =
+                        body +
+                        `<p>You created ${sessionsCreatedThisWeek} sessions.</p>`;
                 }
                 if (sessionsUpdatedThisWeek === 1) {
                     body =
                         body +
                         `<p>You updated ${sessionsUpdatedThisWeek} session.</p>`;
-                }
-                if (upcomingBookings === 1) {
-                    body =
-                        body +
-                        `<p>Keep up the great work!</p><h2>Let us help kickstart your week</h2><p>You have ${upcomingBookings} upcoming booking.</p>`;
-                }
-                if (clientsCreatedThisWeek > 1) {
-                    body =
-                        body +
-                        `<p>You created ${clientsCreatedThisWeek} clients.</p>`;
-                }
-                if (clientsUpdatedThisWeek > 1) {
-                    body =
-                        body +
-                        `<p>You updated ${clientsUpdatedThisWeek} clients.</p>`;
-                }
-                if (clientsArchivedThisWeek > 1) {
-                    body =
-                        body +
-                        `<p>You archived ${clientsArchivedThisWeek} clients.</p>`;
-                }
-                if (templatesCreatedThisWeek > 1) {
-                    body =
-                        body +
-                        `<p>You created ${templatesCreatedThisWeek} templates.</p>`;
-                }
-                if (templatesUpdatedThisWeek > 1) {
-                    body =
-                        body +
-                        `<p>You updated ${templatesUpdatedThisWeek} templates.</p>`;
-                }
-                if (plansCreatedThisWeek > 1) {
-                    body =
-                        body +
-                        `<p>You created ${plansCreatedThisWeek} plans.</p>`;
-                }
-                if (plansUpdatedThisWeek > 1) {
-                    body =
-                        body +
-                        `<p>You updated ${plansUpdatedThisWeek} plans.</p>`;
-                }
-                if (sessionsCreatedThisWeek > 1) {
-                    body =
-                        body +
-                        `<p>You created ${sessionsCreatedThisWeek} sessions.</p>`;
-                }
-                if (sessionsUpdatedThisWeek > 1) {
+                } else if (sessionsUpdatedThisWeek > 1) {
                     body =
                         body +
                         `<p>You updated ${sessionsUpdatedThisWeek} sessions.</p>`;
                 }
+                if (bookingsCreatedThisWeek === 1) {
+                    body =
+                        body +
+                        `<p>You created ${bookingsCreatedThisWeek} booking.</p>`;
+                } else if (bookingsCreatedThisWeek > 1) {
+                    body =
+                        body +
+                    `<p>You created ${bookingsCreatedThisWeek} bookings.</p>`;
+                }
+                if (bookingsUpdatedThisWeek === 1) {
+                    body =
+                        body +
+                        `<p>You updated ${bookingsUpdatedThisWeek} bookings.</p>`;
+                } else if (bookingsUpdatedThisWeek > 1) {
+                    body =
+                        body +
+                    `<p>You updated ${bookingsUpdatedThisWeek} bookings.</p>`;
+                }
                 if (body !== "") {
-                    if (upcomingBookings > 1) {
+                    if (upcomingBookings === 1) {
+                        body =
+                            body +
+                            `<p>Keep up the great work!</p><h2>Let us help kickstart your week</h2><p>You have ${upcomingBookings} upcoming booking.</p>`;
+                    } else if (upcomingBookings > 1) {
                         body =
                             body +
                             `<p>Keep up the great work!</p><h2>Let us help kickstart your week</h2><p>You have ${upcomingBookings} upcoming bookings.</p>`;
@@ -253,7 +278,9 @@ const breakdownHandler: Handler = async () => {
                     // Send an email to the PT
                     const mailOptions = {
                         from: "Train In Blocks <hello@traininblocks.com>",
-                        to: "joe@joebailey.xyz", // PTs.data[PT].email
+                        to: process.env.NODE_ENV === "production"
+                            ? PTs.data[PT].email
+                            : "joe@joebailey.xyz",
                         ...emailBuilder("weekly-breakdown", { body }),
                     };
                     await transporter.sendMail(mailOptions);
